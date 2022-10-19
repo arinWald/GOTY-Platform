@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.5" orientation="orthogonal" renderorder="right-down" width="250" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="250" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
  <tileset firstgid="1" name="terrain" tilewidth="16" tileheight="16" tilecount="242" columns="22">
-  <image source="../Downloads/Pixel Adventure 1/Free/Terrain/Terrain (16x16).png" width="352" height="176"/>
+  <image source="../Pixel Adventure 1/Terrain/Terrain (16x16).png" width="352" height="176"/>
   <wangsets>
    <wangset name="Terra Verda" type="corner" tile="-1">
     <wangcolor name="Terra Verda" color="#ff0000" tile="-1" probability="1"/>
@@ -22,10 +22,10 @@
   </wangsets>
  </tileset>
  <tileset firstgid="243" name="background 1" tilewidth="16" tileheight="16" tilecount="16" columns="4">
-  <image source="../Downloads/Pixel Adventure 1/Free/Background/Brown.png" width="64" height="64"/>
+  <image source="../Pixel Adventure 1/Background/Brown.png" width="64" height="64"/>
  </tileset>
  <tileset firstgid="259" name="Spike" tilewidth="16" tileheight="16" tilecount="1" columns="1">
-  <image source="../Downloads/Pixel Adventure 1/Free/Traps/Spikes/Idle.png" width="16" height="16"/>
+  <image source="../Pixel Adventure 1/Traps/Spikes/Idle.png" width="16" height="16"/>
  </tileset>
  <layer id="2" name="Background" width="250" height="30">
   <data>
