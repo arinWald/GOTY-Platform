@@ -3,6 +3,7 @@
 #include "Render.h"
 #include "Textures.h"
 #include "Map.h"
+#include "Physics.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -189,6 +190,9 @@ bool Map::Load()
     {
         ret = LoadAllLayers(mapFileXML.child("map"));
     }
+    
+    // L07 TODO 3: Create colliders
+    // Later you can create a function here to load and create the colliders from the map
 
     if(ret == true)
     {

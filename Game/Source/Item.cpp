@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Point.h"
+#include "Physics.h"
 
 Item::Item() : Entity(EntityType::ITEM)
 {
@@ -28,12 +29,17 @@ bool Item::Start() {
 
 	//initilize textures
 	texture = app->tex->Load(texturePath);
+	
+	// L07 TODO 4: Add a physics to an item - initialize the physics body
+
 	return true;
 }
 
 bool Item::Update()
 {
+	// L07 TODO 4: Add a physics to an item - update the position of the object from the physics.  
 	app->render->DrawTexture(texture, position.x, position.y);
+
 	return true;
 }
 

@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Point.h"
+#include "Physics.h"
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -35,11 +36,16 @@ bool Player::Start() {
 
 	//initilize textures
 	texture = app->tex->Load(texturePath);
+
+	// L07 TODO 5: Add physics to the player - initialize physics body
+
 	return true;
 }
 
 bool Player::Update()
 {
+	// L07 TODO 5: Add physics to the player - updated player position using physics
+
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 		position.y -= 1;
