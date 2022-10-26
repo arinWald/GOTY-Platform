@@ -191,11 +191,11 @@ bool Map::Load()
         ret = LoadAllLayers(mapFileXML.child("map"));
     }
     
-    // L07 TODO 3: Create colliders
+    // L07 DONE 3: Create colliders
     // Later you can create a function here to load and create the colliders from the map
-    app->physics->CreateRectangle(224 + 256 / 2, 544 + 64 / 2, 256, 64, bodyType::STATIC);
-    app->physics->CreateRectangle(352 + 128/2, 384 + 64/2, 128, 64, bodyType::STATIC);
-    app->physics->CreateRectangle(256, 704 + 64 / 2, 576, 64, bodyType::STATIC);
+    app->physics->CreateRectangle(224 + 128, 543 + 32, 256, 64, STATIC);
+    app->physics->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
+    app->physics->CreateRectangle(256, 704 + 32, 576, 64, STATIC);
 
     if(ret == true)
     {
