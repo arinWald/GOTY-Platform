@@ -193,45 +193,50 @@ bool Map::Load()
     
     // L07 DONE 3: Create colliders
     // Later you can create a function here to load and create the colliders from the map
-    
-    app->physics->CreateRectangle(0 + 8, 320 + 8, 16, 16, STATIC);
-    
-    for (int i = 1; i <= 10; ++i)
-    {
-        app->physics->CreateRectangle(16*i + 8, 320 + 8, 16, 16, STATIC);
-    }
+    PhysBody* c1 = app->physics->CreateRectangle(224 + 128, 543 + 32, 256, 64, STATIC);
+    // L07 DONE 7: Assign collider type
+    c1->ctype = ColliderType::PLATFORM;
 
-    ListItem<MapLayer*>* mapLayerItem;
-    mapLayerItem = mapData.maplayers.start;
+    //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
-    while (mapLayerItem != NULL) {
+    //app->physics->CreateRectangle(0 + 8, 320 + 8, 16, 16, STATIC);
 
-        //L06: DONE 7: use GetProperty method to ask each layer if your “Draw” property is true.
-        if (mapLayerItem->data->properties.GetProperty("Draw") != NULL && mapLayerItem->data->properties.GetProperty("Draw")->value) {
+    //for (int i = 1; i <= 10; ++i)
+    //{
+    //    app->physics->CreateRectangle(16 * i + 8, 320 + 8, 16, 16, STATIC);
+    //}
 
-            for (int x = 0; x < mapLayerItem->data->width; x++)
-            {
-                for (int y = 0; y < mapLayerItem->data->height; y++)
-                {
-                    // L05: DONE 9: Complete the draw function
-                    int gid = mapLayerItem->data->Get(x, y);
+    //ListItem<MapLayer*>* mapLayerItem;
+    //mapLayerItem = mapData.maplayers.start;
 
-                    //L06: DONE 3: Obtain the tile set using GetTilesetFromTileId
-                    TileSet* tileset = GetTilesetFromTileId(gid);
+    //while (mapLayerItem != NULL) {
 
-                    SDL_Rect r = tileset->GetTileRect(gid);
-                    iPoint pos = MapToWorld(x, y);
+    //    //L06: DONE 7: use GetProperty method to ask each layer if your “Draw” property is true.
+    //    if (mapLayerItem->data->properties.GetProperty("Draw") != NULL && mapLayerItem->data->properties.GetProperty("Draw")->value) {
 
-                    app->render->DrawTexture(tileset->texture,
-                        pos.x,
-                        pos.y,
-                        &r);
-                }
-            }
-        }
-        mapLayerItem = mapLayerItem->next;
+    //        for (int x = 0; x < mapLayerItem->data->width; x++)
+    //        {
+    //            for (int y = 0; y < mapLayerItem->data->height; y++)
+    //            {
+    //                // L05: DONE 9: Complete the draw function
+    //                int gid = mapLayerItem->data->Get(x, y);
 
-    }
+    //                //L06: DONE 3: Obtain the tile set using GetTilesetFromTileId
+    //                TileSet* tileset = GetTilesetFromTileId(gid);
+
+    //                SDL_Rect r = tileset->GetTileRect(gid);
+    //                iPoint pos = MapToWorld(x, y);
+
+    //                app->render->DrawTexture(tileset->texture,
+    //                    pos.x,
+    //                    pos.y,
+    //                    &r);
+    //            }
+    //        }
+    //    }
+    //    mapLayerItem = mapLayerItem->next;
+
+    //}
 
     if(ret == true)
     {
