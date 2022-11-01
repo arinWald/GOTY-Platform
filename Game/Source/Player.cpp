@@ -27,6 +27,7 @@ bool Player::Awake() {
 	//L02: DONE 5: Get Player parameters from XML
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
+	speed = parameters.attribute("speed").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
 
 	return true;
@@ -56,8 +57,6 @@ bool Player::Update()
 {
 
 	// L07 DONE 5: Add physics to the player - updated player position using physics
-
-	int speed = 10; 
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y); 
 
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
