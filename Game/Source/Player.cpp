@@ -27,7 +27,7 @@ bool Player::Awake() {
 	//L02: DONE 5: Get Player parameters from XML
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
-	speed = parameters.attribute("speed").as_int();
+	//speed = parameters.attribute("speed").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
 
 	return true;
@@ -39,7 +39,7 @@ bool Player::Start() {
 	texture = app->tex->Load(texturePath);
 
 	// L07 DONE 5: Add physics to the player - initialize physics body
-	pbody = app->physics->CreateCircle(position.x+16, position.y+16, 16, bodyType::DYNAMIC);
+	pbody = app->physics->CreateCircle(position.x+16, position.y+16, 14, bodyType::DYNAMIC);
 
 	// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	pbody->listener = this; 
@@ -48,7 +48,7 @@ bool Player::Start() {
 	pbody->ctype = ColliderType::PLAYER;
 
 	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
-	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
+	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/coinPickup.ogg");
 
 	return true;
 }
@@ -57,16 +57,19 @@ bool Player::Update()
 {
 
 	// L07 DONE 5: Add physics to the player - updated player position using physics
-	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y); 
+
+	int speed = 10;
+	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
 		//
+		pbody->body->ApplyLinearImpulse(b2Vec2(0, -2), pbody->body->GetLocalCenter(), true);
 	}
 	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 		//
 	}
-		
+
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		vel = b2Vec2(-speed, -GRAVITY_Y);
 	}
@@ -82,7 +85,7 @@ bool Player::Update()
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
-	app->render->DrawTexture(texture, position.x , position.y);
+	app->render->DrawTexture(texture, position.x, position.y);
 
 	return true;
 }
