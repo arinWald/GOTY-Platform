@@ -36,6 +36,9 @@ private:
 	const char* texturePath;
 
 	int speed;
+	int jumpspeed;
+	bool ground;
+
 
 	// L07 DONE 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;

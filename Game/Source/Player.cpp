@@ -46,47 +46,65 @@ bool Player::Start() {
 
 	// L07 DONE 7: Assign collider type
 	pbody->ctype = ColliderType::PLAYER;
+	pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
 
 	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/coinPickup.ogg");
 
 	int timerPocho = 0;
-
-
+	jumpspeed = -4;
+	
 	return true;
 }
 
 bool Player::Update()
 {
-
+	ground = true;
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
-	int speed = 10;
+	int speed = 4;
+
+	
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
-	if (timerPocho > 0)
-	{
 
+	if (timerPocho > 0) {
 		timerPocho--;
-		vel = b2Vec2(0, -12);
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+			vel.x = speed;
+		}
+		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			vel.x = -speed;
+		}
+		
+			vel = b2Vec2(vel.x, jumpspeed);
+		
 	}
-
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN ) {
+	 if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && ground == true) {
 		//
-		timerPocho = 40;
+		 timerPocho = 20;
+		/*vel =  b2Vec2(vel.x,jumpspeed);*/
+		
+		
 	
 	}
-	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+	 
+	else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 		//
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		vel = b2Vec2(-speed, -GRAVITY_Y);
+	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+		vel =  b2Vec2(-speed, vel.y);
+	
+		
+	}
+	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+		vel = b2Vec2(speed, vel.y);
+		
+		
+
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		vel = b2Vec2(speed, -GRAVITY_Y);
-	}
 
 	//Set the velocity of the pbody of the player
 	pbody->body->SetLinearVelocity(vel);
@@ -118,6 +136,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::PLATFORM:
 			LOG("Collision PLATFORM");
+			
 			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
