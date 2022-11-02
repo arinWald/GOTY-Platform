@@ -22638,7 +22638,7 @@
    <tile/>
   </data>
  </layer>
- <layer id="6" name="Colliders" width="250" height="30" visible="0">
+ <layer id="6" name="Colliders" width="250" height="30">
   <properties>
    <property name="Collider" type="bool" value="true"/>
    <property name="Draw" type="bool" value="false"/>
@@ -29918,16 +29918,16 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="141"/>
+   <tile gid="141"/>
+   <tile gid="141"/>
+   <tile gid="141"/>
+   <tile gid="141"/>
+   <tile gid="141"/>
+   <tile gid="141"/>
+   <tile gid="141"/>
+   <tile gid="141"/>
+   <tile gid="141"/>
    <tile/>
    <tile/>
    <tile/>

@@ -215,14 +215,14 @@ bool Map::Load()
                     int gid = mapLayerItem->data->Get(x, y);
 
                     //If GID 301 == Red Square (collider)
-                    if (gid == 301)
+                    if (gid == 18)
                     {
                         iPoint pos = MapToWorld(x, y);
                         PhysBody* mapCollider = app->physics->CreateRectangle(pos.x + 8, pos.y + 8, 16, 16, STATIC);
                         mapCollider->ctype = ColliderType::PLATFORM;
                     }
                     //302 == Green Square (die)
-                    else if (gid == 302)
+                    else if (gid == 19)
                     {
                         iPoint pos = MapToWorld(x, y);
                         PhysBody* mapDeathCollider = app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
