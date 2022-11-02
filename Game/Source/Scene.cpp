@@ -44,8 +44,6 @@ bool Scene::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool Scene::Start()
 {
-	//img = app->tex->Load("Assets/Textures/test.png");
-	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
 	
 	// L03: DONE: Load map
 	app->map->Load();
@@ -93,8 +91,6 @@ bool Scene::Update(float dt)
 
 	if (player->position.x > 400 && player->position.x < 3382)
 		app->render->camera.x = -player->position.x + 400;
-
-	//app->render->DrawTexture(img, 380, 100); // Placeholder not needed any more
 
 	// Draw map
 	app->map->Draw();
