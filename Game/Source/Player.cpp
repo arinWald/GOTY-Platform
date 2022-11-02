@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
+#include "Map.h"
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -27,7 +28,7 @@ bool Player::Awake() {
 	//L02: DONE 5: Get Player parameters from XML
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
-	//speed = parameters.attribute("speed").as_int();
+	speed = parameters.attribute("speed").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
 
 	return true;
@@ -58,16 +59,15 @@ bool Player::Start() {
 
 bool Player::Update()
 {
-
+	printf("PositionX: %d PositionY: %d\n", position.x, position.y);
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
-	int speed = 10;
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 	if (timerPocho > 0)
 	{
 
 		timerPocho--;
-		vel = b2Vec2(0, -12);
+		vel = b2Vec2(0, GRAVITY_Y);
 	}
 
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
@@ -97,6 +97,7 @@ bool Player::Update()
 
 	app->render->DrawTexture(texture, position.x, position.y);
 
+
 	return true;
 }
 
@@ -118,6 +119,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::PLATFORM:
 			LOG("Collision PLATFORM");
+			break;
+		case ColliderType::DEATH:
+			LOG("Collision DEATH");
+			app->audio->PlayFx(pickCoinFxId);
 			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
