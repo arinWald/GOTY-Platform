@@ -50,6 +50,9 @@ bool Player::Start() {
 	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/coinPickup.ogg");
 
+	int timerPocho = 0;
+
+
 	return true;
 }
 
@@ -60,11 +63,18 @@ bool Player::Update()
 
 	int speed = 10;
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
+	if (timerPocho > 0)
+	{
+
+		timerPocho--;
+		vel = b2Vec2(0, -12);
+	}
 
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN ) {
 		//
-		pbody->body->ApplyLinearImpulse(b2Vec2(0, -2), pbody->body->GetLocalCenter(), true);
+		timerPocho = 40;
+	
 	}
 	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 		//
