@@ -218,15 +218,15 @@ bool Map::Load()
                     if (gid == 301)
                     {
                         iPoint pos = MapToWorld(x, y);
-
-                        app->physics->CreateRectangle(pos.x + 8, pos.y + 8, 16, 16, STATIC);
+                        PhysBody* mapCollider = app->physics->CreateRectangle(pos.x + 8, pos.y + 8, 16, 16, STATIC);
+                        mapCollider->ctype = ColliderType::PLATFORM;
                     }
                     //302 == Green Square (die)
                     else if (gid == 302)
                     {
                         iPoint pos = MapToWorld(x, y);
-
-                        app->physics->CreateRectangle(pos.x + 8, pos.y + 8, 16, 16, STATIC);
+                        PhysBody* mapDeathCollider = app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
+                        mapDeathCollider->ctype = ColliderType::DEATH;
                     }
                 }
             }
