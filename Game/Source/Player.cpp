@@ -53,7 +53,7 @@ bool Player::Start() {
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/coinPickup.ogg");
 
 	int timerPocho = 0;
-	jumpspeed = -4;
+	jumpspeed = -6;
 	
 	return true;
 }
@@ -64,7 +64,7 @@ bool Player::Update()
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
 	
-	//printf("PositionX: %d PositionY: %d\n", position.x, position.y);
+	printf("PositionX: %d PositionY: %d\n", position.x, position.y);
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
@@ -84,7 +84,7 @@ bool Player::Update()
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 	 if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && ground == true) {
 		//
-		 timerPocho = 20;
+		 timerPocho = 15;
 		/*vel =  b2Vec2(vel.x,jumpspeed);*/
 		
 		
@@ -143,7 +143,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::DEATH:
 			LOG("Collision DEATH");
-			//printf("Collision DEATH");
 			app->audio->PlayFx(pickCoinFxId);
 			break;
 		case ColliderType::UNKNOWN:

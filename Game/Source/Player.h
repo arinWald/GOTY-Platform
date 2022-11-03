@@ -44,6 +44,7 @@ private:
 	PhysBody* pbody;
 	int timerPocho;
 	int pickCoinFxId;
+
 };
 
 #endif // __PLAYER_H__
