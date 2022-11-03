@@ -3,6 +3,7 @@
 
 #include "Entity.h"
 #include "Point.h"
+#include "Animation.h"
 #include "SDL/include/SDL.h"
 #include "Animation.h"
 
@@ -33,8 +34,12 @@ public:
 private:
 
 	//L02: DONE 1: Declare player parameters
-	SDL_Texture* texture;
+	SDL_Texture* playerTexture;
 	const char* texturePath;
+
+	Animation* currentAnimation;
+	Animation rightRunAnimation;
+	Animation rightIdleAnimation;
 
 	int speed;
 	int jumpspeed;
@@ -47,6 +52,7 @@ private:
 	PhysBody* pbody;
 	int timerPocho;
 	int pickCoinFxId;
+	int jumpFxId;
 
 };
 

@@ -2,7 +2,7 @@
 #define __ANIMATION_H__
 
 #include "SDL/include/SDL_rect.h"
-#define MAX_FRAMES 128
+#define MAX_FRAMES 60
 
 class Animation
 {
@@ -16,6 +16,7 @@ public:
 
 private:
 	float currentFrame = 0.0f;
+	
 	int loopCount = 0;
 	int pingpongDirection = 1;
 
@@ -30,7 +31,7 @@ public:
 	{
 		currentFrame = 0;
 	}
-
+	
 	bool HasFinished()
 	{
 		return !loop && !pingpong && loopCount > 0;
@@ -56,8 +57,6 @@ public:
 			actualFrame = totalFrames - currentFrame;
 
 		return frames[actualFrame];
-
-
 	}
 };
 
