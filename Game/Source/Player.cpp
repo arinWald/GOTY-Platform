@@ -113,9 +113,6 @@ bool Player::Update()
 		 app->audio->PlayFx(jumpFxId);
 		 jumpsavailable--;
 		/*vel =  b2Vec2(vel.x,jumpspeed);*/
-		
-		
-	
 	}
 	 
 	else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
@@ -124,8 +121,6 @@ bool Player::Update()
 
 	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		vel =  b2Vec2(-speed, vel.y);
-	
-		
 	}
 	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		currentAnimation = &rightRunAnimation;
