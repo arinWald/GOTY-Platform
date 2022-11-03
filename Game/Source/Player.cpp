@@ -53,7 +53,7 @@ bool Player::Start() {
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/coinPickup.ogg");
 
 	int timerPocho = 0;
-	jumpspeed = -6;
+	jumpspeed = -4;
 	
 	return true;
 }
@@ -84,7 +84,7 @@ bool Player::Update()
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 	 if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && ground == true) {
 		//
-		 timerPocho = 15;
+		 timerPocho = 20;
 		/*vel =  b2Vec2(vel.x,jumpspeed);*/
 		
 		
