@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Point.h"
 #include "SDL/include/SDL.h"
+#include "Animation.h"
 
 struct SDL_Texture;
 
@@ -38,6 +39,8 @@ private:
 	int speed;
 	int jumpspeed;
 	bool ground;
+
+	Animation* currentAnimation = nullptr;
 
 
 	// L07 DONE 5: Add physics to the player - declare a Physics body
