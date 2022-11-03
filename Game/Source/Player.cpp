@@ -9,10 +9,15 @@
 #include "Point.h"
 #include "Physics.h"
 #include "Map.h"
+#include "Animation.h"
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name.Create("Player");
+
+	//Animation pushbacks
+	//leftRunAnimation.PushBack({},{},{},{});
+
 }
 
 Player::~Player() {
@@ -52,6 +57,8 @@ bool Player::Start() {
 	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/coinPickup.ogg");
 
+	currentAnimation = &leftRunAnimation;
+
 	int timerPocho = 0;
 	jumpspeed = -6;
 	
@@ -62,6 +69,8 @@ bool Player::Update()
 {
 	ground = true;
 	// L07 DONE 5: Add physics to the player - updated player position using physics
+
+	currentAnimation->Update();
 
 	
 	printf("PositionX: %d PositionY: %d\n", position.x, position.y);
@@ -116,6 +125,10 @@ bool Player::Update()
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 	app->render->DrawTexture(texture, position.x, position.y);
+
+	//SDL_Rect rect = currentAnimation->GetCurrentFrame();
+
+	//app->render->DrawTexture(playerTexture, position.x, position.y, &rect);
 
 
 	return true;
