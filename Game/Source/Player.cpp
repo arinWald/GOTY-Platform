@@ -16,7 +16,20 @@ Player::Player() : Entity(EntityType::PLAYER)
 	name.Create("Player");
 
 	//Animation pushbacks
-	//leftRunAnimation.PushBack({},{},{},{});
+	
+	for (int i = 0; i < 11; ++i)
+	{
+		rightIdleAnimation.PushBack({ 32*i, 32, 32, 32});
+	}
+	rightIdleAnimation.loop;
+	rightIdleAnimation.speed = 0.3f;
+
+	for (int i = 0; i < 11; ++i)
+	{
+		rightRunAnimation.PushBack({ 32 * i, 64, 32, 32 });
+	}
+	rightRunAnimation.loop;
+	rightRunAnimation.speed = 0.3f;
 
 }
 
@@ -42,7 +55,7 @@ bool Player::Awake() {
 bool Player::Start() {
 
 	//initilize textures
-	texture = app->tex->Load(texturePath);
+	playerTexture = app->tex->Load(texturePath);
 
 	// L07 DONE 5: Add physics to the player - initialize physics body
 	pbody = app->physics->CreateCircle(position.x+16, position.y+16, 14, bodyType::DYNAMIC);
@@ -57,7 +70,7 @@ bool Player::Start() {
 	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/coinPickup.ogg");
 
-	currentAnimation = &leftRunAnimation;
+	currentAnimation = &rightIdleAnimation;
 
 	int timerPocho = 0;
 	jumpspeed = -6;
@@ -110,11 +123,10 @@ bool Player::Update()
 		
 	}
 	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+		currentAnimation = &rightRunAnimation;
 		vel = b2Vec2(speed, vel.y);
-		
-		
-
 	}
+	else currentAnimation = &rightIdleAnimation;
 
 
 	//Set the velocity of the pbody of the player
@@ -124,11 +136,11 @@ bool Player::Update()
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
-	app->render->DrawTexture(texture, position.x, position.y);
+	//app->render->DrawTexture(texture, position.x, position.y);
 
-	//SDL_Rect rect = currentAnimation->GetCurrentFrame();
+	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 
-	//app->render->DrawTexture(playerTexture, position.x, position.y, &rect);
+	app->render->DrawTexture(playerTexture, position.x, position.y, &rect);
 
 
 	return true;

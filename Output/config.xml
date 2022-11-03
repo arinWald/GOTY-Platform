@@ -23,7 +23,7 @@
 
   <!-- L02: DONE: Add an element for the entity manager and add the player parameters -->
   <scene>
-    <player x="30" y="270" speed="4" texturepath="Assets/Textures/player1.png"/>
+    <player x="30" y="270" speed="4" texturepath="Assets/Textures/Player/playerSpriteSheet.png"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/>
   </scene>
 

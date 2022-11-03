@@ -33,11 +33,12 @@ public:
 private:
 
 	//L02: DONE 1: Declare player parameters
-	SDL_Texture* texture;
+	SDL_Texture* playerTexture;
 	const char* texturePath;
 
 	Animation* currentAnimation;
-	Animation leftRunAnimation;
+	Animation rightRunAnimation;
+	Animation rightIdleAnimation;
 
 	int speed;
 	int jumpspeed;
