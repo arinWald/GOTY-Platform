@@ -49,6 +49,7 @@ private:
 	PhysBody* pbody;
 	int timerPocho;
 	int pickCoinFxId;
+	int jumpFxId;
 
 };
 

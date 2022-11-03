@@ -69,6 +69,7 @@ bool Player::Start() {
 
 	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/coinPickup.ogg");
+	jumpFxId = app->audio->LoadFx("Assets/Audio/Fx/jump.wav");
 
 	currentAnimation = &rightIdleAnimation;
 
@@ -107,6 +108,7 @@ bool Player::Update()
 	 if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && ground == true) {
 		//
 		 timerPocho = 15;
+		 app->audio->PlayFx(jumpFxId);
 		/*vel =  b2Vec2(vel.x,jumpspeed);*/
 		
 		
