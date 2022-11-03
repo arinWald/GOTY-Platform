@@ -64,7 +64,7 @@ bool Player::Update()
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
 	
-	//printf("PositionX: %d PositionY: %d\n", position.x, position.y);
+	printf("PositionX: %d PositionY: %d\n", position.x, position.y);
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
@@ -143,7 +143,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::DEATH:
 			LOG("Collision DEATH");
-			//printf("Collision DEATH");
+			printf("Collision DEATH");
 			app->audio->PlayFx(pickCoinFxId);
 			break;
 		case ColliderType::UNKNOWN:
