@@ -15135,6 +15135,9 @@
   </data>
  </layer>
  <layer id="10" name="Obstacles" width="250" height="30">
+  <properties>
+   <property name="Draw" type="bool" value="true"/>
+  </properties>
   <data>
    <tile/>
    <tile/>
