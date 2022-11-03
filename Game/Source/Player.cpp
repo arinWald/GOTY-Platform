@@ -55,12 +55,13 @@ bool Player::Start() {
 	int timerPocho = 0;
 	jumpspeed = -6;
 	
+	
 	return true;
 }
 
 bool Player::Update()
 {
-	ground = true;
+	
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
 	
@@ -116,7 +117,7 @@ bool Player::Update()
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 	app->render->DrawTexture(texture, position.x, position.y);
-
+	
 
 	return true;
 }
@@ -138,6 +139,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			app->audio->PlayFx(pickCoinFxId);
 			break;
 		case ColliderType::PLATFORM:
+			ground = true;
 			LOG("Collision PLATFORM");
 			
 			break;
@@ -148,6 +150,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
 			break;
+		
+		default:
+			ground = false;
+				
 	}
 	
 
