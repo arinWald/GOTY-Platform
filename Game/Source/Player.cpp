@@ -75,8 +75,8 @@ bool Player::Start() {
 	currentAnimation = &rightIdleAnimation;
 
 	int timerPocho = 0;
-	jumpspeed = -6;
-	
+	jumpspeed = -5.5;
+	jumpsavailable = 2;
 	
 	return true;
 }
@@ -107,10 +107,11 @@ bool Player::Update()
 		
 	}
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-	 if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && ground == true) {
+	 if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable >0) {
 		//
 		 timerPocho = 15;
 		 app->audio->PlayFx(jumpFxId);
+		 jumpsavailable--;
 		/*vel =  b2Vec2(vel.x,jumpspeed);*/
 		
 		
@@ -155,11 +156,13 @@ bool Player::CleanUp()
 	return true;
 }
 
+
+
 // L07 DONE 6: Define OnCollision function for the player. Check the virtual function on Entity class
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	// L07 DONE 7: Detect the type of collision
-
+	
 	switch (physB->ctype)
 	{
 		case ColliderType::ITEM:
@@ -168,6 +171,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::PLATFORM:
 			ground = true;
+			jumpsavailable = 2;
 			LOG("Collision PLATFORM");
 			
 			break;
