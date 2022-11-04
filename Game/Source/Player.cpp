@@ -10,6 +10,9 @@
 #include "Physics.h"
 #include "Map.h"
 #include "Animation.h"
+#include "EntityManager.h"
+#include <iostream>
+using namespace std;
 
 
 Player::Player() : Entity(EntityType::PLAYER)
@@ -77,6 +80,8 @@ bool Player::Start() {
 	int timerPocho = 0;
 	jumpspeed = -5.5;
 	jumpsavailable = 2;
+
+	transformPosition teleport;
 	
 	return true;
 }
@@ -136,6 +141,15 @@ bool Player::Update()
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
+	//PLAYER TELEPORT
+	if (teleport.turn == true)
+	{
+		b2Vec2 resetPos = b2Vec2(PIXEL_TO_METERS(teleport.posX), PIXEL_TO_METERS(teleport.posY));
+		pbody->body->SetTransform(resetPos, 0);
+
+		teleport.turn = false;
+	}
+
 	//app->render->DrawTexture(texture, position.x, position.y);
 
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
@@ -173,6 +187,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		case ColliderType::DEATH:
 			LOG("Collision DEATH");
 			app->audio->PlayFx(pickCoinFxId);
+			//resetPos = b2Vec2(PIXEL_TO_METERS(150), PIXEL_TO_METERS(672));
+			//pbody->body->SetTransform({PIXEL_TO_METERS(resetPos.x), PIXEL_TO_METERS(resetPos.y)}, 0);
+			ChangePosition(30, 270);
+			
 			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
@@ -181,8 +199,13 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			
 				
 	}
-	
+}
 
+void Player::ChangePosition(int x, int y)
+{
 
+	teleport.posX = x;
+	teleport.posY = y;
+	teleport.turn = true;
 
 }

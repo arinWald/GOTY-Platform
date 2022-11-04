@@ -9,6 +9,13 @@
 
 struct SDL_Texture;
 
+struct transformPosition {
+	float posX;
+	float posY;
+	bool turn;
+
+};
+
 class Player : public Entity
 {
 public:
@@ -28,10 +35,10 @@ public:
 	// L07 DONE 6: Define OnCollision function for the player. Check the virtual function on Entity class
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
+	void Player::ChangePosition(int x, int y);
+
 
 public:
-
-private:
 
 	//L02: DONE 1: Declare player parameters
 	SDL_Texture* playerTexture;
@@ -51,6 +58,12 @@ private:
 	int timerPocho;
 	int pickCoinFxId;
 	int jumpFxId;
+
+	transformPosition teleport;
+
+private:
+
+
 
 };
 

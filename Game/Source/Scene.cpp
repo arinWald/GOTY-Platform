@@ -93,6 +93,10 @@ bool Scene::Update(float dt)
 
 	if (player->position.x > 400 && player->position.x < 3382)
 		app->render->camera.x = -player->position.x + 400;
+	else if (player->position.x < 400)
+	{
+		app->render->camera.x = 0;
+	}
 
 	//app->render->DrawTexture(img, 380, 100); // Placeholder not needed any more
 
