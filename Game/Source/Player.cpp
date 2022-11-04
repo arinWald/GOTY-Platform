@@ -10,6 +10,10 @@
 #include "Physics.h"
 #include "Map.h"
 #include "Animation.h"
+#include "EntityManager.h"
+#include "Window.h"
+#include <iostream>
+using namespace std;
 
 
 Player::Player() : Entity(EntityType::PLAYER)
@@ -81,6 +85,9 @@ bool Player::Awake() {
 	position.y = parameters.attribute("y").as_int();
 	speed = parameters.attribute("speed").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
+	jumpFxPath = parameters.attribute("jumpfxpath").as_string();
+	deathFxPath = parameters.attribute("deathfxpath").as_string();
+	level1SongPath = parameters.attribute("level1songpath").as_string();
 
 	return true;
 }
@@ -101,15 +108,22 @@ bool Player::Start() {
 	pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
 
 	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
-	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/coinPickup.ogg");
-	jumpFxId = app->audio->LoadFx("Assets/Audio/Fx/jump.wav");
+	deathFxId = app->audio->LoadFx(deathFxPath);
+	jumpFxId = app->audio->LoadFx(jumpFxPath);
+
+	app->audio->PlayMusic(level1SongPath, 0);
 
 	currentAnimation = &rightIdleAnimation;
 
 	timerJump = 0;
 	jumpspeed = -5.5;
 	jumpsavailable = 2;
+
 	LastDir = 1;
+
+
+	transformPosition teleport;
+
 	
 	return true;
 }
@@ -200,12 +214,20 @@ bool Player::Update()
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
+	//PLAYER TELEPORT
+	if (teleport.turn == true)
+	{
+		b2Vec2 resetPos = b2Vec2(PIXEL_TO_METERS(teleport.posX), PIXEL_TO_METERS(teleport.posY));
+		pbody->body->SetTransform(resetPos, 0);
+
+		teleport.turn = false;
+	}
+
 	//app->render->DrawTexture(texture, position.x, position.y);
 
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 
 	app->render->DrawTexture(playerTexture, position.x, position.y, &rect);
-
 
 	return true;
 }
@@ -226,7 +248,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	{
 		case ColliderType::ITEM:
 			LOG("Collision ITEM");
-			app->audio->PlayFx(pickCoinFxId);
+			app->audio->PlayFx(deathFxId);
 			break;
 		case ColliderType::PLATFORM:
 			ground = true;
@@ -238,7 +260,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::DEATH:
 			LOG("Collision DEATH");
-			app->audio->PlayFx(pickCoinFxId);
+			app->audio->PlayFx(deathFxId);
+			//resetPos = b2Vec2(PIXEL_TO_METERS(150), PIXEL_TO_METERS(672));
+			//pbody->body->SetTransform({PIXEL_TO_METERS(resetPos.x), PIXEL_TO_METERS(resetPos.y)}, 0);
+			ChangePosition(30, 270);
+			
 			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
@@ -247,8 +273,13 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			
 				
 	}
-	
+}
 
+void Player::ChangePosition(int x, int y)
+{
 
+	teleport.posX = x;
+	teleport.posY = y;
+	teleport.turn = true;
 
 }

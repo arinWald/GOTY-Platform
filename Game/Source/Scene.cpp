@@ -60,6 +60,8 @@ bool Scene::Start()
 
 	app->win->SetTitle(title.GetString());
 
+
+
 	return true;
 }
 
@@ -91,8 +93,13 @@ bool Scene::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		app->render->camera.x -= 3;
 
+	//CAMERA FOLLOW
 	if (player->position.x > 400 && player->position.x < 3382)
 		app->render->camera.x = -player->position.x + 400;
+	else if (player->position.x < 400)
+	{
+		app->render->camera.x = 0;
+	}
 
 	//app->render->DrawTexture(img, 380, 100); // Placeholder not needed any more
 
@@ -117,6 +124,23 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
+
+	return true;
+}
+
+bool Scene::LoadState(pugi::xml_node& data)
+{
+	player->ChangePosition(data.child("player").attribute("x").as_int() , data.child("player").attribute("y").as_int());
+
+	return true;
+}
+
+bool Scene::SaveState(pugi::xml_node& data)
+{
+	pugi::xml_node playerNode = data.append_child("player");
+
+	playerNode.append_attribute("x") = player->position.x;
+	playerNode.append_attribute("y") = player->position.y;
 
 	return true;
 }
