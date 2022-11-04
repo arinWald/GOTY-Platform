@@ -55,6 +55,7 @@ bool Player::Awake() {
 	texturePath = parameters.attribute("texturepath").as_string();
 	jumpFxPath = parameters.attribute("jumpfxpath").as_string();
 	deathFxPath = parameters.attribute("deathfxpath").as_string();
+	level1SongPath = parameters.attribute("level1songpath").as_string();
 
 	return true;
 }
@@ -77,6 +78,8 @@ bool Player::Start() {
 	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
 	deathFxId = app->audio->LoadFx(deathFxPath);
 	jumpFxId = app->audio->LoadFx(jumpFxPath);
+
+	app->audio->PlayMusic(level1SongPath, 0);
 
 	currentAnimation = &rightIdleAnimation;
 

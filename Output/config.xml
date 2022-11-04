@@ -25,7 +25,8 @@
   <scene>
     <player x="30" y="270" speed="4" texturepath="Assets/Textures/Player/playerSpriteSheet.png" 
 			jumpfxpath="Assets/Audio/Fx/jump.wav"
-			deathfxpath="Assets/Audio/Fx/hitHurt.wav"/>
+			deathfxpath="Assets/Audio/Fx/hitHurt.wav"
+			level1songpath="Assets/Audio/Music/level1Song.ogg"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png" 
 		  coinfxpath="Assets/Audio/Fx/coinPickup.ogg"/>
   </scene>

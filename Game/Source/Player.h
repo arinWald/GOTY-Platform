@@ -46,6 +46,7 @@ public:
 	const char* texturePath;
 	const char* deathFxPath;
 	const char* jumpFxPath;
+	const char* level1SongPath;
 
 	Animation* currentAnimation;
 	Animation rightRunAnimation;
@@ -61,6 +62,7 @@ public:
 	int timerPocho;
 	int deathFxId;
 	int jumpFxId;
+
 
 	transformPosition teleport;
 
