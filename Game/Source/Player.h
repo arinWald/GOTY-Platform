@@ -40,6 +40,15 @@ private:
 	Animation* currentAnimation;
 	Animation rightRunAnimation;
 	Animation rightIdleAnimation;
+	Animation rightJumpAnimation;
+	Animation rightFallAnimation;
+	Animation rightDoubleJumpAnimation;
+
+	Animation leftRunAnimation;
+	Animation leftIdleAnimation;
+	Animation leftJumpAnimation;
+	Animation leftFallAnimation;
+	Animation leftDoubleJumpAnimation;
 
 	int speed;
 	int jumpspeed;
@@ -48,9 +57,10 @@ private:
 
 	// L07 DONE 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
-	int timerPocho;
+	int timerJump;
 	int pickCoinFxId;
 	int jumpFxId;
+	int LastDir;
 
 };
 

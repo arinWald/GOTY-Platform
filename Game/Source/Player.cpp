@@ -27,10 +27,42 @@ Player::Player() : Entity(EntityType::PLAYER)
 
 	for (int i = 0; i < 11; ++i)
 	{
-		rightRunAnimation.PushBack({ 32 * i, 64, 32, 32 });
+		rightRunAnimation.PushBack({ 32 * i, 64, 31, 32 });
 	}
 	rightRunAnimation.loop;
 	rightRunAnimation.speed = 0.3f;
+
+	rightJumpAnimation.PushBack({ 352, 32, 32, 32 });
+
+	for (int i = 0; i < 6; ++i)
+	{
+		rightDoubleJumpAnimation.PushBack({ 32 * i, 0, 32, 32 });
+	}
+	rightDoubleJumpAnimation.loop;
+	rightDoubleJumpAnimation.speed = 0.3f;
+
+	for (int i = 0; i < 11; ++i)
+	{
+		leftIdleAnimation.PushBack({ 409-(32 * i), 133, 32, 32 });
+	}
+	leftIdleAnimation.loop;
+	leftIdleAnimation.speed = 0.3f;
+
+	for (int i = 0; i < 11; ++i)
+	{
+		leftRunAnimation.PushBack({ 410-(32 * i), 161, 31, 32 });
+	}
+	leftRunAnimation.loop;
+	leftRunAnimation.speed = 0.3f;
+
+	leftJumpAnimation.PushBack({ 66, 133, 32, 32 });
+
+	for (int i = 0; i < 6; ++i)
+	{
+		leftDoubleJumpAnimation.PushBack({ 409 - (i*32), 99, 32, 32 });
+	}
+	leftDoubleJumpAnimation.loop;
+	leftDoubleJumpAnimation.speed = 0.3f;
 
 }
 
@@ -74,9 +106,10 @@ bool Player::Start() {
 
 	currentAnimation = &rightIdleAnimation;
 
-	int timerPocho = 0;
+	timerJump = 0;
 	jumpspeed = -5.5;
 	jumpsavailable = 2;
+	LastDir = 1;
 	
 	return true;
 }
@@ -93,15 +126,43 @@ bool Player::Update()
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
+	if (LastDir == 1) {
+		currentAnimation = &rightIdleAnimation;
+	}
+	else {
+		currentAnimation = &leftIdleAnimation;
+	}
 
-	if (timerPocho > 0) {
-		timerPocho--;
+	if (timerJump > 0) {
+		timerJump--;
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 			vel.x = speed;
+			LastDir = 1;
+			
 		}
 		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			
+			
 			vel.x = -speed;
+			LastDir = 2;
 		}
+
+		 if (jumpsavailable == 1) {
+			if (LastDir == 1) {
+				currentAnimation = &rightJumpAnimation;
+			}
+			if (LastDir == 2) {
+				currentAnimation = &leftJumpAnimation;
+			}
+		}
+		else if (jumpsavailable == 0) {
+			 if (LastDir == 1) {
+				 currentAnimation = &rightDoubleJumpAnimation;
+			 }
+			 if (LastDir == 2) {
+				 currentAnimation = &leftDoubleJumpAnimation;
+			 }
+	    }
 		
 			vel = b2Vec2(vel.x, jumpspeed);
 		
@@ -109,7 +170,7 @@ bool Player::Update()
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 	 if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable >0) {
 		//
-		 timerPocho = 15;
+		 timerJump = 15;
 		 app->audio->PlayFx(jumpFxId);
 		 jumpsavailable--;
 		/*vel =  b2Vec2(vel.x,jumpspeed);*/
@@ -119,14 +180,17 @@ bool Player::Update()
 		//
 	}
 
-	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
 		vel =  b2Vec2(-speed, vel.y);
+		currentAnimation = &leftRunAnimation;
+		LastDir = 2;
 	}
-	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump ==0) {
 		currentAnimation = &rightRunAnimation;
+		LastDir = 1;
 		vel = b2Vec2(speed, vel.y);
 	}
-	else currentAnimation = &rightIdleAnimation;
+	 
 
 
 	//Set the velocity of the pbody of the player
@@ -166,7 +230,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::PLATFORM:
 			ground = true;
+			if (timerJump > 0) { timerJump = 0; }
 			jumpsavailable = 2;
+			
 			LOG("Collision PLATFORM");
 			
 			break;
