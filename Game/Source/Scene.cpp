@@ -60,6 +60,8 @@ bool Scene::Start()
 
 	app->win->SetTitle(title.GetString());
 
+
+
 	return true;
 }
 
@@ -122,6 +124,23 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
+
+	return true;
+}
+
+bool Scene::LoadState(pugi::xml_node& data)
+{
+	player->ChangePosition(data.child("player").attribute("x").as_int() , data.child("player").attribute("y").as_int());
+
+	return true;
+}
+
+bool Scene::SaveState(pugi::xml_node& data)
+{
+	pugi::xml_node playerNode = data.append_child("player");
+
+	playerNode.append_attribute("x") = player->position.x;
+	playerNode.append_attribute("y") = player->position.y;
 
 	return true;
 }

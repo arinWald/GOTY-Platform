@@ -53,6 +53,8 @@ bool Player::Awake() {
 	position.y = parameters.attribute("y").as_int();
 	speed = parameters.attribute("speed").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
+	jumpFxPath = parameters.attribute("jumpfxpath").as_string();
+	deathFxPath = parameters.attribute("deathfxpath").as_string();
 
 	return true;
 }
@@ -73,8 +75,8 @@ bool Player::Start() {
 	pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
 
 	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
-	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/coinPickup.ogg");
-	jumpFxId = app->audio->LoadFx("Assets/Audio/Fx/jump.wav");
+	deathFxId = app->audio->LoadFx(deathFxPath);
+	jumpFxId = app->audio->LoadFx(jumpFxPath);
 
 	currentAnimation = &rightIdleAnimation;
 
@@ -176,7 +178,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	{
 		case ColliderType::ITEM:
 			LOG("Collision ITEM");
-			app->audio->PlayFx(pickCoinFxId);
+			app->audio->PlayFx(deathFxId);
 			break;
 		case ColliderType::PLATFORM:
 			ground = true;
@@ -186,7 +188,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::DEATH:
 			LOG("Collision DEATH");
-			app->audio->PlayFx(pickCoinFxId);
+			app->audio->PlayFx(deathFxId);
 			//resetPos = b2Vec2(PIXEL_TO_METERS(150), PIXEL_TO_METERS(672));
 			//pbody->body->SetTransform({PIXEL_TO_METERS(resetPos.x), PIXEL_TO_METERS(resetPos.y)}, 0);
 			ChangePosition(30, 270);

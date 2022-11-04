@@ -44,6 +44,8 @@ public:
 	//L02: DONE 1: Declare player parameters
 	SDL_Texture* playerTexture;
 	const char* texturePath;
+	const char* deathFxPath;
+	const char* jumpFxPath;
 
 	Animation* currentAnimation;
 	Animation rightRunAnimation;
@@ -57,7 +59,7 @@ public:
 	// L07 DONE 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
 	int timerPocho;
-	int pickCoinFxId;
+	int deathFxId;
 	int jumpFxId;
 
 	transformPosition teleport;
