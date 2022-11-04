@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Point.h"
 #include "Animation.h"
+#include "Physics.h"
 #include "SDL/include/SDL.h"
 #include "Animation.h"
 

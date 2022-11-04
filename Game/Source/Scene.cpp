@@ -91,6 +91,7 @@ bool Scene::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		app->render->camera.x -= 3;
 
+	//CAMERA FOLLOW
 	if (player->position.x > 400 && player->position.x < 3382)
 		app->render->camera.x = -player->position.x + 400;
 	else if (player->position.x < 400)

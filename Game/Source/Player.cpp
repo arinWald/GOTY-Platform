@@ -11,6 +11,7 @@
 #include "Map.h"
 #include "Animation.h"
 #include "EntityManager.h"
+#include "Window.h"
 #include <iostream>
 using namespace std;
 
@@ -155,7 +156,6 @@ bool Player::Update()
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 
 	app->render->DrawTexture(playerTexture, position.x, position.y, &rect);
-
 
 	return true;
 }
