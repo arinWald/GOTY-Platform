@@ -60,7 +60,7 @@ Player::Player() : Entity(EntityType::PLAYER)
 		leftRunAnimation.loop;
 		leftRunAnimation.speed = 0.3f;
 
-		leftJumpAnimation.PushBack({ 66, 133, 32, 32 });
+		leftJumpAnimation.PushBack({ 58, 133, 32, 32 });
 
 		for (int i = 0; i < 6; ++i)
 		{
