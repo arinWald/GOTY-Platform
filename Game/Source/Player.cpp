@@ -24,19 +24,19 @@ Player::Player() : Entity(EntityType::PLAYER)
 	
 	for (int i = 0; i < 11; ++i)
 	{
-		rightIdleAnimation.PushBack({ 32*i, 32, 32, 32});
+		rightIdleAnimation.PushBack({ 32*i, 31, 32, 32});
 	}
 	rightIdleAnimation.loop;
 	rightIdleAnimation.speed = 0.3f;
 
 	for (int i = 0; i < 11; ++i)
 	{
-		rightRunAnimation.PushBack({ 32 * i, 64, 31, 32 });
+		rightRunAnimation.PushBack({ 32 * i, 62, 31, 32 });
 	}
 	rightRunAnimation.loop;
 	rightRunAnimation.speed = 0.3f;
 
-	rightJumpAnimation.PushBack({ 352, 32, 32, 32 });
+	rightJumpAnimation.PushBack({ 352, 31, 32, 32 });
 
 	for (int i = 0; i < 6; ++i)
 	{
@@ -47,7 +47,7 @@ Player::Player() : Entity(EntityType::PLAYER)
 
 	for (int i = 0; i < 11; ++i)
 	{
-		leftIdleAnimation.PushBack({ 409-(32 * i), 133, 32, 32 });
+		leftIdleAnimation.PushBack({ 409-(32 * i), 130, 32, 32 });
 	}
 	leftIdleAnimation.loop;
 	leftIdleAnimation.speed = 0.3f;
