@@ -61,6 +61,8 @@ public:
 	SDL_Texture* intro;
 	const char* introtexturePath;
 
+	SDL_Texture* game_over;
+	const char* game_over_texturePath;
 
 	Animation* screenDisplayAnim;
 private:

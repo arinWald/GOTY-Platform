@@ -23,12 +23,14 @@
 
   <!-- L02: DONE: Add an element for the entity manager and add the player parameters -->
   <scene>
-    <player x="30" y="270" speed="4" texturepath="Assets/Textures/Player/playerSpriteSheet.png" 
+    <player x="30" y="270" speed="4" jumpspeed ="-5.5" lives="3" texturepath="Assets/Textures/Player/playerSpriteSheet.png" 
 			jumpfxpath="Assets/Audio/Fx/jump.wav"
 			deathfxpath="Assets/Audio/Fx/hitHurt.wav"
 			level1songpath="Assets/Audio/Music/level1Song.ogg"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png" 
 		  coinfxpath="Assets/Audio/Fx/coinPickup.ogg"/>
+    <intro texturepath ="Assets/Textures/Scenas/Intro.png"/> 
+    <game_over texturepath ="Assets/Textures/Scenas/Game over.png"/> 
   </scene>
 
   <map>
