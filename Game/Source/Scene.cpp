@@ -58,7 +58,7 @@ bool Scene::Start()
 
 
 	// L04: DONE 7: Set the window title with map/tileset info
-	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
+	SString title("Peepee's Adventure - Map:%dx%d Tiles:%dx%d Tilesets:%d",
 		app->map->mapData.width,
 		app->map->mapData.height,
 		app->map->mapData.tileWidth,
@@ -70,6 +70,7 @@ bool Scene::Start()
 	
 
 	intro = app->tex->Load(introtexturePath);
+	game_over = app->tex->Load(game_over_texturePath);
 
 	return true;
 }
@@ -88,6 +89,11 @@ bool Scene::Update(float dt)
 	{
 		FadeToNewState(TITLE_SCREEN);
 	}
+	/*if (app->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN && gameplayState == PLAYING)
+	{
+		FadeToNewState(GAME_OVER_SCREEN);
+	}*/
+
 	if (gameplayState == TITLE_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 	{
 		app->scene->FadeToNewState(PLAYING);
@@ -227,6 +233,7 @@ bool Scene::PostUpdate()
 		app->render->DrawTexture(game_over, 0, 0);
 
 	}
+
 	return ret;
 }
 
