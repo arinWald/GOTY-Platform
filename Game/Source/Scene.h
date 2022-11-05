@@ -11,6 +11,17 @@ class Scene : public Module
 {
 public:
 
+	enum GameplayState
+	{
+		TITLE_SCREEN,
+		PLAYING,
+		GAME_OVER_SCREEN,
+		LOGO_SCREEN,
+	};
+
+
+
+
 	Scene();
 
 	// Destructor
@@ -37,14 +48,25 @@ public:
 	bool LoadState(pugi::xml_node&);
 	bool SaveState(pugi::xml_node&);
 
+	void ChangeGameplayState(GameplayState newState);
+	void FadeToNewState(GameplayState newState);
+
 public:
 
 	//L02: DONE 3: Declare a Player attribute 
 	Player* player;
 
+	GameplayState gameplayState = TITLE_SCREEN;
+	bool fading = false;
+	SDL_Texture* intro;
+	const char* introtexturePath;
+
+
+	Animation* screenDisplayAnim;
 private:
 	SDL_Texture* img;
-
+	float currentFade = 0.0f;
+	GameplayState targetState = gameplayState;
 };
 
 #endif // __SCENE_H__

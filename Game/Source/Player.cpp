@@ -18,56 +18,57 @@ using namespace std;
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
-	name.Create("Player");
+	if (app->scene->gameplayState == app->scene->PLAYING) {
+		name.Create("Player");
 
-	//Animation pushbacks
-	
-	for (int i = 0; i < 11; ++i)
-	{
-		rightIdleAnimation.PushBack({ 32*i, 31, 32, 32});
+		//Animation pushbacks
+
+		for (int i = 0; i < 11; ++i)
+		{
+			rightIdleAnimation.PushBack({ 32 * i, 31, 32, 32 });
+		}
+		rightIdleAnimation.loop;
+		rightIdleAnimation.speed = 0.3f;
+
+		for (int i = 0; i < 11; ++i)
+		{
+			rightRunAnimation.PushBack({ 32 * i, 62, 31, 32 });
+		}
+		rightRunAnimation.loop;
+		rightRunAnimation.speed = 0.3f;
+
+		rightJumpAnimation.PushBack({ 352, 31, 32, 32 });
+
+		for (int i = 0; i < 6; ++i)
+		{
+			rightDoubleJumpAnimation.PushBack({ 32 * i, 0, 32, 32 });
+		}
+		rightDoubleJumpAnimation.loop;
+		rightDoubleJumpAnimation.speed = 0.3f;
+
+		for (int i = 0; i < 11; ++i)
+		{
+			leftIdleAnimation.PushBack({ 409 - (32 * i), 130, 32, 32 });
+		}
+		leftIdleAnimation.loop;
+		leftIdleAnimation.speed = 0.3f;
+
+		for (int i = 0; i < 11; ++i)
+		{
+			leftRunAnimation.PushBack({ 410 - (32 * i), 161, 31, 32 });
+		}
+		leftRunAnimation.loop;
+		leftRunAnimation.speed = 0.3f;
+
+		leftJumpAnimation.PushBack({ 66, 133, 32, 32 });
+
+		for (int i = 0; i < 6; ++i)
+		{
+			leftDoubleJumpAnimation.PushBack({ 409 - (i * 32), 99, 32, 32 });
+		}
+		leftDoubleJumpAnimation.loop;
+		leftDoubleJumpAnimation.speed = 0.3f;
 	}
-	rightIdleAnimation.loop;
-	rightIdleAnimation.speed = 0.3f;
-
-	for (int i = 0; i < 11; ++i)
-	{
-		rightRunAnimation.PushBack({ 32 * i, 62, 31, 32 });
-	}
-	rightRunAnimation.loop;
-	rightRunAnimation.speed = 0.3f;
-
-	rightJumpAnimation.PushBack({ 352, 31, 32, 32 });
-
-	for (int i = 0; i < 6; ++i)
-	{
-		rightDoubleJumpAnimation.PushBack({ 32 * i, 0, 32, 32 });
-	}
-	rightDoubleJumpAnimation.loop;
-	rightDoubleJumpAnimation.speed = 0.3f;
-
-	for (int i = 0; i < 11; ++i)
-	{
-		leftIdleAnimation.PushBack({ 409-(32 * i), 130, 32, 32 });
-	}
-	leftIdleAnimation.loop;
-	leftIdleAnimation.speed = 0.3f;
-
-	for (int i = 0; i < 11; ++i)
-	{
-		leftRunAnimation.PushBack({ 410-(32 * i), 161, 31, 32 });
-	}
-	leftRunAnimation.loop;
-	leftRunAnimation.speed = 0.3f;
-
-	leftJumpAnimation.PushBack({ 66, 133, 32, 32 });
-
-	for (int i = 0; i < 6; ++i)
-	{
-		leftDoubleJumpAnimation.PushBack({ 409 - (i*32), 99, 32, 32 });
-	}
-	leftDoubleJumpAnimation.loop;
-	leftDoubleJumpAnimation.speed = 0.3f;
-
 }
 
 Player::~Player() {
@@ -95,37 +96,39 @@ bool Player::Awake() {
 bool Player::Start() {
 
 	//initilize textures
-	playerTexture = app->tex->Load(texturePath);
+	
+		playerTexture = app->tex->Load(texturePath);
 
-	// L07 DONE 5: Add physics to the player - initialize physics body
-	pbody = app->physics->CreateCircle(position.x+16, position.y+16, 14, bodyType::DYNAMIC);
+		// L07 DONE 5: Add physics to the player - initialize physics body
+		pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
 
-	// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
-	pbody->listener = this; 
+		// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
+		pbody->listener = this;
 
-	// L07 DONE 7: Assign collider type
-	pbody->ctype = ColliderType::PLAYER;
-	pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
+		// L07 DONE 7: Assign collider type
+		pbody->ctype = ColliderType::PLAYER;
+		pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
 
-	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
-	deathFxId = app->audio->LoadFx(deathFxPath);
-	jumpFxId = app->audio->LoadFx(jumpFxPath);
+		//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
+		deathFxId = app->audio->LoadFx(deathFxPath);
+		jumpFxId = app->audio->LoadFx(jumpFxPath);
 
-	app->audio->PlayMusic(level1SongPath, 0);
+		app->audio->PlayMusic(level1SongPath, 0);
 
-	currentAnimation = &rightIdleAnimation;
+		currentAnimation = &rightIdleAnimation;
 
-	timerJump = 0;
-	jumpspeed = -5.5;
-	jumpsavailable = 2;
+		timerJump = 0;
+		jumpspeed = -5.5;
+		jumpsavailable = 2;
 
-	LastDir = 1;
+		LastDir = 1;
 
 
-	transformPosition teleport;
+		transformPosition teleport;
 
 	
-	return true;
+		return true;
+	
 }
 
 bool Player::Update()
