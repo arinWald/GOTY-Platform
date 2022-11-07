@@ -61,6 +61,8 @@ public:
 	Animation leftFallAnimation;
 	Animation leftDoubleJumpAnimation;
 
+	Animation dissappearAnimation;
+
 	int speed;
 	int jumpspeed;
 	bool ground;
@@ -75,6 +77,9 @@ public:
 
 	int timerPocho;
 	int deathFxId;
+
+	int timerDeath;
+	bool isDead;
 
 	int jumpFxId;
 	int LastDir;

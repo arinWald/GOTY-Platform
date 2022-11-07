@@ -68,6 +68,13 @@ Player::Player() : Entity(EntityType::PLAYER)
 		}
 		leftDoubleJumpAnimation.loop;
 		leftDoubleJumpAnimation.speed = 0.3f;
+
+		for (int i = 0; i < 7; ++i)
+		{
+			dissappearAnimation.PushBack({(63 * i), 193, 63, 63});
+		}
+		dissappearAnimation.loop = true;
+		dissappearAnimation.speed = 0.3f;
 	
 }
 
@@ -111,6 +118,9 @@ bool Player::Start() {
 		jumpspeed = -5.5;
 		jumpsavailable = 2;
 
+		timerDeath = 30;
+		isDead = false;
+
 		LastDir = 1;
 		
 		// L07 DONE 5: Add physics to the player - initialize physics body
@@ -138,6 +148,15 @@ bool Player::Update()
 		printf("PositionX: %d PositionY: %d\n", position.x, position.y);
 		// L07 DONE 5: Add physics to the player - updated player position using physics
 		
+		if (timerDeath == 0 && isDead)
+		{
+			++timerDeath;
+			currentAnimation = &dissappearAnimation;
+		}
+
+		if (isDead)
+			cout << "IS DEAD";
+
 		b2Vec2 vel ;
 		if (!app->scene->godMode)
 		{
@@ -152,49 +171,57 @@ bool Player::Update()
 			app->scene->FadeToNewState(app->scene->GAME_OVER_SCREEN);
 			
 		}
+		
+		if (!isDead) {
 
-		if (LastDir == 1) {
-			currentAnimation = &rightIdleAnimation;
+			if (LastDir == 1) {
+				currentAnimation = &rightIdleAnimation;
+			}
+			else {
+				currentAnimation = &leftIdleAnimation;
+			}
+
+			if (timerJump > 0) {
+				timerJump--;
+				if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+					vel.x = speed;
+					LastDir = 1;
+				}
+				else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+
+
+					vel.x = -speed;
+					LastDir = 2;
+				}
+
+				if (jumpsavailable == 1) {
+					if (LastDir == 1) {
+						currentAnimation = &rightJumpAnimation;
+					}
+					if (LastDir == 2) {
+						currentAnimation = &leftJumpAnimation;
+					}
+				}
+				else if (jumpsavailable == 0) {
+					if (LastDir == 1) {
+						currentAnimation = &rightDoubleJumpAnimation;
+					}
+					if (LastDir == 2) {
+						currentAnimation = &leftDoubleJumpAnimation;
+					}
+				}
+
+				vel = b2Vec2(vel.x, jumpspeed);
+
+			}
 		}
-		else {
-			currentAnimation = &leftIdleAnimation;
-		}
 
-		if (timerJump > 0) {
-			timerJump--;
-			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-				vel.x = speed;
-				LastDir = 1;
-			}
-			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-
-
-				vel.x = -speed;
-				LastDir = 2;
-			}
-
-			if (jumpsavailable == 1) {
-				if (LastDir == 1) {
-					currentAnimation = &rightJumpAnimation;
-				}
-				if (LastDir == 2) {
-					currentAnimation = &leftJumpAnimation;
-				}
-			}
-			else if (jumpsavailable == 0) {
-				if (LastDir == 1) {
-					currentAnimation = &rightDoubleJumpAnimation;
-				}
-				if (LastDir == 2) {
-					currentAnimation = &leftDoubleJumpAnimation;
-				}
-			}
-
-			vel = b2Vec2(vel.x, jumpspeed);
-
+		if (app->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT)
+		{
+			currentAnimation = &dissappearAnimation;
 		}
 		
-		if (!app->scene->godMode)
+		if (!app->scene->godMode && !isDead)
 		{
 			//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 			if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
@@ -268,7 +295,14 @@ bool Player::Update()
 
 		SDL_Rect rect = currentAnimation->GetCurrentFrame();
 
-		app->render->DrawTexture(playerTexture, position.x, position.y, &rect);
+		if (isDead)
+		{
+			app->render->DrawTexture(playerTexture, position.x - 16, position.y - 16, &rect);
+		}
+		else
+		{
+			app->render->DrawTexture(playerTexture, position.x, position.y, &rect);
+		}
 	
 	return true;
 }
@@ -304,12 +338,18 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			LOG("Collision DEATH");
 			if (!app->scene->godMode)
 			{
+				isDead = true;
 				app->audio->PlayFx(deathFxId);
 				playerlives--;
-				//resetPos = b2Vec2(PIXEL_TO_METERS(150), PIXEL_TO_METERS(672));
-				//pbody->body->SetTransform({PIXEL_TO_METERS(resetPos.x), PIXEL_TO_METERS(resetPos.y)}, 0);
-				ChangePosition(30, 270);
-			}			
+
+				timerDeath = 0;
+
+				if (timerDeath == 30)
+				{
+					currentAnimation = &rightIdleAnimation;
+					ChangePosition(30, 270);
+				}
+			}
 			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
