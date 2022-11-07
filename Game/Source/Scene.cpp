@@ -7,6 +7,8 @@
 #include "Scene.h"
 #include "EntityManager.h"
 #include "Map.h"
+#include <iostream>
+using namespace std;
 
 #include "Defs.h"
 #include "Log.h"
@@ -72,6 +74,8 @@ bool Scene::Start()
 	intro = app->tex->Load(introtexturePath);
 	game_over = app->tex->Load(game_over_texturePath);
 
+	godMode = false;
+
 	return true;
 }
 
@@ -119,9 +123,32 @@ bool Scene::Update(float dt)
 			app->render->camera.x -= 3;
 		if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 			player->playerlives = 0;
+		// Start from the beginning of the current level
+		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+		{
+			player->ChangePosition(40, 270);
+		}
+		if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+		{
+			if (!godMode) godMode = true;
+			else godMode = false;
+		}
+		
+		if (godMode)
+		{
+			cout << "GODMODE ON ";
+		}
+
 		//CAMERA FOLLOW
+	/*	if (app->win->GetScale() > 1 && player->position.y > 171)
+		{
+			app->render->camera.y = -player->position.y + 50;
+		}*/
 		if (player->position.x > 400 && player->position.x < 3382)
-			app->render->camera.x = -player->position.x + 400;
+		{
+			app->render->camera.x = -player->position.x * app->win->GetScale() + 400;
+			
+		}
 		else if (player->position.x < 400)
 		{
 			app->render->camera.x = 0;
@@ -194,7 +221,7 @@ void Scene::ChangeGameplayState(GameplayState newState)
 	case PLAYING:
 		gameplayState = PLAYING;
 		app->map->Load();	
-		player->ChangePosition(30, 270);
+		player->ChangePosition(40, 270);
 		break;
 	case TITLE_SCREEN:
 		gameplayState = TITLE_SCREEN;

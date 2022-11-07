@@ -113,18 +113,15 @@ bool Player::Start() {
 
 		LastDir = 1;
 		
-			// L07 DONE 5: Add physics to the player - initialize physics body
-			pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
+		// L07 DONE 5: Add physics to the player - initialize physics body
+		pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
 
-			// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
-			pbody->listener = this;
+		// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
+		pbody->listener = this;
 
-			// L07 DONE 7: Assign collider type
-			pbody->ctype = ColliderType::PLAYER;
-			pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
-		
-
-
+		// L07 DONE 7: Assign collider type
+		pbody->ctype = ColliderType::PLAYER;
+		pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
 	
 		return true;
 	
@@ -141,7 +138,15 @@ bool Player::Update()
 		printf("PositionX: %d PositionY: %d\n", position.x, position.y);
 		// L07 DONE 5: Add physics to the player - updated player position using physics
 		
-		b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
+		b2Vec2 vel ;
+		if (!app->scene->godMode)
+		{
+			vel = b2Vec2(0, -GRAVITY_Y);
+		}
+		else
+		{
+			vel = b2Vec2(0, 0);
+		}
 
 		if (playerlives <= 0) {
 			app->scene->FadeToNewState(app->scene->GAME_OVER_SCREEN);
@@ -160,7 +165,6 @@ bool Player::Update()
 			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 				vel.x = speed;
 				LastDir = 1;
-
 			}
 			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 
@@ -189,29 +193,58 @@ bool Player::Update()
 			vel = b2Vec2(vel.x, jumpspeed);
 
 		}
-		//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-		if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
-			//
-			timerJump = 15;
-			app->audio->PlayFx(jumpFxId);
-			jumpsavailable--;
-			/*vel =  b2Vec2(vel.x,jumpspeed);*/
-		}
+		
+		if (!app->scene->godMode)
+		{
+			//L02: DONE 4: modify the position of the player using arrow keys and render the texture
+			if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
+				//
+				timerJump = 15;
+				app->audio->PlayFx(jumpFxId);
+				jumpsavailable--;
+				/*vel =  b2Vec2(vel.x,jumpspeed);*/
+			}
 
-		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-			//
-		}
+			else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+				//
+			}
 
-		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
-			vel = b2Vec2(-speed, vel.y);
-			currentAnimation = &leftRunAnimation;
-			LastDir = 2;
+			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
+				vel = b2Vec2(-speed, vel.y);
+				currentAnimation = &leftRunAnimation;
+				LastDir = 2;
+			}
+			else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
+				currentAnimation = &rightRunAnimation;
+				LastDir = 1;
+				vel = b2Vec2(speed, vel.y);
+			}
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
-			currentAnimation = &rightRunAnimation;
-			LastDir = 1;
-			vel = b2Vec2(speed, vel.y);
+		else
+		{
+			//L02: DONE 4: modify the position of the player using arrow keys and render the texture
+			if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)) {
+				vel = b2Vec2(vel.x, -speed);
+				currentAnimation = &leftJumpAnimation;
+			}
+
+			else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+				vel = b2Vec2(vel.x, speed);
+				currentAnimation = &leftJumpAnimation;
+			}
+
+			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
+				vel = b2Vec2(-speed, vel.y);
+				currentAnimation = &leftRunAnimation;
+				LastDir = 2;
+			}
+			else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
+				currentAnimation = &rightRunAnimation;
+				LastDir = 1;
+				vel = b2Vec2(speed, vel.y);
+			}
 		}
+		
 
 
 
@@ -269,12 +302,14 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::DEATH:
 			LOG("Collision DEATH");
-			app->audio->PlayFx(deathFxId);
-			playerlives--;
-			//resetPos = b2Vec2(PIXEL_TO_METERS(150), PIXEL_TO_METERS(672));
-			//pbody->body->SetTransform({PIXEL_TO_METERS(resetPos.x), PIXEL_TO_METERS(resetPos.y)}, 0);
-			ChangePosition(30, 270);
-			
+			if (!app->scene->godMode)
+			{
+				app->audio->PlayFx(deathFxId);
+				playerlives--;
+				//resetPos = b2Vec2(PIXEL_TO_METERS(150), PIXEL_TO_METERS(672));
+				//pbody->body->SetTransform({PIXEL_TO_METERS(resetPos.x), PIXEL_TO_METERS(resetPos.y)}, 0);
+				ChangePosition(30, 270);
+			}			
 			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");

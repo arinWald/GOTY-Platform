@@ -79,7 +79,6 @@ public:
 	int jumpFxId;
 	int LastDir;
 
-
 	transformPosition teleport;
 
 private:

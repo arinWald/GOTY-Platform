@@ -65,6 +65,9 @@ public:
 	const char* game_over_texturePath;
 
 	Animation* screenDisplayAnim;
+
+	bool godMode;
+
 private:
 	SDL_Texture* img;
 	float currentFade = 0.0f;

@@ -23,7 +23,7 @@
 
   <!-- L02: DONE: Add an element for the entity manager and add the player parameters -->
   <scene>
-    <player x="30" y="270" speed="4" jumpspeed ="-5.5" lives="3" texturepath="Assets/Textures/Player/playerSpriteSheet.png" 
+    <player x="40" y="270" speed="4" jumpspeed ="-5.5" lives="3" texturepath="Assets/Textures/Player/playerSpriteSheet.png" 
 			jumpfxpath="Assets/Audio/Fx/jump.wav"
 			deathfxpath="Assets/Audio/Fx/hitHurt.wav"
 			level1songpath="Assets/Audio/Music/level1Song.ogg"/>
