@@ -1,21 +1,21 @@
-#include "ModuleFadeToBlack.h"
+#include "FadeToBlack.h"
 
-#include "Application.h"
-#include "ModuleRender.h"
+#include "App.h"
+#include "Render.h"
 
 #include "SDL/include/SDL_render.h"
 
-ModuleFadeToBlack::ModuleFadeToBlack(bool startEnabled) : Module(startEnabled)
+FadeToBlack::FadeToBlack(bool startEnabled) : Module(startEnabled)
 {
 	screenRect = {0, 0, SCREEN_WIDTH * SCREEN_SIZE, SCREEN_HEIGHT * SCREEN_SIZE};
 }
 
-ModuleFadeToBlack::~ModuleFadeToBlack()
+FadeToBlack::~FadeToBlack()
 {
 
 }
 
-bool ModuleFadeToBlack::Start()
+bool FadeToBlack::Start()
 {
 	LOG("Preparing Fade Screen");
 
@@ -24,7 +24,7 @@ bool ModuleFadeToBlack::Start()
 	return true;
 }
 
-Update_Status ModuleFadeToBlack::Update()
+ FadeToBlack::Update()
 {
 	// Exit this function if we are not performing a fade
 	if (currentStep == Fade_Step::NONE) return Update_Status::UPDATE_CONTINUE;
@@ -52,7 +52,7 @@ Update_Status ModuleFadeToBlack::Update()
 	return Update_Status::UPDATE_CONTINUE;
 }
 
-Update_Status ModuleFadeToBlack::PostUpdate()
+Update_Status FadeToBlack::PostUpdate()
 {
 	// Exit this function if we are not performing a fade
 	if (currentStep == Fade_Step::NONE) return Update_Status::UPDATE_CONTINUE;
@@ -66,7 +66,7 @@ Update_Status ModuleFadeToBlack::PostUpdate()
 	return Update_Status::UPDATE_CONTINUE;
 }
 
-bool ModuleFadeToBlack::FadeToBlack(Module* moduleToDisable, Module* moduleToEnable, float frames)
+bool FadeToBlack::FadeToBlack(Module* moduleToDisable, Module* moduleToEnable, float frames)
 {
 	bool ret = false;
 
