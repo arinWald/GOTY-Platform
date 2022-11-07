@@ -259,13 +259,15 @@ bool Physics::PostUpdate()
 					{
 						v = b->GetWorldPoint(polygonShape->GetVertex(i));
 						if (i > 0)
-							app->render->DrawLine(METERS_TO_PIXELS(prev.x), METERS_TO_PIXELS(prev.y), METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 255, 255, 100);
+							app->render->DrawLine(METERS_TO_PIXELS(prev.x), METERS_TO_PIXELS(prev.y),
+								METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 255, 255, 100);
 
 						prev = v;
 					}
 
 					v = b->GetWorldPoint(polygonShape->GetVertex(0));
-					app->render->DrawLine(METERS_TO_PIXELS(prev.x), METERS_TO_PIXELS(prev.y), METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 255, 100, 100);
+					app->render->DrawLine(METERS_TO_PIXELS(prev.x), METERS_TO_PIXELS(prev.y),
+						METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 255, 100, 100);
 				}
 				break;
 
