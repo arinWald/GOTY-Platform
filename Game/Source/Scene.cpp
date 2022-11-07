@@ -205,7 +205,6 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		break;
 	case GAME_OVER_SCREEN:
 		gameplayState = GAME_OVER_SCREEN;
-		app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 		break;

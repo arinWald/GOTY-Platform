@@ -140,12 +140,12 @@ bool Player::Update()
 
 		printf("PositionX: %d PositionY: %d\n", position.x, position.y);
 		// L07 DONE 5: Add physics to the player - updated player position using physics
-
+		
 		b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 
-		if (playerlives == 0) {
+		if (playerlives <= 0) {
 			app->scene->FadeToNewState(app->scene->GAME_OVER_SCREEN);
-			playerlives = 3;
+			
 		}
 
 		if (LastDir == 1) {
