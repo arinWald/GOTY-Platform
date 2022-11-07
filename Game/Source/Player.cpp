@@ -12,9 +12,11 @@
 #include "Animation.h"
 #include "EntityManager.h"
 #include "Window.h"
+
 #include <iostream>
 using namespace std;
 
+#define DEATH_TIME 40;
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -71,9 +73,9 @@ Player::Player() : Entity(EntityType::PLAYER)
 
 		for (int i = 0; i < 7; ++i)
 		{
-			dissappearAnimation.PushBack({(63 * i), 193, 63, 63});
+			dissappearAnimation.PushBack({(63 * i), 197, 63, 63});
 		}
-		dissappearAnimation.loop = true;
+		dissappearAnimation.pingpong = true;
 		dissappearAnimation.speed = 0.3f;
 	
 }
@@ -118,10 +120,9 @@ bool Player::Start() {
 		jumpspeed = -5.5;
 		jumpsavailable = 2;
 
-		timerDeath = 30;
-		isDead = false;
-
 		LastDir = 1;
+
+		timerDeath = DEATH_TIME;
 		
 		// L07 DONE 5: Add physics to the player - initialize physics body
 		pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
@@ -147,12 +148,6 @@ bool Player::Update()
 
 		printf("PositionX: %d PositionY: %d\n", position.x, position.y);
 		// L07 DONE 5: Add physics to the player - updated player position using physics
-		
-		if (timerDeath == 0 && isDead)
-		{
-			++timerDeath;
-			currentAnimation = &dissappearAnimation;
-		}
 
 		if (isDead)
 			cout << "IS DEAD";
@@ -172,56 +167,70 @@ bool Player::Update()
 			
 		}
 		
-		if (!isDead) {
+		if (LastDir == 1) {
+			currentAnimation = &rightIdleAnimation;
+		}
+		else {
+			currentAnimation = &leftIdleAnimation;
+		}
 
-			if (LastDir == 1) {
-				currentAnimation = &rightIdleAnimation;
+		if (timerJump > 0) {
+			timerJump--;
+			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+				vel.x = speed;
+				LastDir = 1;
 			}
-			else {
-				currentAnimation = &leftIdleAnimation;
+			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+
+
+				vel.x = -speed;
+				LastDir = 2;
 			}
 
-			if (timerJump > 0) {
-				timerJump--;
-				if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-					vel.x = speed;
-					LastDir = 1;
+			if (jumpsavailable == 1) {
+				if (LastDir == 1) {
+					currentAnimation = &rightJumpAnimation;
 				}
-				else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-
-
-					vel.x = -speed;
-					LastDir = 2;
+				if (LastDir == 2) {
+					currentAnimation = &leftJumpAnimation;
 				}
-
-				if (jumpsavailable == 1) {
-					if (LastDir == 1) {
-						currentAnimation = &rightJumpAnimation;
-					}
-					if (LastDir == 2) {
-						currentAnimation = &leftJumpAnimation;
-					}
-				}
-				else if (jumpsavailable == 0) {
-					if (LastDir == 1) {
-						currentAnimation = &rightDoubleJumpAnimation;
-					}
-					if (LastDir == 2) {
-						currentAnimation = &leftDoubleJumpAnimation;
-					}
-				}
-
-				vel = b2Vec2(vel.x, jumpspeed);
-
 			}
+			else if (jumpsavailable == 0) {
+				if (LastDir == 1) {
+					currentAnimation = &rightDoubleJumpAnimation;
+				}
+				if (LastDir == 2) {
+					currentAnimation = &leftDoubleJumpAnimation;
+				}
+			}
+
+			vel = b2Vec2(vel.x, jumpspeed);
+
 		}
 
 		if (app->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT)
 		{
 			currentAnimation = &dissappearAnimation;
 		}
+
+		if (isDead)
+		{
+			if (timerDeath >= 0)
+			{
+				cout << "IS DEAD ";
+				currentAnimation = &dissappearAnimation;
+				--timerDeath;
+			}
+			else
+			{
+				isDead = false;
+				timerDeath = DEATH_TIME;
+				ChangePosition(40, 270);
+			}
+		}
 		
-		if (!app->scene->godMode && !isDead)
+		//PLAYER MOVE INPUT
+		if (!app->scene->godMode)
 		{
 			//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 			if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
@@ -271,8 +280,6 @@ bool Player::Update()
 				vel = b2Vec2(speed, vel.y);
 			}
 		}
-		
-
 
 
 		//Set the velocity of the pbody of the player
@@ -295,6 +302,7 @@ bool Player::Update()
 
 		SDL_Rect rect = currentAnimation->GetCurrentFrame();
 
+		//Death animation needs offset
 		if (isDead)
 		{
 			app->render->DrawTexture(playerTexture, position.x - 16, position.y - 16, &rect);
@@ -338,18 +346,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			LOG("Collision DEATH");
 			if (!app->scene->godMode)
 			{
-				isDead = true;
 				app->audio->PlayFx(deathFxId);
 				playerlives--;
-
-				timerDeath = 0;
-
-				if (timerDeath == 30)
-				{
-					currentAnimation = &rightIdleAnimation;
-					ChangePosition(30, 270);
-				}
 			}
+			isDead = true;
 			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
