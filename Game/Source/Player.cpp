@@ -126,9 +126,11 @@ bool Player::Start() {
 		
 		// L07 DONE 5: Add physics to the player - initialize physics body
 		pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
+		groundSensor = app->physics->CreateRectangleSensor(position.x + 16, position.y + 16, 10, 17, bodyType::DYNAMIC);
 
 		// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 		pbody->listener = this;
+		groundSensor->listener = this;
 
 		// L07 DONE 7: Assign collider type
 		pbody->ctype = ColliderType::PLAYER;
@@ -208,11 +210,12 @@ bool Player::Update()
 
 		}
 
-		if (app->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT)
-		{
-			currentAnimation = &dissappearAnimation;
-		}
+		//if (app->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT)
+		//{
+		//	currentAnimation = &dissappearAnimation;
+		//}
 
+		//Manage Death Timer
 		if (isDead)
 		{
 			if (timerDeath >= 0)
@@ -288,6 +291,9 @@ bool Player::Update()
 		//Update player position in pixels
 		position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 		position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+
+		b2Vec2 groundSensorCoords = b2Vec2(position.x, position.y);
+		groundSensor->body->SetTransform(groundSensorCoords, 0);
 
 		//PLAYER TELEPORT
 		if (teleport.turn == true)
