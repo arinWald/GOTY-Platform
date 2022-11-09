@@ -30,7 +30,8 @@
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png" 
 		  coinfxpath="Assets/Audio/Fx/coinPickup.ogg"/>
     <intro texturepath ="Assets/Textures/Scenas/Intro.png"/> 
-    <game_over texturepath ="Assets/Textures/Scenas/GameOver.png"/> 
+    <game_over texturepath ="Assets/Textures/Scenas/GameOver.png"/>
+	<logo texturepath ="Assets/Textures/Scenas/Logo.png"/>
   </scene>
 
   <map>

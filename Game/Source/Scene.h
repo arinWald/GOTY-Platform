@@ -56,8 +56,12 @@ public:
 	//L02: DONE 3: Declare a Player attribute 
 	Player* player;
 
-	GameplayState gameplayState = TITLE_SCREEN;
+	GameplayState gameplayState = LOGO_SCREEN;
 	bool fading = false;
+
+	SDL_Texture* logo;
+	const char* logotexturePath;
+
 	SDL_Texture* intro;
 	const char* introtexturePath;
 

@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "EntityManager.h"
 #include "Map.h"
+#include "Player.h"
 #include <iostream>
 using namespace std;
 
@@ -37,9 +38,11 @@ bool Scene::Awake(pugi::xml_node& config)
 	}
 	//L02: DONE 3: Instantiate the player using the entity manager
 
-		player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
-		player->parameters = config.child("player");
+	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
+	player->parameters = config.child("player");
 	
+	pugi::xml_node logo = config.child("logo");
+	logotexturePath = logo.attribute("texturepath").as_string();
 
 	pugi::xml_node intro = config.child("intro");
 	introtexturePath = intro.attribute("texturepath").as_string();
@@ -70,7 +73,7 @@ bool Scene::Start()
 	app->win->SetTitle(title.GetString());
 
 	
-
+	logo = app->tex->Load(logotexturePath);
 	intro = app->tex->Load(introtexturePath);
 	game_over = app->tex->Load(game_over_texturePath);
 
@@ -102,6 +105,10 @@ bool Scene::Update(float dt)
 	{
 		app->scene->FadeToNewState(PLAYING);
 		LOG("LOAD REQUESTED");
+	}
+	if (gameplayState == GAME_OVER_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	{
+		app->scene->FadeToNewState(TITLE_SCREEN);
 	}
 	if (gameplayState == PLAYING) {
 		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
@@ -158,9 +165,9 @@ bool Scene::Update(float dt)
 	if (gameplayState != targetState)
 	{
 		currentFade += 0.02f;
-		if (currentFade >= 1.0f)
+		if (currentFade >= 0.5f)
 		{
-			currentFade = 1.0f;
+			currentFade = 0.5f;
 			ChangeGameplayState(targetState);
 		}
 	}
@@ -218,6 +225,11 @@ void Scene::ChangeGameplayState(GameplayState newState)
 
 	switch (newState)
 	{
+	case LOGO_SCREEN:
+		gameplayState = LOGO_SCREEN;
+		app->render->camera.x = 0;
+		app->render->camera.y = 0;
+		break;
 	case PLAYING:
 		gameplayState = PLAYING;
 		app->map->Load();	
@@ -225,13 +237,14 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		break;
 	case TITLE_SCREEN:
 		gameplayState = TITLE_SCREEN;
-		app->map->CleanUp();
 		
+		player->playerlives = 3;
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 		break;
 	case GAME_OVER_SCREEN:
 		gameplayState = GAME_OVER_SCREEN;
+		//app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 		break;
@@ -247,6 +260,10 @@ bool Scene::PostUpdate()
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
 
+	if (gameplayState == LOGO_SCREEN)
+	{
+		app->render->DrawTexture(logo, 0, 0);
+	}
 
 	if (gameplayState == TITLE_SCREEN)
 	{
@@ -259,7 +276,6 @@ bool Scene::PostUpdate()
 		app->render->DrawTexture(game_over, 0, 0);
 
 	}
-
 	return ret;
 }
 
