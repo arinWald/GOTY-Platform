@@ -9,6 +9,8 @@
 #include "Render.h"
 #include "Player.h"
 #include "Window.h"
+#include <iostream>
+using namespace std;
 #include "Box2D/Box2D/Box2D.h"
 
 // Tell the compiler to reference the compiled Box2D libraries
@@ -302,7 +304,7 @@ bool Physics::PostUpdate()
 				}
 				break;
 				}
-
+				
 			}
 		}
 	}

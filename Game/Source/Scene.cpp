@@ -160,6 +160,16 @@ bool Scene::Update(float dt)
 		{
 			app->render->camera.x = 0;
 		}
+
+		//if (player->position.y > 161)
+		//{
+		//	app->render->camera.y = -player->position.y * app->win->GetScale() + 290;
+
+		//}
+		//else if (player->position.y < 161)
+		//{
+		//	app->render->camera.y = 0;
+		//}
 	}
 
 	if (gameplayState != targetState)
