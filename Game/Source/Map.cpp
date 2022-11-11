@@ -214,19 +214,33 @@ bool Map::Load()
                     // L05: DONE 9: Complete the draw function
                     int gid = mapLayerItem->data->Get(x, y);
 
-                    //If GID 301 == Red Square (collider)
-                    if (gid == 301)
+                    //If GID 295 == Red Square (collider)
+                    if (gid == 295)
                     {
                         iPoint pos = MapToWorld(x, y);
                         PhysBody* mapCollider = app->physics->CreateRectangle(pos.x + 8, pos.y + 8, 16, 16, STATIC);
                         mapCollider->ctype = ColliderType::PLATFORM;
                     }
-                    //302 == Green Square (die)
-                    else if (gid == 302)
+                    //296 == Green Square (die)
+                    else if (gid == 296)
                     {
                         iPoint pos = MapToWorld(x, y);
-                        PhysBody* mapDeathCollider = app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
-                        mapDeathCollider->ctype = ColliderType::DEATH;
+                        PhysBody* mapDeathSensor= app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
+                        mapDeathSensor->ctype = ColliderType::DEATH;
+                    }
+                    //293 == Ground sensor
+                    else if (gid == 293)
+                    {
+                        iPoint pos = MapToWorld(x, y);
+                        PhysBody* mapGroundSensor = app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
+                        mapGroundSensor->ctype = ColliderType::GROUNDSENSOR;
+                    }
+                    //294 == WIN
+                    else if (gid == 294)
+                    {
+                        iPoint pos = MapToWorld(x, y);
+                        PhysBody* mapWinSensor = app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
+                        mapWinSensor->ctype = ColliderType::WINSENSOR;
                     }
                 }
             }

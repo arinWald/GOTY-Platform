@@ -126,8 +126,6 @@ bool Player::Start() {
 		
 		// L07 DONE 5: Add physics to the player - initialize physics body
 		pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
-		/*PhysBody* groundSensor = app->physics->CreateRectangle(position.x + 16, position.y + 26, 10, 16, bodyType::DYNAMIC);
-		groundSensor->ctype = ColliderType::JUMPSENSOR;*/
 
 		// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 		pbody->listener = this;
@@ -182,7 +180,7 @@ bool Player::Update()
 				vel.x = speed;
 				LastDir = 1;
 			}
-			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 
 
 				vel.x = -speed;
@@ -210,10 +208,6 @@ bool Player::Update()
 
 		}
 
-		//if (app->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT)
-		//{
-		//	currentAnimation = &dissappearAnimation;
-		//}
 
 		//Manage Death Timer
 		if (isDead)
@@ -233,7 +227,7 @@ bool Player::Update()
 		}
 		
 		//PLAYER MOVE INPUT
-		if (!app->scene->godMode)
+		if (!app->scene->godMode && app->scene->gameplayState == app->scene->GameplayState::PLAYING && !isDead)
 		{
 			//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 			if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
@@ -244,22 +238,23 @@ bool Player::Update()
 				/*vel =  b2Vec2(vel.x,jumpspeed);*/
 			}
 
-			else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 				//
 			}
 
-			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
+			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
 				vel = b2Vec2(-speed, vel.y);
 				currentAnimation = &leftRunAnimation;
 				LastDir = 2;
 			}
-			else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
+			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
 				currentAnimation = &rightRunAnimation;
 				LastDir = 1;
 				vel = b2Vec2(speed, vel.y);
 			}
 		}
-		else
+		//GOD MODE INPUT
+		else if(app->scene->gameplayState == app->scene->GameplayState::PLAYING && app->scene->godMode)
 		{
 			//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 			if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)) {
@@ -267,17 +262,17 @@ bool Player::Update()
 				currentAnimation = &leftJumpAnimation;
 			}
 
-			else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 				vel = b2Vec2(vel.x, speed);
 				currentAnimation = &leftJumpAnimation;
 			}
 
-			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
+			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
 				vel = b2Vec2(-speed, vel.y);
 				currentAnimation = &leftRunAnimation;
 				LastDir = 2;
 			}
-			else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
+			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
 				currentAnimation = &rightRunAnimation;
 				LastDir = 1;
 				vel = b2Vec2(speed, vel.y);
@@ -336,11 +331,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			app->audio->PlayFx(deathFxId);
 			break;
 		case ColliderType::PLATFORM:
-			ground = true;
-			if (timerJump > 0) { 
- 				timerJump = 0; }
-			jumpsavailable = 2;
-			
+
 			LOG("Collision PLATFORM");
 			
 			break;
@@ -350,12 +341,22 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			{
 				app->audio->PlayFx(deathFxId);
 				playerlives--;
+				isDead = true;
 			}
-			isDead = true;
 			break;
-		case ColliderType::JUMPSENSOR:
+		case ColliderType::GROUNDSENSOR:
 			LOG("TOUCHING GROUND");
-			cout << "Touching Ground";
+			cout << "Touching Ground" << endl;
+
+			ground = true;
+			if (timerJump > 0) {
+				timerJump = 0;
+			}
+			jumpsavailable = 2;
+			break;
+		case ColliderType::WINSENSOR:
+			LOG("WIN");
+			cout << "WINNNNNN" << endl;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
 			break;	
