@@ -144,7 +144,7 @@ bool Scene::Update(float dt)
 		// Start from the beginning of the current level
 		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 		{
-			player->ChangePosition(40, 270);
+			player->ChangePosition(player->initialPosX, player->initialPosY);
 		}
 		if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 		{
@@ -255,7 +255,7 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		gameplayState = PLAYING;
 		app->map->Load();
 		app->audio->PlayMusic(level1SongPath, 0);
-		player->ChangePosition(40, 270);
+		player->ChangePosition(player->initialPosX, player->initialPosY);
 		break;
 	case TITLE_SCREEN:
 		gameplayState = TITLE_SCREEN;
@@ -303,7 +303,7 @@ bool Scene::PostUpdate()
 	}
 	if (gameplayState == WIN_SCREEN)
 	{
-		app->render->DrawTexture(game_over, 0, 0);
+		app->render->DrawTexture(win_screen, 0, 0);
 
 	}
 	return ret;

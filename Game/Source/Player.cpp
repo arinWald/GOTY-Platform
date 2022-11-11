@@ -113,12 +113,19 @@ bool Player::Start() {
 		//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
 		deathFxId = app->audio->LoadFx(deathFxPath);
 		jumpFxId = app->audio->LoadFx(jumpFxPath);
-		app->audio->PlayMusic(level1SongPath, 0);
+		//app->audio->PlayMusic(level1SongPath, 0);
 		currentAnimation = &rightIdleAnimation;
 
 		timerJump = 0;
 		jumpspeed = -5.5;
 		jumpsavailable = 2;
+
+		isDead = false;
+		isWin = false;
+
+
+		initialPosX = 40;
+		initialPosY = 270;
 
 		LastDir = 1;
 
@@ -165,6 +172,11 @@ bool Player::Update()
 		if (playerlives <= 0) {
 			app->scene->FadeToNewState(app->scene->GAME_OVER_SCREEN);
 			
+		}
+
+		if (isWin)
+		{
+			app->scene->FadeToNewState(app->scene->WIN_SCREEN);
 		}
 		
 		if (LastDir == 1) {
@@ -222,7 +234,7 @@ bool Player::Update()
 			{
 				isDead = false;
 				timerDeath = DEATH_TIME;
-				ChangePosition(40, 270);
+				ChangePosition(initialPosX, initialPosY);
 			}
 		}
 		
@@ -358,6 +370,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			LOG("WIN");
 			cout << "WINNNNNN" << endl;
 			isWin = true;
+			ChangePosition(initialPosX, initialPosY);
 
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");

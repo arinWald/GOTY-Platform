@@ -89,6 +89,9 @@ public:
 
 	transformPosition teleport;
 
+	int initialPosX;
+	int initialPosY;
+
 private:
 
 
