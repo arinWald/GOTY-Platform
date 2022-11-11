@@ -357,6 +357,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		case ColliderType::WINSENSOR:
 			LOG("WIN");
 			cout << "WINNNNNN" << endl;
+			isWin = true;
+
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
 			break;	

@@ -17,6 +17,7 @@ public:
 		PLAYING,
 		GAME_OVER_SCREEN,
 		LOGO_SCREEN,
+		WIN_SCREEN,
 	};
 
 
@@ -67,6 +68,11 @@ public:
 
 	SDL_Texture* game_over;
 	const char* game_over_texturePath;
+
+	SDL_Texture* win_screen;
+	const char* win_screen_texturePath;
+
+	const char* level1SongPath;
 
 	Animation* screenDisplayAnim;
 

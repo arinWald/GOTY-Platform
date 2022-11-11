@@ -25,13 +25,14 @@
   <scene>
     <player x="23" y="289" speed="4" jumpspeed ="-5.5" lives="3" texturepath="Assets/Textures/Player/playerSpriteSheet.png" 
 			jumpfxpath="Assets/Audio/Fx/jump.wav"
-			deathfxpath="Assets/Audio/Fx/hitHurt.wav"
-			level1songpath="Assets/Audio/Music/level1Song.ogg"/>
+			deathfxpath="Assets/Audio/Fx/hitHurt.wav"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png" 
 		  coinfxpath="Assets/Audio/Fx/coinPickup.ogg"/>
     <intro texturepath ="Assets/Textures/Scenas/Intro.png"/> 
     <game_over texturepath ="Assets/Textures/Scenas/GameOver.png"/>
 	<logo texturepath ="Assets/Textures/Scenas/Logo.png"/>
+	<win_screen texturepath="Assets/Textures/Scenas/Win.png"/>
+	<level_1_song audiopath="Assets/Audio/Music/level1Song.ogg"/>
   </scene>
 
   <map>

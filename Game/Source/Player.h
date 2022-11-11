@@ -82,6 +82,8 @@ public:
 	int timerDeath;
 	bool isDead;
 
+	bool isWin;
+
 	int jumpFxId;
 	int LastDir;
 

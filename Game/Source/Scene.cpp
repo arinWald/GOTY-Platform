@@ -50,6 +50,12 @@ bool Scene::Awake(pugi::xml_node& config)
 	pugi::xml_node game_over = config.child("game_over");
 	game_over_texturePath = game_over.attribute("texturepath").as_string();
 
+	pugi::xml_node win_screen = config.child("win_screen");
+	win_screen_texturePath = win_screen.attribute("texturepath").as_string();
+
+	pugi::xml_node level_1_song = config.child("level_1_song");
+	level1SongPath = level_1_song.attribute("audiopath").as_string();
+
 	return ret;
 }
 
@@ -76,6 +82,7 @@ bool Scene::Start()
 	logo = app->tex->Load(logotexturePath);
 	intro = app->tex->Load(introtexturePath);
 	game_over = app->tex->Load(game_over_texturePath);
+	win_screen = app->tex->Load(win_screen_texturePath);
 
 	godMode = false;
 
@@ -107,6 +114,10 @@ bool Scene::Update(float dt)
 		LOG("LOAD REQUESTED");
 	}
 	if (gameplayState == GAME_OVER_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	{
+		app->scene->FadeToNewState(TITLE_SCREEN);
+	}
+	if (gameplayState == WIN_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 	{
 		app->scene->FadeToNewState(TITLE_SCREEN);
 	}
@@ -242,7 +253,8 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		break;
 	case PLAYING:
 		gameplayState = PLAYING;
-		app->map->Load();	
+		app->map->Load();
+		app->audio->PlayMusic(level1SongPath, 0);
 		player->ChangePosition(40, 270);
 		break;
 	case TITLE_SCREEN:
@@ -258,7 +270,10 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 		break;
-
+	case WIN_SCREEN:
+		gameplayState = WIN_SCREEN;
+		app->render->camera.x = 0;
+		app->render->camera.y = 0;
 	}
 }
 
@@ -282,6 +297,11 @@ bool Scene::PostUpdate()
 	}
 
 	if (gameplayState == GAME_OVER_SCREEN)
+	{
+		app->render->DrawTexture(game_over, 0, 0);
+
+	}
+	if (gameplayState == WIN_SCREEN)
 	{
 		app->render->DrawTexture(game_over, 0, 0);
 
