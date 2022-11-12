@@ -78,7 +78,7 @@ bool Render::Update(float dt)
 	if (app->scene->gameplayState == Scene::GameplayState::PLAYING)
 	{
 		camera.x = -(int)app->scene->player->position.x * scale + camera.w / 2;
-		camera.y = -(int)app->scene->player->position.y * scale + camera.h;
+		camera.y = camera.h;
 
 		//Camera limits ---> HARDCODED
 		if (camera.x > -0)
@@ -86,10 +86,10 @@ bool Render::Update(float dt)
 		if (camera.x < -16 * 206 * 1.66)
 			camera.x = -16 * 206 * 1.66;
 
-		if (camera.y > -0)
-			camera.y = -0;
-		if (camera.y < -16 * 78 * 1.425)
-			camera.y = -16 * 78 * 1.425;
+		//if (camera.y > -0)
+		//	camera.y = -0;
+		//if (camera.y < -16 * 78 * 1.425)
+		//	camera.y = -16 * 78 * 1.425;
 	}
 
 	printf("CAMERA X: %d, CAMERA Y: %d\n", camera.x, camera.y);

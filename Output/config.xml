@@ -9,7 +9,7 @@
   </renderer>
 
   <window>
-    <resolution width="1024" height="960" scale="2"/>
+    <resolution width="1280" height="960" scale="2"/>
     <fullscreen value="false"/>
     <borderless value="false"/>
     <resizable value="false"/>
