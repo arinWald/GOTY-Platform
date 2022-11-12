@@ -272,7 +272,7 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		gameplayState = TITLE_SCREEN;
 		player->isDead = false;
 		player->isWin = false;
-		app->map->Load();
+		app->map->Load();	
 		player->playerlives = 3;
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;

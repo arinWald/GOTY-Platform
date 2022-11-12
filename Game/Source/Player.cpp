@@ -154,8 +154,8 @@ bool Player::Update()
 
 
 		//printf("PositionX: %d PositionY: %d\n", position.x, position.y);
-		cout << "Jumps Available: " << jumpsavailable << endl;
-		cout << "Player Lives: " << playerlives << endl;
+		/*cout << "Jumps Available: " << jumpsavailable << endl;
+		cout << "Player Lives: " << playerlives << endl;*/
 		// L07 DONE 5: Add physics to the player - updated player position using physics
 
 		if (isDead)
