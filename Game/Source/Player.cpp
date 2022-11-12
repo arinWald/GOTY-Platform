@@ -286,7 +286,16 @@ bool Player::Update()
 		}
 
 		//Set the velocity of the pbody of the player
-		pbody->body->SetLinearVelocity(vel);
+		if (app->scene->godMode)
+		{
+			vel.x *= 2;
+			vel.y *= 2;
+			pbody->body->SetLinearVelocity(vel);
+		}
+		else
+		{
+			pbody->body->SetLinearVelocity(vel);
+		}
 
 		//Update player position in pixels
 		position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;

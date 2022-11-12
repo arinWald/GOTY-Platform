@@ -80,11 +80,11 @@ bool Render::Update(float dt)
 		camera.x = -(int)app->scene->player->position.x * scale + camera.w / 2;
 		camera.y = camera.h;
 
-		//Camera limits ---> HARDCODED
+		//Camera limits HARDCODED
 		if (camera.x > -0)
 			camera.x = -0;
-		if (camera.x < -16 * 206 * 1.66)
-			camera.x = -16 * 206 * 1.66;
+		if (camera.x < -6712)
+			camera.x = -6712;
 
 		if (camera.y > -0)
 			camera.y = -0;
