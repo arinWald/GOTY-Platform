@@ -86,8 +86,8 @@ bool Render::Update(float dt)
 		if (camera.x < -16 * 206 * 1.66)
 			camera.x = -16 * 206 * 1.66;
 
-		//if (camera.y > -0)
-		//	camera.y = -0;
+		if (camera.y > -0)
+			camera.y = -0;
 		//if (camera.y < -16 * 78 * 1.425)
 		//	camera.y = -16 * 78 * 1.425;
 	}
