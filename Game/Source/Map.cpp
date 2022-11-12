@@ -4,6 +4,8 @@
 #include "Textures.h"
 #include "Map.h"
 #include "Physics.h"
+#include "Entity.h"
+#include "EntityManager.h"
 
 #include "Defs.h"
 #include "Log.h"

@@ -139,19 +139,26 @@ bool Scene::Update(float dt)
 		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
 			app->LoadGameRequest();
 
-		if (app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-			app->render->camera.y += 3;
+		//if (app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		//	app->render->camera.y += 3;
 
-		if (app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-			app->render->camera.y -= 3;
+		//if (app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		//	app->render->camera.y -= 3;
 
-		if (app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-			app->render->camera.x += 3;
+		//if (app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		//	app->render->camera.x += 3;
 
-		if (app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-			app->render->camera.x -= 3;
-		if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
-			player->playerlives = 0;
+		//if (app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		//	app->render->camera.x -= 3;
+
+
+		if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		{
+			player->playerlives = 3;
+			player->ChangePosition(player->initialPosX, player->initialPosY);
+		}
+		/*if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+			player->playerlives = 0;*/
 		// Start from the beginning of the current level
 		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 		{
@@ -165,33 +172,21 @@ bool Scene::Update(float dt)
 		
 		if (godMode)
 		{
-			cout << "GODMODE ON ";
+			cout << "GODMODE ON " << endl;
 		}
 
-		//CAMERA FOLLOW
-	/*	if (app->win->GetScale() > 1 && player->position.y > 171)
-		{
-			app->render->camera.y = -player->position.y + 50;
-		}*/
-		if (player->position.x > 400 && player->position.x < 3382)
-		{
-			app->render->camera.x = -player->position.x * app->win->GetScale() + 400;
-			
-		}
-		else if (player->position.x < 400)
-		{
-			app->render->camera.x = 0;
-		}
-
-		//if (player->position.y > 161)
+		////CAMERA CONTROL
+		//if (player->position.x > 400 && player->position.x < 3382)
 		//{
-		//	app->render->camera.y = -player->position.y * app->win->GetScale() + 290;
-
+		//	app->render->camera.x = -player->position.x * app->win->GetScale() + app->map->mapData.width / 2;
+		//	
 		//}
-		//else if (player->position.y < 161)
+		//else if (player->position.x < 400)
 		//{
-		//	app->render->camera.y = 0;
+		//	app->render->camera.x = 0;
 		//}
+
+		//app->render->camera.y = -player->position.y * app->win->GetScale() + 290;
 	}
 
 	if (gameplayState != targetState)
@@ -285,7 +280,6 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		break;
 	case WIN_SCREEN:
 		gameplayState = WIN_SCREEN;
-		//app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 	}
