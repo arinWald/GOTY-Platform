@@ -92,7 +92,7 @@ bool Render::Update(float dt)
 		//	camera.y = -16 * 78 * 1.425;
 	}
 
-	printf("CAMERA X: %d, CAMERA Y: %d\n", camera.x, camera.y);
+	//printf("CAMERA X: %d, CAMERA Y: %d\n", camera.x, camera.y);
 	return true;
 }
 

@@ -153,13 +153,10 @@ bool Player::Update()
 		currentAnimation->Update();
 
 
-		printf("PositionX: %d PositionY: %d\n", position.x, position.y);
+		//printf("PositionX: %d PositionY: %d\n", position.x, position.y);
 		/*cout << "Jumps Available: " << jumpsavailable << endl;
 		cout << "Player Lives: " << playerlives << endl;*/
 		// L07 DONE 5: Add physics to the player - updated player position using physics
-
-		if (isDead)
-			cout << "IS DEAD";
 
 		b2Vec2 vel ;
 		if (!app->scene->godMode)
@@ -220,7 +217,7 @@ bool Player::Update()
 		{
 			if (timerDeath >= 0)
 			{
-				cout << "IS DEAD ";
+				//cout << "IS DEAD ";
 				currentAnimation = &dissappearAnimation;
 				--timerDeath;
 			}
@@ -342,16 +339,16 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype)
 	{
 		case ColliderType::ITEM:
-			LOG("Collision ITEM");
+			//LOG("Collision ITEM");
 			app->audio->PlayFx(deathFxId);
 			break;
 		case ColliderType::PLATFORM:
 
-			LOG("Collision PLATFORM");
+			//LOG("Collision PLATFORM");
 			
 			break;
 		case ColliderType::DEATH:
-			LOG("Collision DEATH");
+			//LOG("Collision DEATH");
 			if (!app->scene->godMode)
 			{
 				app->audio->PlayFx(deathFxId);
@@ -360,8 +357,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			}
 			break;
 		case ColliderType::GROUNDSENSOR:
-			LOG("TOUCHING GROUND");
-			cout << "Touching Ground" << endl;
+			//LOG("TOUCHING GROUND");
+			//cout << "Touching Ground" << endl;
 
 			ground = true;
 			if (timerJump > 0) {
@@ -371,12 +368,12 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::WINSENSOR:
 			LOG("WIN");
-			cout << "WINNNNNN" << endl;
+			//cout << "WINNNNNN" << endl;
 			isWin = true;
 			ChangePosition(initialPosX, initialPosY);
 
 		case ColliderType::UNKNOWN:
-			LOG("Collision UNKNOWN");
+			//LOG("Collision UNKNOWN");
 			break;	
 	}
 }

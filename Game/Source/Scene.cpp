@@ -171,11 +171,6 @@ bool Scene::Update(float dt)
 			if (!godMode) godMode = true;
 			else godMode = false;
 		}
-		
-		if (godMode)
-		{
-			cout << "GODMODE ON " << endl;
-		}
 
 		////CAMERA CONTROL
 		//if (player->position.x > 400 && player->position.x < 3382)
@@ -193,10 +188,11 @@ bool Scene::Update(float dt)
 
 	if (gameplayState != targetState)
 	{
+		//Abans era 0.05f
 		currentFade += 0.02f;
-		if (currentFade >= 0.5f)
+		if (currentFade >= 0.0f)
 		{
-			currentFade = 0.5f;
+			currentFade = 0.0f;
 			ChangeGameplayState(targetState);
 		}
 	}
@@ -277,13 +273,14 @@ void Scene::ChangeGameplayState(GameplayState newState)
 	case GAME_OVER_SCREEN:
 		gameplayState = GAME_OVER_SCREEN;
 		app->audio->PlayMusic(silenceSongPath, 0);
-		//app->map->CleanUp();
+		app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 		break;
 	case WIN_SCREEN:
 		app->audio->PlayMusic(silenceSongPath, 0);
 		gameplayState = WIN_SCREEN;
+		//app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 	}
