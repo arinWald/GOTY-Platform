@@ -56,6 +56,8 @@ bool Scene::Awake(pugi::xml_node& config)
 	pugi::xml_node level_1_song = config.child("level_1_song");
 	level1SongPath = level_1_song.attribute("audiopath").as_string();
 
+	pugi::xml_node silence_song = config.child("silence_song");
+	silenceSongPath = silence_song.attribute("audiopath").as_string();
 	return ret;
 }
 
@@ -274,11 +276,13 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		break;
 	case GAME_OVER_SCREEN:
 		gameplayState = GAME_OVER_SCREEN;
+		app->audio->PlayMusic(silenceSongPath, 0);
 		//app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 		break;
 	case WIN_SCREEN:
+		app->audio->PlayMusic(silenceSongPath, 0);
 		gameplayState = WIN_SCREEN;
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
