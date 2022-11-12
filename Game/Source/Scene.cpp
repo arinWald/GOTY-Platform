@@ -121,6 +121,17 @@ bool Scene::Update(float dt)
 	{
 		app->scene->FadeToNewState(TITLE_SCREEN);
 	}
+	if (player->playerlives <= 0) {
+		app->scene->FadeToNewState(app->scene->GAME_OVER_SCREEN);
+
+	}
+
+	if (player->isWin && gameplayState == PLAYING)
+	{
+		player->playerlives = 3;
+		app->scene->FadeToNewState(app->scene->WIN_SCREEN);
+	}
+
 	if (gameplayState == PLAYING) {
 		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 			app->SaveGameRequest();
@@ -253,13 +264,15 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		break;
 	case PLAYING:
 		gameplayState = PLAYING;
-		app->map->Load();
+		//app->map->Load();
 		app->audio->PlayMusic(level1SongPath, 0);
 		player->ChangePosition(player->initialPosX, player->initialPosY);
 		break;
 	case TITLE_SCREEN:
 		gameplayState = TITLE_SCREEN;
-		
+		player->isDead = false;
+		player->isWin = false;
+		app->map->Load();
 		player->playerlives = 3;
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
@@ -272,6 +285,7 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		break;
 	case WIN_SCREEN:
 		gameplayState = WIN_SCREEN;
+		//app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 	}

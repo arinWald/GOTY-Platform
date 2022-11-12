@@ -153,7 +153,9 @@ bool Player::Update()
 		currentAnimation->Update();
 
 
-		printf("PositionX: %d PositionY: %d\n", position.x, position.y);
+		//printf("PositionX: %d PositionY: %d\n", position.x, position.y);
+		cout << "Jumps Available: " << jumpsavailable << endl;
+		cout << "Player Lives: " << playerlives << endl;
 		// L07 DONE 5: Add physics to the player - updated player position using physics
 
 		if (isDead)
@@ -169,15 +171,7 @@ bool Player::Update()
 			vel = b2Vec2(0, 0);
 		}
 
-		if (playerlives <= 0) {
-			app->scene->FadeToNewState(app->scene->GAME_OVER_SCREEN);
-			
-		}
-
-		if (isWin)
-		{
-			app->scene->FadeToNewState(app->scene->WIN_SCREEN);
-		}
+		
 		
 		if (LastDir == 1) {
 			currentAnimation = &rightIdleAnimation;
