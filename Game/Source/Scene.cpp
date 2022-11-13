@@ -207,7 +207,7 @@ bool Scene::Update(float dt)
 	}
 
 	//app->render->DrawTexture(img, 380, 100); // Placeholder not needed any more
-
+	app->render->DrawTexture(game_over, 0, 0);
 	// Draw map
 	
 	app->map->Draw();
