@@ -33,6 +33,7 @@
 	<logo texturepath ="Assets/Textures/Scenas/Logo.png"/>
 	<win_screen texturepath="Assets/Textures/Scenas/Win.png"/>
 	<level_1_song audiopath="Assets/Audio/Music/level1Song.ogg"/>
+	<victory_song audiopath="Assets/Audio/Music/victorySong.ogg"/>
   </scene>
 
   <map>

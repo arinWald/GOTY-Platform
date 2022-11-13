@@ -58,6 +58,9 @@ bool Scene::Awake(pugi::xml_node& config)
 
 	pugi::xml_node silence_song = config.child("silence_song");
 	silenceSongPath = silence_song.attribute("audiopath").as_string();
+
+	pugi::xml_node victory_song = config.child("victory_song");
+	victorySongPath = victory_song.attribute("audiopath").as_string();
 	return ret;
 }
 
@@ -119,10 +122,10 @@ bool Scene::Update(float dt)
 	{
 		app->scene->FadeToNewState(TITLE_SCREEN);
 	}
-	if (gameplayState == WIN_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-	{
-		app->scene->FadeToNewState(TITLE_SCREEN);
-	}
+	//if (gameplayState == WIN_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	//{
+	//	app->scene->FadeToNewState(TITLE_SCREEN);
+	//}
 	if (player->playerlives <= 0) {
 		app->scene->FadeToNewState(app->scene->GAME_OVER_SCREEN);
 
@@ -210,7 +213,10 @@ bool Scene::Update(float dt)
 	app->render->DrawTexture(game_over, 0, 0);
 	// Draw map
 	
-	app->map->Draw();
+	if (app->scene->gameplayState == PLAYING)
+	{
+		app->map->Draw();
+	}
 
 	return true;
 }
@@ -263,9 +269,9 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		break;
 	case TITLE_SCREEN:
 		gameplayState = TITLE_SCREEN;
+		app->map->Load();
 		player->isDead = false;
 		player->isWin = false;
-		app->map->Load();
 		player->playerlives = 3;
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
@@ -273,14 +279,14 @@ void Scene::ChangeGameplayState(GameplayState newState)
 	case GAME_OVER_SCREEN:
 		gameplayState = GAME_OVER_SCREEN;
 		app->audio->PlayMusic(silenceSongPath, 0);
-		//app->map->CleanUp();
+		app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 		break;
 	case WIN_SCREEN:
-		app->audio->PlayMusic(silenceSongPath, 0);
+		app->audio->PlayMusic(victorySongPath, 0);
 		gameplayState = WIN_SCREEN;
-		//app->map->CleanUp();
+		app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 	}
@@ -291,8 +297,11 @@ bool Scene::PostUpdate()
 {
 	bool ret = true;
 
-	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || (gameplayState == WIN_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN))
+	{
 		ret = false;
+
+	}
 
 	if (gameplayState == LOGO_SCREEN)
 	{

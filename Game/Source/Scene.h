@@ -76,6 +76,8 @@ public:
 
 	const char* silenceSongPath;
 
+	const char* victorySongPath;
+
 	Animation* screenDisplayAnim;
 
 	bool godMode;
