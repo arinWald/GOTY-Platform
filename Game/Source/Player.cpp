@@ -211,7 +211,7 @@ bool Player::Update()
 
 		}
 
-
+		//cout << "JUMPS AVAILABLE: " << jumpsavailable << endl;
 		//Manage Death Timer
 		if (isDead)
 		{

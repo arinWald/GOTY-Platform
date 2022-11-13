@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="250" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="155">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="250" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="218">
  <tileset firstgid="1" name="terrain" tilewidth="16" tileheight="16" tilecount="242" columns="22">
   <image source="../Pixel Adventure 1/Terrain/Terrain (16x16).png" width="352" height="176"/>
   <wangsets>
@@ -30270,5 +30270,63 @@
  <objectgroup id="14" name="Win">
   <object id="151" x="3936" y="224" width="32" height="32"/>
   <object id="153" x="3936" y="224" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="16" name="GroundSensor">
+  <object id="157" x="16" y="304" width="176" height="16"/>
+  <object id="158" x="192" y="288" width="32" height="16"/>
+  <object id="159" x="224" y="272" width="64" height="16"/>
+  <object id="160" x="288" y="288" width="48" height="16"/>
+  <object id="161" x="336" y="224" width="64" height="16"/>
+  <object id="163" x="400" y="256" width="96" height="16"/>
+  <object id="164" x="496" y="176" width="48" height="16"/>
+  <object id="165" x="544" y="256" width="96" height="16"/>
+  <object id="166" x="688" y="256" width="32" height="16"/>
+  <object id="167" x="784" y="256" width="32" height="16"/>
+  <object id="168" x="832" y="320" width="112" height="16"/>
+  <object id="169" x="944" y="336" width="32" height="16"/>
+  <object id="170" x="976" y="352" width="96" height="16"/>
+  <object id="171" x="1152" y="352" width="112" height="16"/>
+  <object id="172" x="1312" y="320" width="48" height="16"/>
+  <object id="173" x="1360" y="272" width="48" height="16"/>
+  <object id="176" x="1408" y="320" width="32" height="16"/>
+  <object id="177" x="1472" y="224" width="32" height="16"/>
+  <object id="178" x="1488" y="368" width="80" height="16"/>
+  <object id="180" x="1504" y="192" width="256" height="16"/>
+  <object id="181" x="1616" y="272" width="32" height="16"/>
+  <object id="182" x="1712" y="272" width="96" height="16"/>
+  <object id="183" x="1664" y="352" width="96" height="16"/>
+  <object id="184" x="1808" y="352" width="32" height="16"/>
+  <object id="185" x="1648" y="400" width="32" height="16"/>
+  <object id="186" x="1680" y="416" width="16" height="16"/>
+  <object id="188" x="1696" y="432" width="224" height="16"/>
+  <object id="189" x="1920" y="416" width="64" height="16"/>
+  <object id="190" x="2080" y="384" width="48" height="16"/>
+  <object id="191" x="2240" y="320" width="112" height="16"/>
+  <object id="192" x="2432" y="384" width="96" height="16"/>
+  <object id="193" x="2592" y="304" width="96" height="16"/>
+  <object id="194" x="2752" y="224" width="112" height="16"/>
+  <object id="195" x="2944" y="128" width="192" height="16"/>
+  <object id="196" x="3200" y="176" width="48" height="16"/>
+  <object id="197" x="3312" y="176" width="48" height="16"/>
+  <object id="198" x="3232" y="368" width="128" height="16"/>
+  <object id="199" x="3440" y="256" width="96" height="16"/>
+  <object id="200" x="3536" y="240" width="16" height="16"/>
+  <object id="201" x="3552" y="224" width="16" height="16"/>
+  <object id="202" x="3568" y="208" width="16" height="16"/>
+  <object id="203" x="3584" y="192" width="16" height="16"/>
+  <object id="204" x="3600" y="176" width="144" height="16"/>
+  <object id="205" x="3440" y="416" width="144" height="16"/>
+  <object id="206" x="3584" y="400" width="16" height="16"/>
+  <object id="207" x="3600" y="384" width="16" height="16"/>
+  <object id="208" x="3648" y="384" width="16" height="16"/>
+  <object id="209" x="3664" y="400" width="96" height="16"/>
+  <object id="210" x="3792" y="384" width="16" height="16"/>
+  <object id="211" x="3808" y="368" width="48" height="16"/>
+  <object id="212" x="3856" y="336" width="16" height="16"/>
+  <object id="213" x="3872" y="320" width="16" height="16"/>
+  <object id="214" x="3888" y="304" width="16" height="16"/>
+  <object id="215" x="3904" y="304" width="16" height="16"/>
+  <object id="216" x="3920" y="240" width="16" height="16"/>
+  <object id="217" x="3968" y="240" width="16" height="16"/>
  </objectgroup>
 </map>
