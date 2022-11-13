@@ -47,6 +47,7 @@ public:
 	const char* deathFxPath;
 	const char* jumpFxPath;
 	const char* level1SongPath;
+	const char* defeatFxPath;
 
 	Animation* currentAnimation;
 	Animation rightRunAnimation;
@@ -78,6 +79,8 @@ public:
 
 	int timerPocho;
 	int deathFxId;
+
+	int defeatFxId;
 
 	int timerDeath;
 	bool isDead;

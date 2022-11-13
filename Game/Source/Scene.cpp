@@ -118,10 +118,10 @@ bool Scene::Update(float dt)
 		app->scene->FadeToNewState(PLAYING);
 		LOG("LOAD REQUESTED");
 	}
-	if (gameplayState == GAME_OVER_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	/*if (gameplayState == GAME_OVER_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 	{
 		app->scene->FadeToNewState(TITLE_SCREEN);
-	}
+	}*/
 	//if (gameplayState == WIN_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 	//{
 	//	app->scene->FadeToNewState(TITLE_SCREEN);
@@ -279,14 +279,14 @@ void Scene::ChangeGameplayState(GameplayState newState)
 	case GAME_OVER_SCREEN:
 		gameplayState = GAME_OVER_SCREEN;
 		app->audio->PlayMusic(silenceSongPath, 0);
-		app->map->CleanUp();
+		//app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 		break;
 	case WIN_SCREEN:
 		app->audio->PlayMusic(victorySongPath, 0);
 		gameplayState = WIN_SCREEN;
-		app->map->CleanUp();
+		//app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 	}
@@ -297,7 +297,8 @@ bool Scene::PostUpdate()
 {
 	bool ret = true;
 
-	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || (gameplayState == WIN_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN))
+	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || (gameplayState == WIN_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		|| (gameplayState == GAME_OVER_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN))
 	{
 		ret = false;
 

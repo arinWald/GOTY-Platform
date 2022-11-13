@@ -100,6 +100,7 @@ bool Player::Awake() {
 		level1SongPath = parameters.attribute("level1songpath").as_string();
 		playerlives = parameters.attribute("lives").as_int();
 		jumpspeed = parameters.attribute("jumpspeed").as_int();
+		defeatFxPath = parameters.attribute("defeatfx").as_string();
 	
 	return true;
 }
@@ -113,6 +114,7 @@ bool Player::Start() {
 		//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
 		deathFxId = app->audio->LoadFx(deathFxPath);
 		jumpFxId = app->audio->LoadFx(jumpFxPath);
+		defeatFxId = app->audio->LoadFx(defeatFxPath);
 		//app->audio->PlayMusic(level1SongPath, 0);
 		currentAnimation = &rightIdleAnimation;
 
@@ -356,6 +358,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 				app->audio->PlayFx(deathFxId);
 				playerlives--;
 				isDead = true;
+			}
+			if (playerlives <= 0)
+			{
+				app->audio->PlayFx(defeatFxId);
 			}
 			break;
 		case ColliderType::GROUNDSENSOR:
