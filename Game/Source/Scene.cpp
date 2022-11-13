@@ -265,7 +265,7 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		gameplayState = TITLE_SCREEN;
 		player->isDead = false;
 		player->isWin = false;
-		app->map->Load();	
+		app->map->Load();
 		player->playerlives = 3;
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
@@ -273,7 +273,7 @@ void Scene::ChangeGameplayState(GameplayState newState)
 	case GAME_OVER_SCREEN:
 		gameplayState = GAME_OVER_SCREEN;
 		app->audio->PlayMusic(silenceSongPath, 0);
-		app->map->CleanUp();
+		//app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 		break;

@@ -107,6 +107,15 @@ struct MapData
 	List<MapLayer*> maplayers;
 };
 
+struct ColLayer
+{
+	int x;
+	int y;
+	int width;
+	int height;
+	//uint* data;
+};
+
 class Map : public Module
 {
 public:
@@ -141,6 +150,7 @@ private:
 	// L05
 	bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
 	bool LoadAllLayers(pugi::xml_node mapNode);
+	bool LoadObject(pugi::xml_node node);
 
 	// L06: DONE 2
 	TileSet* GetTilesetFromTileId(int gid) const;
@@ -152,6 +162,8 @@ public:
 
 	// L04: DONE 1: Declare a variable data of the struct MapData
 	MapData mapData;
+
+	List<PhysBody*> Colliders;
 
 private:
 

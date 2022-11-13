@@ -192,6 +192,13 @@ bool Map::Load()
     {
         ret = LoadAllLayers(mapFileXML.child("map"));
     }
+
+    if (ret == true)
+    {
+        ret = LoadObject(mapFileXML.child("map"));
+    }
+
+
     
     //// L07 DONE 3: Create colliders
     //// Later you can create a function here to load and create the colliders from the map
@@ -202,54 +209,54 @@ bool Map::Load()
 
     ////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
-    ListItem<MapLayer*>* mapLayerItem;
-    mapLayerItem = mapData.maplayers.start;
+    //ListItem<MapLayer*>* mapLayerItem;
+    //mapLayerItem = mapData.maplayers.start;
 
-    while (mapLayerItem != NULL) {
+    //while (mapLayerItem != NULL) {
 
-        //L06: DONE 7: use GetProperty method to ask each layer if your “Draw” property is true.
-        if (mapLayerItem->data->properties.GetProperty("Collider") != NULL && mapLayerItem->data->properties.GetProperty("Collider")->value) {
+    //    //L06: DONE 7: use GetProperty method to ask each layer if your “Draw” property is true.
+    //    if (mapLayerItem->data->properties.GetProperty("Collider") != NULL && mapLayerItem->data->properties.GetProperty("Collider")->value) {
 
-            for (int x = 0; x < mapLayerItem->data->width; x++)
-            {
-                for (int y = 0; y < mapLayerItem->data->height; y++)
-                {
-                    // L05: DONE 9: Complete the draw function
-                    int gid = mapLayerItem->data->Get(x, y);
+    //        for (int x = 0; x < mapLayerItem->data->width; x++)
+    //        {
+    //            for (int y = 0; y < mapLayerItem->data->height; y++)
+    //            {
+    //                // L05: DONE 9: Complete the draw function
+    //                int gid = mapLayerItem->data->Get(x, y);
 
-                    //If GID 295 == Red Square (collider)
-                    if (gid == 295)
-                    {
-                        iPoint pos = MapToWorld(x, y);
-                        PhysBody* mapCollider = app->physics->CreateRectangle(pos.x + 8, pos.y + 8, 16, 16, STATIC);
-                        mapCollider->ctype = ColliderType::PLATFORM;
-                    }
-                    //296 == Green Square (die)
-                    else if (gid == 296)
-                    {
-                        iPoint pos = MapToWorld(x, y);
-                        PhysBody* mapDeathSensor= app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
-                        mapDeathSensor->ctype = ColliderType::DEATH;
-                    }
-                    //293 == Ground sensor
-                    else if (gid == 293)
-                    {
-                        iPoint pos = MapToWorld(x, y);
-                        PhysBody* mapGroundSensor = app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
-                        mapGroundSensor->ctype = ColliderType::GROUNDSENSOR;
-                    }
-                    //294 == WIN
-                    else if (gid == 294)
-                    {
-                        iPoint pos = MapToWorld(x, y);
-                        PhysBody* mapWinSensor = app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
-                        mapWinSensor->ctype = ColliderType::WINSENSOR;
-                    }
-                }
-            }
-        }
-        mapLayerItem = mapLayerItem->next;
-    }
+    //                //If GID 295 == Red Square (collider)
+    //                if (gid == 295)
+    //                {
+    //                    iPoint pos = MapToWorld(x, y);
+    //                    PhysBody* mapCollider = app->physics->CreateRectangle(pos.x + 8, pos.y + 8, 16, 16, STATIC);
+    //                    mapCollider->ctype = ColliderType::PLATFORM;
+    //                }
+    //                //296 == Green Square (die)
+    //                else if (gid == 296)
+    //                {
+    //                    iPoint pos = MapToWorld(x, y);
+    //                    PhysBody* mapDeathSensor= app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
+    //                    mapDeathSensor->ctype = ColliderType::DEATH;
+    //                }
+    //                //293 == Ground sensor
+    //                else if (gid == 293)
+    //                {
+    //                    iPoint pos = MapToWorld(x, y);
+    //                    PhysBody* mapGroundSensor = app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
+    //                    mapGroundSensor->ctype = ColliderType::GROUNDSENSOR;
+    //                }
+    //                //294 == WIN
+    //                else if (gid == 294)
+    //                {
+    //                    iPoint pos = MapToWorld(x, y);
+    //                    PhysBody* mapWinSensor = app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
+    //                    mapWinSensor->ctype = ColliderType::WINSENSOR;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    mapLayerItem = mapLayerItem->next;
+    //}
 
     if(ret == true)
     {
@@ -406,6 +413,64 @@ bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
     return ret;
 }
 
+bool Map::LoadObject(pugi::xml_node node)
+{
+    bool ret = true;
+    LOG("Loading Objects");
+
+    ColLayer object;
+    for (pugi::xml_node colNode = node.child("objectgroup"); colNode && ret; colNode = colNode.next_sibling("objectgroup"))
+    {
+        //printf("NAME %s", colNode.attribute("name").as_string());
+        if (colNode.attribute("id").as_int() == 15)
+        {
+            //LOG("CREATING COLLIDERS\n");
+            for (pugi::xml_node secondNode = colNode.child("object"); secondNode && ret; secondNode = secondNode.next_sibling("object"))
+            {
+                //Load the attributes
+                object.x = secondNode.next_sibling("object").attribute("x").as_int();
+                object.y = secondNode.next_sibling("object").attribute("y").as_int();
+                object.width = secondNode.next_sibling("object").attribute("width").as_int();
+                object.height = secondNode.next_sibling("object").attribute("height").as_int();
+                PhysBody* c1 = app->physics->CreateRectangle(object.x + object.width / 2, object.y + object.height / 2, object.width, object.height, STATIC);
+                c1->ctype = ColliderType::PLATFORM;
+                Colliders.Add(c1);
+            }
+        }
+        //DEATH = 7
+        else if (colNode.attribute("id").as_int() == 7)
+        {
+            for (pugi::xml_node secondNode = colNode.child("object"); secondNode && ret; secondNode = secondNode.next_sibling("object"))
+            {
+                //Load the attributes
+                object.x = secondNode.next_sibling("object").attribute("x").as_int();
+                object.y = secondNode.next_sibling("object").attribute("y").as_int();
+                object.width = secondNode.next_sibling("object").attribute("width").as_int();
+                object.height = secondNode.next_sibling("object").attribute("height").as_int();
+                PhysBody* c1 = app->physics->CreateRectangle(object.x + object.width / 2, object.y + object.height / 2, object.width, object.height, STATIC);
+                c1->ctype = ColliderType::DEATH;
+                Colliders.Add(c1);
+            }
+        }
+        //WIN = 14
+        else if (colNode.attribute("id").as_int() == 14)
+        {
+            for (pugi::xml_node secondNode = colNode.child("object"); secondNode && ret; secondNode = secondNode.next_sibling("object"))
+            {
+                //Load the attributes
+                object.x = secondNode.next_sibling("object").attribute("x").as_int();
+                object.y = secondNode.next_sibling("object").attribute("y").as_int();
+                object.width = secondNode.next_sibling("object").attribute("width").as_int();
+                object.height = secondNode.next_sibling("object").attribute("height").as_int();
+                PhysBody* c1 = app->physics->CreateRectangle(object.x + object.width / 2, object.y + object.height / 2, object.width, object.height, STATIC);
+                c1->ctype = ColliderType::WINSENSOR;
+                Colliders.Add(c1);
+            }
+        }
+    }
+
+    return ret;
+}
 
 // L06: DONE 7: Ask for the value of a custom property
 Properties::Property* Properties::GetProperty(const char* name)
