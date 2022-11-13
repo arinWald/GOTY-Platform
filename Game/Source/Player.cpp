@@ -329,7 +329,7 @@ bool Player::Update()
 		}
 	
 		for (int i = 0; i < (playerlives ); ++i) {
-			app->render->DrawTexture(playerLivesTexture, (-app->render->camera.x*0.5)+ 30*i, 0);
+			app->render->DrawTexture(playerLivesTexture, (-app->render->camera.x*0.5)+ 30*i+5, 5);
 
 		}
 
