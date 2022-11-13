@@ -1,26 +1,35 @@
-# {Project Name}
+# PeePee's Adventure
 
 ## Description
 
-{project description}
+Join PeePee the frog on fantastic adventures on this 2D platform videogame!
+
+CITM Student's project made in C++, Box2D and SDL libraries.
+ 
 
 ## Key Features
 
- - {Feature01}
- - {Feature02}
- - {Feature03}
- - {Feature04}
+ - One fun map
+ - The player has animations
+ - It can double jump!
+ - Great music accompained with cool SFX
  
 ## Controls
 
- - {ControlsScheme}
+ - A Move left
+ - D Move right
+ - Space Jump & Double Jump
+ - F1 Start from the first level
+ - F3 Start from the beginning of the current level
+ - F5 Save the current player and camera position
+ - F6 Load the saved player and camera position
+ - F9 View colliders / logic
+ - F10 God Mode(more speed, fly enabled and can't die)
 
 ## Developers
 
- - {Dev01} - {Role(s)}
- - {Dev02} - {Role(s)}
- - {Dev03} - {Role(s)}
- - {Dev04} - {Role(s)}
+ - Arnau González (arinWald)
+ - Xiao Shan (xaita)
 
 ## License
 
