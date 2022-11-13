@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="250" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="221">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="250" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="227">
  <tileset firstgid="1" name="terrain" tilewidth="16" tileheight="16" tilecount="242" columns="22">
   <image source="Terrain (16x16).png" width="352" height="176"/>
   <wangsets>
@@ -30272,12 +30272,7 @@
   <object id="153" x="3936" y="224" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="16" name="GroundSensor">
-  <object id="157" x="16" y="315" width="176" height="4"/>
-  <object id="158" x="194" y="299.43" width="28" height="4.26563"/>
-  <object id="159" x="228.5" y="285" width="56" height="3"/>
-  <object id="160" x="288" y="300.5" width="48" height="3.5"/>
-  <object id="161" x="338.75" y="235.375" width="58.5" height="4.625"/>
-  <object id="163" x="400" y="269.25" width="96" height="2.75"/>
+  <object id="163" x="401.636" y="267.432" width="92.7273" height="4.56818"/>
   <object id="164" x="497.5" y="188.75" width="45" height="3.25"/>
   <object id="165" x="545.625" y="269.25" width="92.75" height="2.75"/>
   <object id="166" x="689.25" y="269.375" width="29.5" height="2.625"/>
@@ -30328,5 +30323,11 @@
   <object id="216" x="3921.27" y="252.091" width="13.4545" height="3.90909"/>
   <object id="217" x="3969.64" y="251.182" width="12.7273" height="4.81818"/>
   <object id="220" x="92.5" y="547.5"/>
+  <object id="221" x="18.1818" y="317.091" width="171.636" height="2.90909"/>
+  <object id="222" x="194.545" y="299.322" width="28" height="4.26563"/>
+  <object id="223" x="226" y="284.182" width="60" height="3.81818"/>
+  <object id="224" x="289.818" y="299.818" width="44.3636" height="4.18182"/>
+  <object id="225" x="338.182" y="235.273" width="59.6364" height="4.72727"/>
+  <object id="226" x="400" y="266.909" width="96" height="5.09091"/>
  </objectgroup>
 </map>
