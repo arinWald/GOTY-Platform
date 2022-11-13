@@ -43,6 +43,8 @@ public:
 
 	//L02: DONE 1: Declare player parameters
 	SDL_Texture* playerTexture;
+	SDL_Texture* playerLivesTexture;
+	const char* livesTexturePath;
 	const char* texturePath;
 	const char* deathFxPath;
 	const char* jumpFxPath;

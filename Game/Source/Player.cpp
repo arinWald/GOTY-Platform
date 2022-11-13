@@ -89,11 +89,12 @@ bool Player::Awake() {
 		//L02: DONE 1: Initialize Player parameters
 		//pos = position;
 		//texturePath = "Assets/Textures/player/idle1.png";
-
+	livesTexturePath = "Assets/Textures/heart-icon.png";
 		//L02: DONE 5: Get Player parameters from XML
 		position.x = parameters.attribute("x").as_int();
 		position.y = parameters.attribute("y").as_int();
 		speed = parameters.attribute("speed").as_int();
+		livesTexturePath = parameters.attribute("livestexturepath").as_string();
 		texturePath = parameters.attribute("texturepath").as_string();
 		jumpFxPath = parameters.attribute("jumpfxpath").as_string();
 		deathFxPath = parameters.attribute("deathfxpath").as_string();
@@ -108,7 +109,7 @@ bool Player::Awake() {
 bool Player::Start() {
 
 	//initilize textures
-	
+	playerLivesTexture = app->tex->Load(livesTexturePath);
 		playerTexture = app->tex->Load(texturePath);
 		transformPosition teleport;
 		//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
@@ -312,6 +313,7 @@ bool Player::Update()
 		}
 
 		//app->render->DrawTexture(texture, position.x, position.y);
+		
 
 		SDL_Rect rect = currentAnimation->GetCurrentFrame();
 
@@ -323,7 +325,18 @@ bool Player::Update()
 		else
 		{
 			app->render->DrawTexture(playerTexture, position.x, position.y, &rect);
+		
 		}
+	
+		for (int i = 0; i < (playerlives ); ++i) {
+			app->render->DrawTexture(playerLivesTexture, (-app->render->camera.x*0.5)+ 30*i, 0);
+
+		}
+
+		printf("Position camera.x %d \n", app->render->camera.x);
+
+
+		
 	
 	return true;
 }
