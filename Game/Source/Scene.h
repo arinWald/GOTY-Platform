@@ -17,6 +17,7 @@ public:
 		PLAYING,
 		GAME_OVER_SCREEN,
 		LOGO_SCREEN,
+		WIN_SCREEN,
 	};
 
 
@@ -56,15 +57,31 @@ public:
 	//L02: DONE 3: Declare a Player attribute 
 	Player* player;
 
-	GameplayState gameplayState = TITLE_SCREEN;
+	GameplayState gameplayState = LOGO_SCREEN;
 	bool fading = false;
+
+	SDL_Texture* logo;
+	const char* logotexturePath;
+
 	SDL_Texture* intro;
 	const char* introtexturePath;
 
 	SDL_Texture* game_over;
 	const char* game_over_texturePath;
 
+	SDL_Texture* win_screen;
+	const char* win_screen_texturePath;
+
+	const char* level1SongPath;
+
+	const char* silenceSongPath;
+
+	const char* victorySongPath;
+
 	Animation* screenDisplayAnim;
+
+	bool godMode;
+
 private:
 	SDL_Texture* img;
 	float currentFade = 0.0f;

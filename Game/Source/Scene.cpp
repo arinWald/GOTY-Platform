@@ -7,6 +7,9 @@
 #include "Scene.h"
 #include "EntityManager.h"
 #include "Map.h"
+#include "Player.h"
+#include <iostream>
+using namespace std;
 
 #include "Defs.h"
 #include "Log.h"
@@ -35,9 +38,11 @@ bool Scene::Awake(pugi::xml_node& config)
 	}
 	//L02: DONE 3: Instantiate the player using the entity manager
 
-		player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
-		player->parameters = config.child("player");
+	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
+	player->parameters = config.child("player");
 	
+	pugi::xml_node logo = config.child("logo");
+	logotexturePath = logo.attribute("texturepath").as_string();
 
 	pugi::xml_node intro = config.child("intro");
 	introtexturePath = intro.attribute("texturepath").as_string();
@@ -45,6 +50,17 @@ bool Scene::Awake(pugi::xml_node& config)
 	pugi::xml_node game_over = config.child("game_over");
 	game_over_texturePath = game_over.attribute("texturepath").as_string();
 
+	pugi::xml_node win_screen = config.child("win_screen");
+	win_screen_texturePath = win_screen.attribute("texturepath").as_string();
+
+	pugi::xml_node level_1_song = config.child("level_1_song");
+	level1SongPath = level_1_song.attribute("audiopath").as_string();
+
+	pugi::xml_node silence_song = config.child("silence_song");
+	silenceSongPath = silence_song.attribute("audiopath").as_string();
+
+	pugi::xml_node victory_song = config.child("victory_song");
+	victorySongPath = victory_song.attribute("audiopath").as_string();
 	return ret;
 }
 
@@ -68,9 +84,12 @@ bool Scene::Start()
 	app->win->SetTitle(title.GetString());
 
 	
-
+	logo = app->tex->Load(logotexturePath);
 	intro = app->tex->Load(introtexturePath);
 	game_over = app->tex->Load(game_over_texturePath);
+	win_screen = app->tex->Load(win_screen_texturePath);
+
+	godMode = false;
 
 	return true;
 }
@@ -99,6 +118,25 @@ bool Scene::Update(float dt)
 		app->scene->FadeToNewState(PLAYING);
 		LOG("LOAD REQUESTED");
 	}
+	/*if (gameplayState == GAME_OVER_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	{
+		app->scene->FadeToNewState(TITLE_SCREEN);
+	}*/
+	//if (gameplayState == WIN_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	//{
+	//	app->scene->FadeToNewState(TITLE_SCREEN);
+	//}
+	if (player->playerlives <= 0) {
+		app->scene->FadeToNewState(app->scene->GAME_OVER_SCREEN);
+
+	}
+
+	if (player->isWin && gameplayState == PLAYING)
+	{
+		player->playerlives = 3;
+		app->scene->FadeToNewState(app->scene->WIN_SCREEN);
+	}
+
 	if (gameplayState == PLAYING) {
 		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 			app->SaveGameRequest();
@@ -106,34 +144,58 @@ bool Scene::Update(float dt)
 		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
 			app->LoadGameRequest();
 
-		if (app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-			app->render->camera.y += 3;
+		//if (app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		//	app->render->camera.y += 3;
 
-		if (app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-			app->render->camera.y -= 3;
+		//if (app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		//	app->render->camera.y -= 3;
 
-		if (app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-			app->render->camera.x += 3;
+		//if (app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		//	app->render->camera.x += 3;
 
-		if (app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-			app->render->camera.x -= 3;
-		if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
-			player->playerlives = 0;
-		//CAMERA FOLLOW
-		if (player->position.x > 400 && player->position.x < 3382)
-			app->render->camera.x = -player->position.x + 400;
-		else if (player->position.x < 400)
+		//if (app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		//	app->render->camera.x -= 3;
+
+
+		if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		{
-			app->render->camera.x = 0;
+			player->playerlives = 3;
+			player->ChangePosition(player->initialPosX, player->initialPosY);
 		}
+		/*if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+			player->playerlives = 0;*/
+		// Start from the beginning of the current level
+		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+		{
+			player->ChangePosition(player->initialPosX, player->initialPosY);
+		}
+		if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+		{
+			if (!godMode) godMode = true;
+			else godMode = false;
+		}
+
+		////CAMERA CONTROL
+		//if (player->position.x > 400 && player->position.x < 3382)
+		//{
+		//	app->render->camera.x = -player->position.x * app->win->GetScale() + app->map->mapData.width / 2;
+		//	
+		//}
+		//else if (player->position.x < 400)
+		//{
+		//	app->render->camera.x = 0;
+		//}
+
+		//app->render->camera.y = -player->position.y * app->win->GetScale() + 290;
 	}
 
 	if (gameplayState != targetState)
 	{
+		//Abans era 0.05f
 		currentFade += 0.02f;
-		if (currentFade >= 1.0f)
+		if (currentFade >= 0.0f)
 		{
-			currentFade = 1.0f;
+			currentFade = 0.0f;
 			ChangeGameplayState(targetState);
 		}
 	}
@@ -148,10 +210,13 @@ bool Scene::Update(float dt)
 	}
 
 	//app->render->DrawTexture(img, 380, 100); // Placeholder not needed any more
-
+	app->render->DrawTexture(game_over, 0, 0);
 	// Draw map
 	
-	app->map->Draw();
+	if (app->scene->gameplayState == PLAYING)
+	{
+		app->map->Draw();
+	}
 
 	return true;
 }
@@ -191,24 +256,39 @@ void Scene::ChangeGameplayState(GameplayState newState)
 
 	switch (newState)
 	{
+	case LOGO_SCREEN:
+		gameplayState = LOGO_SCREEN;
+		app->render->camera.x = 0;
+		app->render->camera.y = 0;
+		break;
 	case PLAYING:
 		gameplayState = PLAYING;
-		app->map->Load();	
-		player->ChangePosition(30, 270);
+		//app->map->Load();
+		app->audio->PlayMusic(level1SongPath, 0);
+		player->ChangePosition(player->initialPosX, player->initialPosY);
 		break;
 	case TITLE_SCREEN:
 		gameplayState = TITLE_SCREEN;
-		app->map->CleanUp();
-		
+		app->map->Load();
+		player->isDead = false;
+		player->isWin = false;
+		player->playerlives = 3;
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 		break;
 	case GAME_OVER_SCREEN:
 		gameplayState = GAME_OVER_SCREEN;
+		app->audio->PlayMusic(silenceSongPath, 0);
+		//app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
 		break;
-
+	case WIN_SCREEN:
+		app->audio->PlayMusic(victorySongPath, 0);
+		gameplayState = WIN_SCREEN;
+		//app->map->CleanUp();
+		app->render->camera.x = 0;
+		app->render->camera.y = 0;
 	}
 }
 
@@ -217,9 +297,17 @@ bool Scene::PostUpdate()
 {
 	bool ret = true;
 
-	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || (gameplayState == WIN_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		|| (gameplayState == GAME_OVER_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN))
+	{
 		ret = false;
 
+	}
+
+	if (gameplayState == LOGO_SCREEN)
+	{
+		app->render->DrawTexture(logo, 0, 0);
+	}
 
 	if (gameplayState == TITLE_SCREEN)
 	{
@@ -232,7 +320,11 @@ bool Scene::PostUpdate()
 		app->render->DrawTexture(game_over, 0, 0);
 
 	}
+	if (gameplayState == WIN_SCREEN)
+	{
+		app->render->DrawTexture(win_screen, 0, 0);
 
+	}
 	return ret;
 }
 

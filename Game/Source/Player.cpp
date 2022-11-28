@@ -12,9 +12,11 @@
 #include "Animation.h"
 #include "EntityManager.h"
 #include "Window.h"
+
 #include <iostream>
 using namespace std;
 
+#define DEATH_TIME 40;
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -68,6 +70,13 @@ Player::Player() : Entity(EntityType::PLAYER)
 		}
 		leftDoubleJumpAnimation.loop;
 		leftDoubleJumpAnimation.speed = 0.3f;
+
+		for (int i = 0; i < 7; ++i)
+		{
+			dissappearAnimation.PushBack({(63 * i), 197, 63, 63});
+		}
+		dissappearAnimation.pingpong = true;
+		dissappearAnimation.speed = 0.3f;
 	
 }
 
@@ -80,17 +89,19 @@ bool Player::Awake() {
 		//L02: DONE 1: Initialize Player parameters
 		//pos = position;
 		//texturePath = "Assets/Textures/player/idle1.png";
-
+	livesTexturePath = "Assets/Textures/heart-icon.png";
 		//L02: DONE 5: Get Player parameters from XML
 		position.x = parameters.attribute("x").as_int();
 		position.y = parameters.attribute("y").as_int();
 		speed = parameters.attribute("speed").as_int();
+		livesTexturePath = parameters.attribute("livestexturepath").as_string();
 		texturePath = parameters.attribute("texturepath").as_string();
 		jumpFxPath = parameters.attribute("jumpfxpath").as_string();
 		deathFxPath = parameters.attribute("deathfxpath").as_string();
 		level1SongPath = parameters.attribute("level1songpath").as_string();
 		playerlives = parameters.attribute("lives").as_int();
 		jumpspeed = parameters.attribute("jumpspeed").as_int();
+		defeatFxPath = parameters.attribute("defeatfx").as_string();
 	
 	return true;
 }
@@ -98,33 +109,40 @@ bool Player::Awake() {
 bool Player::Start() {
 
 	//initilize textures
-	
+	playerLivesTexture = app->tex->Load(livesTexturePath);
 		playerTexture = app->tex->Load(texturePath);
 		transformPosition teleport;
 		//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
 		deathFxId = app->audio->LoadFx(deathFxPath);
 		jumpFxId = app->audio->LoadFx(jumpFxPath);
-		app->audio->PlayMusic(level1SongPath, 0);
+		defeatFxId = app->audio->LoadFx(defeatFxPath);
+		//app->audio->PlayMusic(level1SongPath, 0);
 		currentAnimation = &rightIdleAnimation;
 
 		timerJump = 0;
 		jumpspeed = -5.5;
 		jumpsavailable = 2;
 
+		isDead = false;
+		isWin = false;
+
+
+		initialPosX = 40;
+		initialPosY = 270;
+
 		LastDir = 1;
+
+		timerDeath = DEATH_TIME;
 		
-			// L07 DONE 5: Add physics to the player - initialize physics body
-			pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
+		// L07 DONE 5: Add physics to the player - initialize physics body
+		pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
 
-			// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
-			pbody->listener = this;
+		// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
+		pbody->listener = this;
 
-			// L07 DONE 7: Assign collider type
-			pbody->ctype = ColliderType::PLAYER;
-			pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
-		
-
-
+		// L07 DONE 7: Assign collider type
+		pbody->ctype = ColliderType::PLAYER;
+		pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
 	
 		return true;
 	
@@ -138,16 +156,23 @@ bool Player::Update()
 		currentAnimation->Update();
 
 
-		printf("PositionX: %d PositionY: %d\n", position.x, position.y);
+		//printf("PositionX: %d PositionY: %d\n", position.x, position.y);
+		/*cout << "Jumps Available: " << jumpsavailable << endl;
+		cout << "Player Lives: " << playerlives << endl;*/
 		// L07 DONE 5: Add physics to the player - updated player position using physics
-		
-		b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 
-		if (playerlives <= 0) {
-			app->scene->FadeToNewState(app->scene->GAME_OVER_SCREEN);
-			
+		b2Vec2 vel ;
+		if (!app->scene->godMode)
+		{
+			vel = b2Vec2(0, -GRAVITY_Y);
+		}
+		else
+		{
+			vel = b2Vec2(0, 0);
 		}
 
+		
+		
 		if (LastDir == 1) {
 			currentAnimation = &rightIdleAnimation;
 		}
@@ -160,9 +185,8 @@ bool Player::Update()
 			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 				vel.x = speed;
 				LastDir = 1;
-
 			}
-			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 
 
 				vel.x = -speed;
@@ -189,34 +213,91 @@ bool Player::Update()
 			vel = b2Vec2(vel.x, jumpspeed);
 
 		}
-		//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-		if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
-			//
-			timerJump = 15;
-			app->audio->PlayFx(jumpFxId);
-			jumpsavailable--;
-			/*vel =  b2Vec2(vel.x,jumpspeed);*/
-		}
 
-		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-			//
-		}
+		//cout << "JUMPS AVAILABLE: " << jumpsavailable << endl;
+		//cout << "LIVES: " << playerlives << endl;
 
-		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
-			vel = b2Vec2(-speed, vel.y);
-			currentAnimation = &leftRunAnimation;
-			LastDir = 2;
+		//Manage Death Timer
+		if (isDead)
+		{
+			if (timerDeath >= 0)
+			{
+				//cout << "IS DEAD ";
+				currentAnimation = &dissappearAnimation;
+				--timerDeath;
+			}
+			else
+			{
+				isDead = false;
+				timerDeath = DEATH_TIME;
+				ChangePosition(initialPosX, initialPosY);
+			}
 		}
-		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
-			currentAnimation = &rightRunAnimation;
-			LastDir = 1;
-			vel = b2Vec2(speed, vel.y);
+		
+		//PLAYER MOVE INPUT
+		if (!app->scene->godMode && app->scene->gameplayState == app->scene->GameplayState::PLAYING && !isDead)
+		{
+			//L02: DONE 4: modify the position of the player using arrow keys and render the texture
+			if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
+				//
+				timerJump = 15;
+				app->audio->PlayFx(jumpFxId);
+				jumpsavailable--;
+				/*vel =  b2Vec2(vel.x,jumpspeed);*/
+			}
+
+			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+				//
+			}
+
+			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
+				vel = b2Vec2(-speed, vel.y);
+				currentAnimation = &leftRunAnimation;
+				LastDir = 2;
+			}
+			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
+				currentAnimation = &rightRunAnimation;
+				LastDir = 1;
+				vel = b2Vec2(speed, vel.y);
+			}
 		}
+		//GOD MODE INPUT
+		else if(app->scene->gameplayState == app->scene->GameplayState::PLAYING && app->scene->godMode)
+		{
+			//L02: DONE 4: modify the position of the player using arrow keys and render the texture
+			if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)) {
+				vel = b2Vec2(vel.x, -speed);
+				currentAnimation = &leftJumpAnimation;
+			}
 
+			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+				vel = b2Vec2(vel.x, speed);
+				currentAnimation = &leftJumpAnimation;
+			}
 
+			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
+				vel = b2Vec2(-speed, vel.y);
+				currentAnimation = &leftRunAnimation;
+				LastDir = 2;
+			}
+			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
+				currentAnimation = &rightRunAnimation;
+				LastDir = 1;
+				vel = b2Vec2(speed, vel.y);
+			}
+		}
 
 		//Set the velocity of the pbody of the player
-		pbody->body->SetLinearVelocity(vel);
+		if (app->scene->godMode)
+		{
+			vel.x *= 2;
+			vel.y *= 2;
+			pbody->body->SetLinearVelocity(vel);
+		}
+		else
+		{
+			pbody->body->SetLinearVelocity(vel);
+		}
 
 		//Update player position in pixels
 		position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
@@ -232,10 +313,30 @@ bool Player::Update()
 		}
 
 		//app->render->DrawTexture(texture, position.x, position.y);
+		
 
 		SDL_Rect rect = currentAnimation->GetCurrentFrame();
 
-		app->render->DrawTexture(playerTexture, position.x, position.y, &rect);
+		//Death animation needs offset
+		if (isDead)
+		{
+			app->render->DrawTexture(playerTexture, position.x - 16, position.y - 16, &rect);
+		}
+		else
+		{
+			app->render->DrawTexture(playerTexture, position.x, position.y, &rect);
+		
+		}
+	
+		for (int i = 0; i < (playerlives ); ++i) {
+			app->render->DrawTexture(playerLivesTexture, (-app->render->camera.x*0.5)+ 30*i+5, 5);
+
+		}
+
+		printf("Position camera.x %d \n", app->render->camera.x);
+
+
+		
 	
 	return true;
 }
@@ -255,33 +356,46 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype)
 	{
 		case ColliderType::ITEM:
-			LOG("Collision ITEM");
+			//LOG("Collision ITEM");
 			app->audio->PlayFx(deathFxId);
 			break;
 		case ColliderType::PLATFORM:
-			ground = true;
-			if (timerJump > 0) { 
- 				timerJump = 0; }
-			jumpsavailable = 2;
-			
-			LOG("Collision PLATFORM");
+
+			//LOG("Collision PLATFORM");
 			
 			break;
 		case ColliderType::DEATH:
-			LOG("Collision DEATH");
-			app->audio->PlayFx(deathFxId);
-			playerlives--;
-			//resetPos = b2Vec2(PIXEL_TO_METERS(150), PIXEL_TO_METERS(672));
-			//pbody->body->SetTransform({PIXEL_TO_METERS(resetPos.x), PIXEL_TO_METERS(resetPos.y)}, 0);
-			ChangePosition(30, 270);
-			
+			//LOG("Collision DEATH");
+			if (!app->scene->godMode)
+			{
+				app->audio->PlayFx(deathFxId);
+				playerlives--;
+				isDead = true;
+			}
+			if (playerlives <= 0)
+			{
+				app->audio->PlayFx(defeatFxId);
+			}
 			break;
+		case ColliderType::GROUNDSENSOR:
+			//LOG("TOUCHING GROUND");
+			//cout << "Touching Ground" << endl;
+
+			ground = true;
+			if (timerJump > 0) {
+				timerJump = 0;
+			}
+			jumpsavailable = 2;
+			break;
+		case ColliderType::WINSENSOR:
+			LOG("WIN");
+			//cout << "WINNNNNN" << endl;
+			isWin = true;
+			ChangePosition(initialPosX, initialPosY);
+
 		case ColliderType::UNKNOWN:
-			LOG("Collision UNKNOWN");
-			break;
-		
-			
-				
+			//LOG("Collision UNKNOWN");
+			break;	
 	}
 }
 void Player::ChangePosition(int x, int y)

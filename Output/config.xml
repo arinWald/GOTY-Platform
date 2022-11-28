@@ -9,7 +9,7 @@
   </renderer>
 
   <window>
-    <resolution width="1024" height="480" scale="1"/>
+    <resolution width="1280" height="960" scale="2"/>
     <fullscreen value="false"/>
     <borderless value="false"/>
     <resizable value="false"/>
@@ -23,14 +23,18 @@
 
   <!-- L02: DONE: Add an element for the entity manager and add the player parameters -->
   <scene>
-    <player x="30" y="270" speed="4" jumpspeed ="-5.5" lives="3" texturepath="Assets/Textures/Player/playerSpriteSheet.png" 
-			jumpfxpath="Assets/Audio/Fx/jump.wav"
-			deathfxpath="Assets/Audio/Fx/hitHurt.wav"
-			level1songpath="Assets/Audio/Music/level1Song.ogg"/>
+	  <player x="23" y="289" speed="4" jumpspeed ="-5.5" lives="3" livestexturepath="Assets/Textures/heart-icon.png" texturepath="Assets/Textures/Player/playerSpriteSheet.png"
+			  jumpfxpath="Assets/Audio/Fx/jump.wav"
+			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"
+			  defeatfx="Assets/Audio/Fx/defeat.wav"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png" 
 		  coinfxpath="Assets/Audio/Fx/coinPickup.ogg"/>
     <intro texturepath ="Assets/Textures/Scenas/Intro.png"/> 
-    <game_over texturepath ="Assets/Textures/Scenas/GameOver.png"/> 
+    <game_over texturepath ="Assets/Textures/Scenas/GameOver.png"/>
+	<logo texturepath ="Assets/Textures/Scenas/Logo.png"/>
+	<win_screen texturepath="Assets/Textures/Scenas/Win.png"/>
+	<level_1_song audiopath="Assets/Audio/Music/level1Song.ogg"/>
+	<victory_song audiopath="Assets/Audio/Music/victorySong.ogg"/>
   </scene>
 
   <map>
