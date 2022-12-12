@@ -21,7 +21,7 @@
     <ClCompile Include="Source\Map.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\ModuleFadeToBlack.cpp" />
-    <ClCompile Include="FlyingEnemy.cpp" />
+    <ClCompile Include="Source\FlyingEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window.h" />
@@ -67,7 +67,7 @@
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\Animation.h" />
     <ClInclude Include="Source\ModuleFadeToBlack.h" />
-    <ClInclude Include="FlyingEnemy.h" />
+    <ClInclude Include="Source\FlyingEnemy.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

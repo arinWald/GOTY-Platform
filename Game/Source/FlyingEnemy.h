@@ -1,5 +1,6 @@
 #ifndef __FLYINGENEMY_H__
-#define __FLYINGENEMYR_H__
+#define __FLYINGENEMY_H__
+
 
 #include "Entity.h"
 #include "Point.h"
@@ -17,13 +18,13 @@ struct transformPosition {
 
 };
 
-class Player : public Entity
+class FlyingEnemy : public Entity
 {
 public:
 
-	Player();
+	FlyingEnemy();
 
-	virtual ~Player();
+	virtual ~FlyingEnemy();
 
 	bool Awake();
 
@@ -36,35 +37,12 @@ public:
 	// L07 DONE 6: Define OnCollision function for the player. Check the virtual function on Entity class
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
-	void Player::ChangePosition(int x, int y);
+	void FlyingEnemy::ChangePosition(int x, int y);
 
 
 public:
 
-	//L02: DONE 1: Declare player parameters
-	SDL_Texture* playerTexture;
-	SDL_Texture* playerLivesTexture;
-	const char* livesTexturePath;
-	const char* texturePath;
-	const char* deathFxPath;
-	const char* jumpFxPath;
-	const char* level1SongPath;
-	const char* defeatFxPath;
 
-	Animation* currentAnimation;
-	Animation rightRunAnimation;
-	Animation rightIdleAnimation;
-	Animation rightJumpAnimation;
-	Animation rightFallAnimation;
-	Animation rightDoubleJumpAnimation;
-
-	Animation leftRunAnimation;
-	Animation leftIdleAnimation;
-	Animation leftJumpAnimation;
-	Animation leftFallAnimation;
-	Animation leftDoubleJumpAnimation;
-
-	Animation dissappearAnimation;
 
 	int speed;
 	int jumpspeed;
