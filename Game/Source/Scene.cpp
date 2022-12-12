@@ -260,8 +260,9 @@ bool Scene::Update(float dt)
 	//Test compute path function
 	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
-		if (originSelected == true)
+		if (originSelected == true && gameplayState == PLAYING)
 		{
+			cout << "Hola" << endl;
 			app->pathfinding->CreatePath(origin, mouseTile);
 			originSelected = false;
 		}
