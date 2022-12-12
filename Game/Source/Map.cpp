@@ -1,4 +1,3 @@
-
 #include "App.h"
 #include "Render.h"
 #include "Textures.h"
@@ -34,25 +33,60 @@ bool Map::Awake(pugi::xml_node& config)
     return ret;
 }
 
+bool Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
+{
+    bool ret = false;
+    ListItem<MapLayer*>* item;
+    item = mapData.maplayers.start;
+
+    for (item = mapData.maplayers.start; item != NULL; item = item->next)
+    {
+        MapLayer* layer = item->data;
+
+        if (layer->properties.GetProperty("Navigation") != NULL && !layer->properties.GetProperty("Navigation")->value)
+            continue;
+
+        uchar* map = new uchar[layer->width * layer->height];
+        memset(map, 1, layer->width * layer->height);
+
+        for (int y = 0; y < mapData.height; ++y)
+        {
+            for (int x = 0; x < mapData.width; ++x)
+            {
+                int i = (y * layer->width) + x;
+
+                int tileId = layer->Get(x, y);
+                TileSet* tileset = (tileId > 0) ? GetTilesetFromTileId(tileId) : NULL;
+
+                if (tileset != NULL)
+                {
+                    //According to the mapType use the ID of the tile to set the walkability value
+                    if (mapData.type == MapTypes::MAPTYPE_ISOMETRIC && tileId == 25) map[i] = 1;
+                    else if (mapData.type == MapTypes::MAPTYPE_ORTHOGONAL && tileId == 50) map[i] = 1;
+                    else map[i] = 0;
+                }
+                else {
+                    //LOG("CreateWalkabilityMap: Invalid tileset found");
+                    map[i] = 0;
+                }
+            }
+        }
+
+        *buffer = map;
+        width = mapData.width;
+        height = mapData.height;
+        ret = true;
+
+        break;
+    }
+
+    return ret;
+}
+
 void Map::Draw()
 {
     if(mapLoaded == false)
         return;
-
-    /*
-    // L04: DONE 6: Iterate all tilesets and draw all their 
-    // images in 0,0 (you should have only one tileset for now)
-
-    ListItem<TileSet*>* tileset;
-    tileset = mapData.tilesets.start;
-
-    while (tileset != NULL) {
-        app->render->DrawTexture(tileset->data->texture,0,0);
-        tileset = tileset->next;
-    }
-    */
-
-    // L05: DONE 5: Prepare the loop to draw all tiles in a layer + DrawTexture()
 
     ListItem<MapLayer*>* mapLayerItem;
     mapLayerItem = mapData.maplayers.start;
@@ -87,13 +121,45 @@ void Map::Draw()
     }
 }
 
-// L05: DONE 8: Create a method that translates x,y coordinates from map positions to world positions
 iPoint Map::MapToWorld(int x, int y) const
 {
     iPoint ret;
 
-    ret.x = x * mapData.tileWidth;
-    ret.y = y * mapData.tileHeight;
+    if (mapData.type == MAPTYPE_ORTHOGONAL)
+    {
+        ret.x = x * mapData.tileWidth;
+        ret.y = y * mapData.tileHeight;
+    }
+    else if (mapData.type == MAPTYPE_ISOMETRIC)
+    {
+        ret.x = (x - y) * (mapData.tileWidth / 2);
+        ret.y = (x + y) * (mapData.tileHeight / 2);
+    }
+
+    return ret;
+}
+
+iPoint Map::WorldToMap(int x, int y)
+{
+    iPoint ret(0, 0);
+
+    if (mapData.type == MAPTYPE_ORTHOGONAL)
+    {
+        ret.x = x / mapData.tileWidth;
+        ret.y = y / mapData.tileHeight;
+    }
+    else if (mapData.type == MAPTYPE_ISOMETRIC)
+    {
+        float halfWidth = mapData.tileWidth * 0.5f;
+        float halfHeight = mapData.tileHeight * 0.5f;
+        ret.x = int((x / halfWidth + y / halfHeight) / 2);
+        ret.y = int((y / halfHeight - x / halfWidth) / 2);
+    }
+    else
+    {
+        LOG("Unknown map type");
+        ret.x = x; ret.y = y;
+    }
 
     return ret;
 }
@@ -200,70 +266,8 @@ bool Map::Load()
         ret = LoadObject(mapFileXML.child("map"));
     }
 
-
-    
-    //// L07 DONE 3: Create colliders
-    //// Later you can create a function here to load and create the colliders from the map
-    //112 320
-    //PhysBody* c1 = app->physics->CreateRectangleBouncy(112 + 8, 320 + 8, 48, 16, STATIC, 10.0f);
-    //// L07 DONE 7: Assign collider type
-    //c1->ctype = ColliderType::PLATFORM;
-
-    ////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-
-    //ListItem<MapLayer*>* mapLayerItem;
-    //mapLayerItem = mapData.maplayers.start;
-
-    //while (mapLayerItem != NULL) {
-
-    //    //L06: DONE 7: use GetProperty method to ask each layer if your “Draw” property is true.
-    //    if (mapLayerItem->data->properties.GetProperty("Collider") != NULL && mapLayerItem->data->properties.GetProperty("Collider")->value) {
-
-    //        for (int x = 0; x < mapLayerItem->data->width; x++)
-    //        {
-    //            for (int y = 0; y < mapLayerItem->data->height; y++)
-    //            {
-    //                // L05: DONE 9: Complete the draw function
-    //                int gid = mapLayerItem->data->Get(x, y);
-
-    //                //If GID 295 == Red Square (collider)
-    //                if (gid == 295)
-    //                {
-    //                    iPoint pos = MapToWorld(x, y);
-    //                    PhysBody* mapCollider = app->physics->CreateRectangle(pos.x + 8, pos.y + 8, 16, 16, STATIC);
-    //                    mapCollider->ctype = ColliderType::PLATFORM;
-    //                }
-    //                //296 == Green Square (die)
-    //                else if (gid == 296)
-    //                {
-    //                    iPoint pos = MapToWorld(x, y);
-    //                    PhysBody* mapDeathSensor= app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
-    //                    mapDeathSensor->ctype = ColliderType::DEATH;
-    //                }
-    //                //293 == Ground sensor
-    //                else if (gid == 293)
-    //                {
-    //                    iPoint pos = MapToWorld(x, y);
-    //                    PhysBody* mapGroundSensor = app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
-    //                    mapGroundSensor->ctype = ColliderType::GROUNDSENSOR;
-    //                }
-    //                //294 == WIN
-    //                else if (gid == 294)
-    //                {
-    //                    iPoint pos = MapToWorld(x, y);
-    //                    PhysBody* mapWinSensor = app->physics->CreateRectangleSensor(pos.x + 8, pos.y + 8, 16, 16, STATIC);
-    //                    mapWinSensor->ctype = ColliderType::WINSENSOR;
-    //                }
-    //            }
-    //        }
-    //    }
-    //    mapLayerItem = mapLayerItem->next;
-    //}
-
     if(ret == true)
-    {
-        // L04: DONE 5: LOG all the data loaded iterate all tilesets and LOG everything
-       
+    {       
         LOG("Successfully parsed map XML file :%s", mapFileName.GetString());
         LOG("width : %d height : %d",mapData.width,mapData.height);
         LOG("tile_width : %d tile_height : %d",mapData.tileWidth, mapData.tileHeight);
@@ -280,7 +284,6 @@ bool Map::Load()
             tileset = tileset->next;
         }
 
-        // L05: DONE 4: LOG the info for each loaded layer
         ListItem<MapLayer*>* mapLayer;
         mapLayer = mapData.maplayers.start;
 
@@ -298,7 +301,6 @@ bool Map::Load()
     return ret;
 }
 
-// L04: DONE 3: Implement LoadMap to load the map properties
 bool Map::LoadMap(pugi::xml_node mapFile)
 {
     bool ret = true;
@@ -316,6 +318,17 @@ bool Map::LoadMap(pugi::xml_node mapFile)
         mapData.width = map.attribute("width").as_int();
         mapData.tileHeight = map.attribute("tileheight").as_int();
         mapData.tileWidth = map.attribute("tilewidth").as_int();
+        mapData.type = MAPTYPE_UNKNOWN;
+
+        mapData.type = MAPTYPE_UNKNOWN;
+        if (strcmp(map.attribute("orientation").as_string(), "isometric") == 0)
+        {
+            mapData.type = MAPTYPE_ISOMETRIC;
+        }
+        if (strcmp(map.attribute("orientation").as_string(), "orthogonal") == 0)
+        {
+            mapData.type = MAPTYPE_ORTHOGONAL;
+        }
     }
 
     return ret;

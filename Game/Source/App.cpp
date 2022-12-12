@@ -8,6 +8,7 @@
 #include "EntityManager.h"
 #include "Map.h"
 #include "Physics.h"
+#include "Pathfinding.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -27,6 +28,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	audio = new Audio();
 	//L07 DONE 2: Add Physics module
 	physics = new Physics();
+	pathfinding = new PathFinding();
 	scene = new Scene();
 	entityManager = new EntityManager();
 	map = new Map();
@@ -39,6 +41,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(audio);
 	//L07 DONE 2: Add Physics module
 	AddModule(physics);
+	AddModule(pathfinding);
 	AddModule(scene);
 	AddModule(entityManager);
 	AddModule(map);
@@ -71,29 +74,28 @@ void App::AddModule(Module* module)
 // Called before render is available
 bool App::Awake()
 {
+	timer = Timer();
+
 	bool ret = false;
 
-	// L01: DONE 3: Load config from XML
 	ret = LoadConfig();
 
 	if (ret == true)
 	{
-		title = configNode.child("app").child("title").child_value(); // L01: DONE 4: Read the title from the config file
+		title = configNode.child("app").child("title").child_value();
 
 		ListItem<Module*>* item;
 		item = modules.start;
 
 		while (item != NULL && ret == true)
 		{
-			// L01: DONE 5: Add a new argument to the Awake method to receive a pointer to an xml node.
-			// If the section with the module name exists in config.xml, fill the pointer with the valid xml_node
-			// that can be used to read all variables for that module.
-			// Send nullptr if the node does not exist in config.xml
 			pugi::xml_node node = configNode.child(item->data->name.GetString());
 			ret = item->data->Awake(node);
 			item = item->next;
 		}
 	}
+
+	LOG("---------------- Time Awake: %f/n", timer.ReadMSec());
 
 	return ret;
 }
@@ -101,6 +103,10 @@ bool App::Awake()
 // Called before the first frame
 bool App::Start()
 {
+	timer.Start();
+	startupTime.Start();
+	lastSecFrameTime.Start();
+
 	bool ret = true;
 	ListItem<Module*>* item;
 	item = modules.start;
@@ -110,6 +116,8 @@ bool App::Start()
 		ret = item->data->Start();
 		item = item->next;
 	}
+
+	LOG("----------------- Time Start(): %f", timer.ReadMSec());
 
 	return ret;
 }
@@ -141,10 +149,8 @@ bool App::LoadConfig()
 {
 	bool ret = false;
 
-	// L01: DONE 3: Load config.xml file using load_file() method from the xml_document class
 	pugi::xml_parse_result parseResult = configFile.load_file("config.xml");
 
-	// L01: DONE 3: Check result for loading errors
 	if (parseResult) {
 		ret = true;
 		configNode = configFile.child("config");
@@ -159,14 +165,38 @@ bool App::LoadConfig()
 // ---------------------------------------------
 void App::PrepareUpdate()
 {
+	frameTime.Start();
 }
 
 // ---------------------------------------------
 void App::FinishUpdate()
 {
-	// L03: DONE 1: This is a good place to call Load / Save methods
 	if (loadGameRequested == true) LoadFromFile();
 	if (saveGameRequested == true) SaveToFile();
+
+	// Amount of frames since startup
+	frameCount++;
+	// Amount of time since game start
+	secondsSinceStartup = startupTime.ReadSec();
+	// Amount of ms took the last update
+	dt = frameTime.ReadMSec();
+	// Amount of frames during the last second
+	lastSecFrameCount++;
+	LOG("%f", lastSecFrameTime.ReadMSec());
+	if (lastSecFrameTime.ReadMSec() > 1000) {
+		lastSecFrameTime.Start();
+		framesPerSecond = lastSecFrameCount;
+		lastSecFrameCount = 0;
+		// Average FPS for the whole game life
+		averageFps = (averageFps + framesPerSecond) / 2;
+	}
+
+	// Shows the time measurements in the window title
+	static char title[256];
+	sprintf_s(title, 256, "Av.FPS: %.2f Last sec frames: %i Last dt: %.3f Time since startup: %.3f Frame Count: %I64u ",
+		averageFps, framesPerSecond, dt, secondsSinceStartup, frameCount);
+
+	app->win->SetTitle(title);
 }
 
 // Call modules before each loop iteration
@@ -277,8 +307,6 @@ const char* App::GetOrganization() const
 	return organization.GetString();
 }
 
-// L02: DONE 1: Implement methods to request load / save and methods 
-// for the real execution of load / save (to be implemented in TODO 5 and 7)
 void App::LoadGameRequest()
 {
 	// NOTE: We should check if SAVE_STATE_FILENAME actually exist
@@ -292,9 +320,6 @@ void App::SaveGameRequest()
 	saveGameRequested = true;
 }
 
-
-// L02: DONE 5: Implement the method LoadFromFile() to actually load a xml file
-// then call all the modules to load themselves
 bool App::LoadFromFile()
 {
 	bool ret = true;
@@ -324,8 +349,6 @@ bool App::LoadFromFile()
 	return ret;
 }
 
-// L02: DONE 7: Implement the xml save method SaveToFile() for current state
-// check https://pugixml.org/docs/quickstart.html#modify
 bool App::SaveToFile() 
 {
 	bool ret = false;

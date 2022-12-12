@@ -20,9 +20,6 @@ public:
 		WIN_SCREEN,
 	};
 
-
-
-
 	Scene();
 
 	// Destructor
@@ -86,6 +83,13 @@ private:
 	SDL_Texture* img;
 	float currentFade = 0.0f;
 	GameplayState targetState = gameplayState;
+
+	SDL_Texture* mouseTileTex = nullptr;
+	SDL_Texture* originTex = nullptr;
+
+	// L12: Debug pathfing
+	iPoint origin;
+	bool originSelected = false;
 };
 
 #endif // __SCENE_H__
