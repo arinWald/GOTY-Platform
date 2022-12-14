@@ -196,6 +196,17 @@ void App::FinishUpdate()
 	sprintf_s(title, 256, "Av.FPS: %.2f Last sec frames: %i Last dt: %.3f Time since startup: %.3f Frame Count: %I64u ",
 		averageFps, framesPerSecond, dt, secondsSinceStartup, frameCount);
 
+	PerfTimer delayTime;
+	delayTime.Start();
+
+	float delay = maxFrameDuration - dt;
+	if (maxFrameDuration > 0 && delay > 0)
+	{
+		SDL_Delay(delay);
+		LOG("Calculated Delay Time: %f and real delay: %f", delay, delayTime.ReadMs());
+		dt = maxFrameDuration;
+	}
+
 	app->win->SetTitle(title);
 }
 

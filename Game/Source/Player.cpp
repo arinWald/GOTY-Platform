@@ -153,187 +153,186 @@ bool Player::Update()
 	
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
-		currentAnimation->Update();
+	currentAnimation->Update();
 
 
-		//printf("PositionX: %d PositionY: %d\n", position.x, position.y);
-		/*cout << "Jumps Available: " << jumpsavailable << endl;
-		cout << "Player Lives: " << playerlives << endl;*/
-		// L07 DONE 5: Add physics to the player - updated player position using physics
+	if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
+	{
+		pbody->body->ApplyLinearImpulse({ 100, 0 }, { 0, 0 }, true);
+	}
 
-		b2Vec2 vel ;
-		if (!app->scene->godMode)
-		{
-			vel = b2Vec2(0, -GRAVITY_Y);
-		}
-		else
-		{
-			vel = b2Vec2(0, 0);
-		}
-
+	b2Vec2 vel ;
+	if (!app->scene->godMode)
+	{
+		vel = b2Vec2(0, -GRAVITY_Y);
+	}
+	else
+	{
+		vel = b2Vec2(0, 0);
+	}
 		
 		
-		if (LastDir == 1) {
-			currentAnimation = &rightIdleAnimation;
+	if (LastDir == 1) {
+		currentAnimation = &rightIdleAnimation;
+	}
+	else {
+		currentAnimation = &leftIdleAnimation;
+	}
+
+	if (timerJump > 0) {
+		timerJump--;
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+			vel.x = speed;
+			LastDir = 1;
 		}
-		else {
-			currentAnimation = &leftIdleAnimation;
-		}
-
-		if (timerJump > 0) {
-			timerJump--;
-			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-				vel.x = speed;
-				LastDir = 1;
-			}
-			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 
 
-				vel.x = -speed;
-				LastDir = 2;
-			}
-
-			if (jumpsavailable == 1) {
-				if (LastDir == 1) {
-					currentAnimation = &rightJumpAnimation;
-				}
-				if (LastDir == 2) {
-					currentAnimation = &leftJumpAnimation;
-				}
-			}
-			else if (jumpsavailable == 0) {
-				if (LastDir == 1) {
-					currentAnimation = &rightDoubleJumpAnimation;
-				}
-				if (LastDir == 2) {
-					currentAnimation = &leftDoubleJumpAnimation;
-				}
-			}
-
-			vel = b2Vec2(vel.x, jumpspeed);
-
+			vel.x = -speed;
+			LastDir = 2;
 		}
 
-		//cout << "JUMPS AVAILABLE: " << jumpsavailable << endl;
-		//cout << "LIVES: " << playerlives << endl;
-
-		//Manage Death Timer
-		if (isDead)
-		{
-			if (timerDeath >= 0)
-			{
-				//cout << "IS DEAD ";
-				currentAnimation = &dissappearAnimation;
-				--timerDeath;
+		if (jumpsavailable == 1) {
+			if (LastDir == 1) {
+				currentAnimation = &rightJumpAnimation;
 			}
-			else
-			{
-				isDead = false;
-				timerDeath = DEATH_TIME;
-				ChangePosition(initialPosX, initialPosY);
-			}
-		}
-		
-		//PLAYER MOVE INPUT
-		if (!app->scene->godMode && app->scene->gameplayState == app->scene->GameplayState::PLAYING && !isDead)
-		{
-			//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-			if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
-				//
-				timerJump = 15;
-				app->audio->PlayFx(jumpFxId);
-				jumpsavailable--;
-				/*vel =  b2Vec2(vel.x,jumpspeed);*/
-			}
-
-			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-				//
-			}
-
-			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
-				vel = b2Vec2(-speed, vel.y);
-				currentAnimation = &leftRunAnimation;
-				LastDir = 2;
-			}
-			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
-				currentAnimation = &rightRunAnimation;
-				LastDir = 1;
-				vel = b2Vec2(speed, vel.y);
-			}
-		}
-		//GOD MODE INPUT
-		else if(app->scene->gameplayState == app->scene->GameplayState::PLAYING && app->scene->godMode)
-		{
-			//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-			if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)) {
-				vel = b2Vec2(vel.x, -speed);
+			if (LastDir == 2) {
 				currentAnimation = &leftJumpAnimation;
 			}
-
-			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-				vel = b2Vec2(vel.x, speed);
-				currentAnimation = &leftJumpAnimation;
+		}
+		else if (jumpsavailable == 0) {
+			if (LastDir == 1) {
+				currentAnimation = &rightDoubleJumpAnimation;
 			}
-
-			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
-				vel = b2Vec2(-speed, vel.y);
-				currentAnimation = &leftRunAnimation;
-				LastDir = 2;
-			}
-			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
-				currentAnimation = &rightRunAnimation;
-				LastDir = 1;
-				vel = b2Vec2(speed, vel.y);
+			if (LastDir == 2) {
+				currentAnimation = &leftDoubleJumpAnimation;
 			}
 		}
 
-		//Set the velocity of the pbody of the player
-		if (app->scene->godMode)
+		vel = b2Vec2(vel.x, jumpspeed);
+
+	}
+
+	//cout << "JUMPS AVAILABLE: " << jumpsavailable << endl;
+	//cout << "LIVES: " << playerlives << endl;
+
+	//Manage Death Timer
+	if (isDead)
+	{
+		if (timerDeath >= 0)
 		{
-			vel.x *= 2;
-			vel.y *= 2;
-			pbody->body->SetLinearVelocity(vel);
+			//cout << "IS DEAD ";
+			currentAnimation = &dissappearAnimation;
+			--timerDeath;
 		}
 		else
 		{
-			pbody->body->SetLinearVelocity(vel);
+			isDead = false;
+			timerDeath = DEATH_TIME;
+			ChangePosition(initialPosX, initialPosY);
+		}
+	}
+		
+	//PLAYER MOVE INPUT
+	if (!app->scene->godMode && app->scene->gameplayState == app->scene->GameplayState::PLAYING && !isDead)
+	{
+		//L02: DONE 4: modify the position of the player using arrow keys and render the texture
+		if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
+			//
+			timerJump = 15;
+			app->audio->PlayFx(jumpFxId);
+			jumpsavailable--;
+			/*vel =  b2Vec2(vel.x,jumpspeed);*/
 		}
 
-		//Update player position in pixels
-		position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
-		position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
-
-		//PLAYER TELEPORT
-		if (teleport.turn == true)
-		{
-			b2Vec2 resetPos = b2Vec2(PIXEL_TO_METERS(teleport.posX), PIXEL_TO_METERS(teleport.posY));
-			pbody->body->SetTransform(resetPos, 0);
-
-			teleport.turn = false;
+		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+			//
 		}
 
-		//app->render->DrawTexture(texture, position.x, position.y);
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
+			vel = b2Vec2(-speed, vel.y);
+			currentAnimation = &leftRunAnimation;
+			LastDir = 2;
+		}
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
+			currentAnimation = &rightRunAnimation;
+			LastDir = 1;
+			vel = b2Vec2(speed, vel.y);
+		}
+	}
+	//GOD MODE INPUT
+	else if(app->scene->gameplayState == app->scene->GameplayState::PLAYING && app->scene->godMode)
+	{
+		//L02: DONE 4: modify the position of the player using arrow keys and render the texture
+		if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)) {
+			vel = b2Vec2(vel.x, -speed);
+			currentAnimation = &leftJumpAnimation;
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+			vel = b2Vec2(vel.x, speed);
+			currentAnimation = &leftJumpAnimation;
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
+			vel = b2Vec2(-speed, vel.y);
+			currentAnimation = &leftRunAnimation;
+			LastDir = 2;
+		}
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
+			currentAnimation = &rightRunAnimation;
+			LastDir = 1;
+			vel = b2Vec2(speed, vel.y);
+		}
+	}
+
+	//Set the velocity of the pbody of the player
+	if (app->scene->godMode)
+	{
+		vel.x *= 2;
+		vel.y *= 2;
+		pbody->body->SetLinearVelocity(vel);
+	}
+	else
+	{
+		pbody->body->SetLinearVelocity(vel);
+	}
+
+	//Update player position in pixels
+	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
+	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+
+	//PLAYER TELEPORT
+	if (teleport.turn == true)
+	{
+		b2Vec2 resetPos = b2Vec2(PIXEL_TO_METERS(teleport.posX), PIXEL_TO_METERS(teleport.posY));
+		pbody->body->SetTransform(resetPos, 0);
+
+		teleport.turn = false;
+	}
+
+	//app->render->DrawTexture(texture, position.x, position.y);
 		
 
-		SDL_Rect rect = currentAnimation->GetCurrentFrame();
+	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 
-		//Death animation needs offset
-		if (isDead)
-		{
-			app->render->DrawTexture(playerTexture, position.x - 16, position.y - 16, &rect);
-		}
-		else
-		{
-			app->render->DrawTexture(playerTexture, position.x, position.y, &rect);
+	//Death animation needs offset
+	if (isDead)
+	{
+		app->render->DrawTexture(playerTexture, position.x - 16, position.y - 16, &rect);
+	}
+	else
+	{
+		app->render->DrawTexture(playerTexture, position.x, position.y, &rect);
 		
-		}
+	}
 	
-		for (int i = 0; i < (playerlives ); ++i) {
-			app->render->DrawTexture(playerLivesTexture, (-app->render->camera.x*0.5)+ 30*i+5, 5);
+	for (int i = 0; i < (playerlives ); ++i) {
+		app->render->DrawTexture(playerLivesTexture, (-app->render->camera.x*0.5)+ 30*i+5, 5);
 
-		}
+	}
 
-		printf("Position camera.x %d \n", app->render->camera.x);
+	printf("Position camera.x %d \n", app->render->camera.x);
 
 
 		

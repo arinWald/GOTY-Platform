@@ -124,6 +124,8 @@ private:
 
 	float averageFps = 0.0f;
 	float secondsSinceStartup = 0.0f;
+
+	uint32 maxFrameDuration = 0;
 };
 
 extern App* app;
