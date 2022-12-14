@@ -1,0 +1,28 @@
+###LEFT
+Hit
+1,1
+32x32
+5 fotograms
+
+Idle
+1, 35
+32x32
+14 fotogrames
+
+Run
+1, 68
+32x32
+16 fotogrames
+
+###RIGHT (ordre del revés)
+Hit
+129, 106 fins a 1, 130
+5 fotog
+
+Idle
+417, 140 fins a 1, 140
+14 fotogrames
+
+Run
+482, 174 fins a 1, 174
+16 fotogrames
