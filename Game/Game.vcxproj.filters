@@ -58,6 +58,9 @@
     <ClCompile Include="Source\Pathfinding.cpp">
       <Filter>CPP .H</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Mushroom.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DynArray.h">
@@ -146,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="Source\PQueue.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mushroom.h">
+      <Filter>CPP .H</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
