@@ -1,103 +1,147 @@
-//#ifndef __MUSHROOM_H__
-//#define __MUSHROOM_H__
-//
-//#include "Entity.h"
-//#include "Point.h"
-//#include "Animation.h"
-//#include "Physics.h"
-//#include "SDL/include/SDL.h"
-//#include "Animation.h"
-//
-//struct SDL_Texture;
-//
-//struct transformPosition {
-//	float posX;
-//	float posY;
-//	bool turn;
-//
-//};
-//
-//class Player : public Entity
-//{
-//public:
-//
-//	Player();
-//
-//	virtual ~Player();
-//
-//	bool Awake();
-//
-//	bool Start();
-//
-//	bool Update();
-//
-//	bool CleanUp();
-//
-//	void OnCollision(PhysBody* physA, PhysBody* physB);
-//
-//	void Player::ChangePosition(int x, int y);
-//
-//
-//public:
-//
-//	SDL_Texture* playerTexture;
-//	const char* livesTexturePath;
-//	const char* texturePath;
-//	const char* deathFxPath;
-//	const char* jumpFxPath;
-//	const char* level1SongPath;
-//	const char* defeatFxPath;
-//
-//	Animation* currentAnimation;
-//	Animation rightRunAnimation;
-//	Animation rightIdleAnimation;
-//	Animation rightJumpAnimation;
-//	Animation rightFallAnimation;
-//	Animation rightDoubleJumpAnimation;
-//
-//	Animation leftRunAnimation;
-//	Animation leftIdleAnimation;
-//	Animation leftJumpAnimation;
-//	Animation leftFallAnimation;
-//	Animation leftDoubleJumpAnimation;
-//
-//	Animation dissappearAnimation;
-//
-//	int speed;
-//	int jumpspeed;
-//	bool ground;
-//	int jumpsavailable;
-//	int playerlives;
-//
-//	// L07 DONE 5: Add physics to the player - declare a Physics body
+#ifndef __SMALL_ENEMY_1__
+#define __SMALL_ENEMY_1__
+
+#include "Entity.h"
+#include "Point.h"
+#include "SDL/include/SDL.h"
+#include "SDL_Timer.h"
+#include "Animation.h"
+
+struct SDL_Texture;
+
+class SmallEnemy1 : public Entity
+{
+public:
+
+	SmallEnemy1();
+	virtual ~SmallEnemy1();
+
+	bool Awake();
+
+	bool Start();
+
+	bool Update();
+
+	bool CleanUp();
+
+	void OnCollision(PhysBody* physA, PhysBody* physB) override;
+
+	void LoadInfo(iPoint pos, int state);
+
+	void SaveInfo();
+
+	int GetState();
+
+
+private:
+
+	//void ChaseMovement();
+	void ChaseMovement2();
+
+	//void SentryMovement();
+	void SentryMovement2();
+
+	//void ReturnMovement();
+	void ReturnMovement2();
+
+
+
+
+public:
+
+	Animation* currentAnimationEnemy = nullptr;
+
+	int limiteIzqX;
+	int limiteDerX;
+	int scalarLimites;
+	int map;
+
+	bool walkDir;
+	bool attackE;
+	bool animAtk;
+	int speedinX;
+
+	Animation walkRAnimEnemy;
+	Animation walkLAnimEnemy;
+	Animation angryRAnimEnemy;
+	Animation angryLAnimEnemy;
+	Animation attackRAnimEnemy;
+	Animation attackLAnimEnemy;
+
+	//bool destroy;
+
+	enum estadoSEnemy1 {
+		STOP = 0,
+		SENTRY,
+		CHASE,
+		DEATH,
+		RETURN,
+		NONE,
+	};
+	int estadoSE1;
+
+	enum direccionEnemy {
+		IZQUIERDA,
+		DERECHA,
+	};
+	int direccionE;
+
+private:
+
+	SDL_Texture* texture;
+	const char* texturePath;
+	SDL_Timer attackAnimTimer;
+	//DONE 4: Add a physics
 //	PhysBody* pbody;
-//	PhysBody* groundSensor;
-//
-//	int timerJump;
-//	int pickCoinFxId;
-//
-//	int timerPocho;
-//	int deathFxId;
-//
-//	int defeatFxId;
-//
-//	int timerDeath;
-//	bool isDead;
-//
-//	bool isWin;
-//
-//	int jumpFxId;
-//	int LastDir;
-//
-//	transformPosition teleport;
-//
-//	int initialPosX;
-//	int initialPosY;
-//
-//private:
-//
-//
-//
-//};
-//
-//#endif // __PLAYER_H__
+
+	iPoint lastPos;
+	int pathIterator;
+
+	iPoint initialPosition, leftBorder, rightBorder;
+	int range;
+	bool startPath;
+	float nextFootStep;
+	float amountToMoveInX;
+	float destination;
+	bool firstPath;
+	bool achievedRightBorder;
+	bool achievedLeftBorder;
+	bool debug;
+	int playerTileX;
+	int playerTileY;
+	int limitToChaseX;
+	int limitToChaseY;
+	bool attackAnimation;
+
+	struct dataFromSave
+	{
+		int posX;
+		int posY;
+		bool startPath;
+		float nextFootStep;
+		float amountToMoveInX;
+		float destination;
+		bool firstPath;
+		bool achievedRightBorder;
+		bool achievedLeftBorder;
+		bool attackAnimation;
+		int estado;
+		Animation* animation = nullptr;
+
+	} newData;
+
+	bool changedDataFromSave;
+
+	int framesStopped;
+	int lastPosinX;
+	int lastPosinY;
+
+	float speedX;
+	float speedLimit;
+
+	bool auxBug;
+	int intBug;
+};
+
+#endif // !__SMALL_ENEMY_1__
+

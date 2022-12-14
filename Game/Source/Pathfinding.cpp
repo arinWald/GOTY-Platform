@@ -1,10 +1,13 @@
 #include "App.h"
 #include "PathFinding.h"
+#include "Map.h"
+#include "DynArray.h"
+#include "Render.h"
 
 #include "Defs.h"
 #include "Log.h"
 
-PathFinding::PathFinding() : Module(), map(NULL), lastPath(DEFAULT_PATH_LENGTH), width(0), height(0)
+PathFinding::PathFinding(bool isActive) : Module(), map(NULL), lastPath(DEFAULT_PATH_LENGTH), width(0), height(0)
 {
 	name.Create("pathfinding");
 }
@@ -45,9 +48,68 @@ bool PathFinding::CheckBoundaries(const iPoint& pos) const
 }
 
 // Utility: returns true is the tile is walkable
-bool PathFinding::IsWalkable(const iPoint& pos) const
+bool PathFinding::IsWalkable(const iPoint& pos, const char* type) const
 {
 	uchar t = GetTileAt(pos);
+
+	ListItem<MapLayer*>* mapLayerItem;
+	mapLayerItem = app->map->mapData.maplayers.start;
+	MapLayer* navigationLayer = mapLayerItem->data;
+
+	while (mapLayerItem != NULL)
+	{
+		if (mapLayerItem->data->properties.GetProperty("Navigation") != NULL && mapLayerItem->data->properties.GetProperty("Navigation")->value)
+		{
+			navigationLayer = mapLayerItem->data;
+		}
+
+		mapLayerItem = mapLayerItem->next;
+	}
+
+	//942 gid tiled
+	if (navigationLayer->Get(pos.x, pos.y) == 942)
+	{
+		return false;
+	}
+
+	//943 gid tiled
+	if (t != INVALID_WALK_CODE)
+	{
+		if (navigationLayer->Get(pos.x, pos.y) == 943)
+		{
+			auto a = "verde";
+
+			if (type == "terrestre")
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		//944 gid tiled
+		if (navigationLayer->Get(pos.x, pos.y) == 944)
+		{
+			auto a = "azul";
+
+			if (type == "aereo")
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+
+	}
+	
+	// Si no hi ha res pintat, pel terrestre vol dir que per allà també podrà fer el path (forats)
+
+
 	return t != INVALID_WALK_CODE && t > 0;
 }
 
@@ -170,16 +232,30 @@ int PathNode::CalculateF(const iPoint& destination)
 	return g + h;
 }
 
+void PathFinding::DrawLastPath()
+{
+	const DynArray<iPoint>* path = GetLastPath();
+
+	for (uint i = 0; i < path->Count(); ++i)
+	{
+		iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+
+		//App -> scene -> point és sprite de creu
+		//app->render->DrawTexture(app->scene->point, pos.x, pos.y);
+	}
+
+}
+
 // ----------------------------------------------------------------------------------
 // Actual A* algorithm: return number of steps in the creation of the path or -1 ----
 // ----------------------------------------------------------------------------------
-int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
+int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination, const char* type)
 {
 	int ret = -1;
 	int iterations = 0;
 
 	// L12: TODO 1: if origin or destination are not walkable, return -1
-	if (IsWalkable(origin) && IsWalkable(destination))
+	if (IsWalkable(origin,  type) && IsWalkable(destination, type))
 	{
 		// L12: TODO 2: Create two lists: open, close
 		PathList open;
