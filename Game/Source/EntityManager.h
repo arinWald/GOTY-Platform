@@ -33,6 +33,10 @@ public:
 
 	void AddEntity(Entity* entity);
 
+	void DisableEntities();
+
+	void EnableEntities();
+
 public:
 
 	List<Entity*> entities;

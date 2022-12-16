@@ -4,6 +4,7 @@
 #include "App.h"
 #include "Textures.h"
 #include "Scene.h"
+#include "TerrestreEnemy.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -92,6 +93,9 @@ Entity* EntityManager::CreateEntity(EntityType type)
 	case EntityType::ITEM:
 		entity = new Item();
 		break;
+	case EntityType::TERRESTREENEMY:
+		entity = new TerrestreEnemy(true);
+		break;
 
 	default: break;
 	}
@@ -133,3 +137,18 @@ bool EntityManager::Update(float dt)
 
 	return ret;
 }
+
+void EntityManager::EnableEntities()
+{
+	ListItem<Entity*>* item;
+	Entity* pEntity = NULL;
+
+	for (item = entities.start; item != NULL; item = item->next)
+	{
+		pEntity = item->data;
+
+		if (pEntity->active == false) pEntity->active = true;
+	}
+
+}
+

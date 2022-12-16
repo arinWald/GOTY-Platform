@@ -48,7 +48,7 @@ bool PathFinding::CheckBoundaries(const iPoint& pos) const
 }
 
 // Utility: returns true is the tile is walkable
-bool PathFinding::IsWalkable(const iPoint& pos, const char* type) const
+bool PathFinding::IsWalkable(const iPoint& pos) const
 {
 	uchar t = GetTileAt(pos);
 
@@ -72,40 +72,7 @@ bool PathFinding::IsWalkable(const iPoint& pos, const char* type) const
 		return false;
 	}
 
-	//943 gid tiled
-	if (t != INVALID_WALK_CODE)
-	{
-		if (navigationLayer->Get(pos.x, pos.y) == 943)
-		{
-			auto a = "green";
-
-			if (type == "land")
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		//944 gid tiled
-		if (navigationLayer->Get(pos.x, pos.y) == 944)
-		{
-			auto a = "blue";
-
-			if (type == "flying")
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-
-	}
+	
 	
 	// Si no hi ha res pintat, pel terrestre vol dir que per allà també podrà fer el path (forats)
 
@@ -185,29 +152,29 @@ PathNode::PathNode(const PathNode& node) : g(node.g), h(node.h), pos(node.pos), 
 // PathNode -------------------------------------------------------------------------
 // Fills a list (PathList) of all valid adjacent pathnodes
 // ----------------------------------------------------------------------------------
-uint PathNode::FindWalkableAdjacents(PathList& listToFill, const char* type) const
+uint PathNode::FindWalkableAdjacents(PathList& listToFill) const
 {
 	iPoint cell;
 	uint before = listToFill.list.Count();
 
 	// north
 	cell.Create(pos.x, pos.y + 1);
-	if (app->pathfinding->IsWalkable(cell, type))
+	if (app->pathfinding->IsWalkable(cell))
 		listToFill.list.Add(PathNode(-1, -1, cell, this));
 
 	// south
 	cell.Create(pos.x, pos.y - 1);
-	if (app->pathfinding->IsWalkable(cell, type))
+	if (app->pathfinding->IsWalkable(cell))
 		listToFill.list.Add(PathNode(-1, -1, cell, this));
 
 	// east
 	cell.Create(pos.x + 1, pos.y);
-	if (app->pathfinding->IsWalkable(cell, type))
+	if (app->pathfinding->IsWalkable(cell))
 		listToFill.list.Add(PathNode(-1, -1, cell, this));
 
 	// west
 	cell.Create(pos.x - 1, pos.y);
-	if (app->pathfinding->IsWalkable(cell, type))
+	if (app->pathfinding->IsWalkable(cell))
 		listToFill.list.Add(PathNode(-1, -1, cell, this));
 
 	return listToFill.list.Count();
@@ -249,13 +216,13 @@ void PathFinding::DrawLastPath()
 // ----------------------------------------------------------------------------------
 // Actual A* algorithm: return number of steps in the creation of the path or -1 ----
 // ----------------------------------------------------------------------------------
-int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination, const char* type)
+int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 {
 	int ret = -1;
 	int iterations = 0;
 
 	// L12: TODO 1: if origin or destination are not walkable, return -1
-	if (IsWalkable(origin, type) && IsWalkable(destination, type))
+	if (IsWalkable(origin) && IsWalkable(destination))
 	{
 		// L12: TODO 2: Create two lists: open, close
 		PathList open;
@@ -295,7 +262,7 @@ int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination, con
 
 			// L12: TODO 5: Fill a list of all adjancent nodes
 			PathList adjacent;
-			node->data.FindWalkableAdjacents(adjacent, type);
+			node->data.FindWalkableAdjacents(adjacent);
 
 			// L12: TODO 6: Iterate adjancent nodes:
 			// If it is a better path, Update the parent

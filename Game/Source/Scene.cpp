@@ -46,8 +46,12 @@ bool Scene::Awake(pugi::xml_node& config)
 	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 	player->parameters = config.child("player");
 
-	enemy1 = (Mushroom*)app->entityManager->CreateEntity(EntityType::MUSHROOM);
-	enemy1->parameters = config.child("mushroom1");
+	//create terrestre enemy
+	TerrestreEnemy* newTerrestreEnemy = (TerrestreEnemy*)app->entityManager->CreateEntity(EntityType::TERRESTREENEMY);
+	terrestreEnemies.Add(newTerrestreEnemy);
+
+	//enemy1 = (Mushroom*)app->entityManager->CreateEntity(EntityType::MUSHROOM);
+	//enemy1->parameters = config.child("mushroom1");
 	
 	pugi::xml_node logo = config.child("logo");
 	logotexturePath = logo.attribute("texturepath").as_string();
@@ -129,6 +133,9 @@ bool Scene::Start()
 		// Texture to show path origin 
 		originTex = app->tex->Load("Assets/Maps/x_square.png");
 	}
+
+	//enable all entities
+	app->entityManager->EnableEntities();
 
 	return true;
 }
@@ -257,15 +264,31 @@ bool Scene::Update(float dt)
 	//		mouseY - app->render->camera.y);
 	//}
 
-	//QUAN CAMERA ES MOU, EL QUADRAT TMB AL DOBLE DE VELOCITAT. MULTIPLICAR O DIVIDIR PER SCALE?
-	if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
-		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x - app->map->mapData.tileWidth / 2,
-			mouseY - app->render->camera.y / app->win->GetScale() - app->map->mapData.tileHeight / 2);
+	////QUAN CAMERA ES MOU, EL QUADRAT TMB AL DOBLE DE VELOCITAT. MULTIPLICAR O DIVIDIR PER SCALE?
+	//if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
+	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x - app->map->mapData.tileWidth / 2,
+	//		mouseY - app->render->camera.y / app->win->GetScale() - app->map->mapData.tileHeight / 2);
+	//}
+	//if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
+	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x,
+	//		mouseY - app->render->camera.y);
+	//}
+
+	//camera fix to player in x axis
+	if (player->position.x > 300 / 2 && player->position.x < (app->map->mapData.tileWidth * app->map->mapData.width) - 724 / 2)
+	{
+		app->render->camera.x = -1 * 2 * (player->position.x - 300 / 2);
 	}
-	if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
-		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x,
-			mouseY - app->render->camera.y);
+	else if (player->position.x <= 300 / 2)
+	{
+		app->render->camera.x = 0;
 	}
+	else if (player->position.x >= (app->map->mapData.tileWidth * app->map->mapData.width) - 724 / 2)
+	{
+		app->render->camera.x = -1 * 2 * ((app->map->mapData.tileWidth * app->map->mapData.width) - 1024 / 2);
+	}
+
+
 	//310
 
 	//cout << "MouseX: " << mouseX << " CameraX: " << app->render->camera.x << endl;
@@ -279,7 +302,7 @@ bool Scene::Update(float dt)
 	{
 		if (originSelected == true && gameplayState == PLAYING)
 		{
-			app->pathfinding->CreatePath(origin, mouseTile, "land");
+			app->pathfinding->CreatePath(origin, mouseTile);
 			originSelected = false;
 		}
 		else
@@ -301,6 +324,45 @@ bool Scene::Update(float dt)
 	// L12: Debug pathfinding
 	iPoint originScreen = app->map->MapToWorld(origin.x, origin.y);
 	app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
+
+	//does pathfinding using coord of enemy and player
+	ListItem<PhysBody*>* enemyItem;
+	enemyItem = app->map->enemies.start;
+
+	ListItem<TerrestreEnemy*>* terrestreEnemyItem = terrestreEnemies.start;
+
+	while (enemyItem != NULL)
+	{
+		if (terrestreEnemyItem != NULL && terrestreEnemyItem->data->state == STATE::AGRESSIVEPATH)
+		{
+			//origin = { enemyItem->data->body->GetPosition().x, enemyItem->data->body->GetPosition().x };//app->map->WorldToMap(enemyItem->data->body->GetPosition().x - app->render->camera.x * (float)1 / scale, enemyItem->data->body->GetPosition().y - app->render->camera.y * (float)1 / scale);
+			origin.x = enemyItem->data->body->GetPosition().x;
+			origin.y = enemyItem->data->body->GetPosition().y;
+			iPoint destination;// = { player->getPbody()->body->GetPosition().x, player->getPbody()->body->GetPosition().x };//app->map->WorldToMap(player->getPbody()->body->GetPosition().x - app->render->camera.x * (float)1 / scale, player->getPbody()->body->GetPosition().y - app->render->camera.y * (float)1 / scale);
+			destination.x = player->pbody->body->GetPosition().x;
+			destination.y = player->pbody->body->GetPosition().y;
+			app->pathfinding->ClearLastPath();
+			app->pathfinding->CreatePath(origin, destination);
+			// L12: Get the latest calculated path and draw
+			const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
+			for (uint i = 0; i < path->Count(); ++i)
+			{
+				iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+				if (i == 1)
+				{
+					terrestreEnemyItem->data->objective.x = PIXEL_TO_METERS(pos.x);
+					terrestreEnemyItem->data->objective.y = PIXEL_TO_METERS(pos.y);
+				}
+				app->render->DrawTexture(mouseTileTex, pos.x, pos.y);
+			}
+
+			// L12: Debug pathfinding
+			iPoint originScreen = app->map->MapToWorld(origin.x, origin.y);
+			app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
+		}
+		enemyItem = enemyItem->next;
+		terrestreEnemyItem = terrestreEnemyItem->next;
+	}
 
 	return true;
 }
@@ -409,6 +471,39 @@ bool Scene::PostUpdate()
 		app->render->DrawTexture(win_screen, 0, 0);
 
 	}
+
+	ListItem<PhysBody*>* ItemListTE = app->map->enemies.start;
+	ListItem<TerrestreEnemy*>* terrestreEnemyItem = terrestreEnemies.start;
+	PhysBody* tebody;
+	PhysBody* pbody = player->pbody;
+
+
+	while (ItemListTE != NULL)
+	{
+		tebody = ItemListTE->data;
+
+		if (ItemListTE->data->body->IsActive())
+		{
+
+			//ray between terrestre enemy and player
+			app->render->DrawLine(METERS_TO_PIXELS(tebody->body->GetPosition().x),
+				METERS_TO_PIXELS(tebody->body->GetPosition().y),
+				METERS_TO_PIXELS(pbody->body->GetPosition().x),
+				METERS_TO_PIXELS(pbody->body->GetPosition().y),
+				255, 0, 0);//red
+
+			////ray that is the PATH of the terrestre enemy 
+			//app->render->DrawLine(	METERS_TO_PIXELS(tebody->body->GetPosition().x),
+			//						METERS_TO_PIXELS(tebody->body->GetPosition().y),
+			//						METERS_TO_PIXELS(terrestreEnemyItem->data->objective.x) + 16,
+			//						METERS_TO_PIXELS(tebody->body->GetPosition().y),
+			//						0, 255, 0); //green
+		}
+
+		terrestreEnemyItem = terrestreEnemyItem->next;
+		ItemListTE = ItemListTE->next;
+	}
+
 	return ret;
 }
 
@@ -416,6 +511,23 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
+
+	//pathfinding stuff
+	app->tex->UnLoad(mouseTileTex);
+	app->tex->UnLoad(originTex);
+
+
+	ListItem<TerrestreEnemy*>* terrestreEnemyItem = terrestreEnemies.start;
+
+	while (terrestreEnemyItem != NULL)
+	{
+		terrestreEnemyItem->data->CleanUp();
+		terrestreEnemyItem = terrestreEnemyItem->next;
+	}
+
+	terrestreEnemies.Clear();
+
+	app->map->CleanUp();
 
 	return true;
 }

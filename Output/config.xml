@@ -31,7 +31,7 @@
 			defeatfx="Assets/Audio/Fx/defeat.wav"/>
 	<mushroom1 x="53" y="289" speedX="2" scalarLimites="1"
 			   walkDir="true"
-			texturepath="Assets/Textures/Player/playerSpriteSheet.png"/>
+			texturepath="Assets/Textures/WalkEnemy/mush_spritesheet.png"/>
     <!-- Coin still here for future purposes -->
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png" 
 		  coinfxpath="Assets/Audio/Fx/coinPickup.ogg"/>

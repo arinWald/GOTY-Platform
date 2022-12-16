@@ -7,22 +7,10 @@
     <ClCompile Include="Source\External\PugiXml\src\pugixml.cpp">
       <Filter>External\PugiXml</Filter>
     </ClCompile>
-    <ClCompile Include="Source\App.cpp">
-      <Filter>CPP .H</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Audio.cpp">
-      <Filter>CPP .H</Filter>
-    </ClCompile>
     <ClCompile Include="Source\EntityManager.cpp">
       <Filter>CPP .H</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Input.cpp">
-      <Filter>CPP .H</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Item.cpp">
-      <Filter>CPP .H</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Main.cpp">
       <Filter>CPP .H</Filter>
     </ClCompile>
     <ClCompile Include="Source\Map.cpp">
@@ -31,28 +19,13 @@
     <ClCompile Include="Source\ModuleFadeToBlack.cpp">
       <Filter>CPP .H</Filter>
     </ClCompile>
-    <ClCompile Include="Source\PerfTimer.cpp">
-      <Filter>CPP .H</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Physics.cpp">
       <Filter>CPP .H</Filter>
     </ClCompile>
     <ClCompile Include="Source\Player.cpp">
       <Filter>CPP .H</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Render.cpp">
-      <Filter>CPP .H</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene.cpp">
-      <Filter>CPP .H</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Textures.cpp">
-      <Filter>CPP .H</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Timer.cpp">
-      <Filter>CPP .H</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Window.cpp">
       <Filter>CPP .H</Filter>
     </ClCompile>
     <ClCompile Include="Source\Pathfinding.cpp">
@@ -61,8 +34,38 @@
     <ClCompile Include="Source\Mushroom.cpp">
       <Filter>CPP .H</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SDL_Timer.cpp">
+    <ClCompile Include="Source\TerrestreEnemy.cpp">
       <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\App.cpp">
+      <Filter>CPP .H\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Audio.cpp">
+      <Filter>CPP .H\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Input.cpp">
+      <Filter>CPP .H\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Main.cpp">
+      <Filter>CPP .H\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Render.cpp">
+      <Filter>CPP .H\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Textures.cpp">
+      <Filter>CPP .H\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Window.cpp">
+      <Filter>CPP .H\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Timer.cpp">
+      <Filter>CPP .H\Timers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SDL_Timer.cpp">
+      <Filter>CPP .H\Timers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PerfTimer.cpp">
+      <Filter>CPP .H\Timers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,19 +96,10 @@
     <ClInclude Include="Source\Defs.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\App.h">
-      <Filter>CPP .H</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Audio.h">
-      <Filter>CPP .H</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Entity.h">
       <Filter>CPP .H</Filter>
     </ClInclude>
     <ClInclude Include="Source\EntityManager.h">
-      <Filter>CPP .H</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Input.h">
       <Filter>CPP .H</Filter>
     </ClInclude>
     <ClInclude Include="Source\Item.h">
@@ -114,13 +108,7 @@
     <ClInclude Include="Source\Map.h">
       <Filter>CPP .H</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Module.h">
-      <Filter>CPP .H</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ModuleFadeToBlack.h">
-      <Filter>CPP .H</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\PerfTimer.h">
       <Filter>CPP .H</Filter>
     </ClInclude>
     <ClInclude Include="Source\Physics.h">
@@ -129,19 +117,7 @@
     <ClInclude Include="Source\Player.h">
       <Filter>CPP .H</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Render.h">
-      <Filter>CPP .H</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Scene.h">
-      <Filter>CPP .H</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Textures.h">
-      <Filter>CPP .H</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Timer.h">
-      <Filter>CPP .H</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Window.h">
       <Filter>CPP .H</Filter>
     </ClInclude>
     <ClInclude Include="Source\Animation.h">
@@ -156,8 +132,38 @@
     <ClInclude Include="Source\Mushroom.h">
       <Filter>CPP .H</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SDL_Timer.h">
+    <ClInclude Include="Source\TerrestreEnemy.h">
       <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App.h">
+      <Filter>CPP .H\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio.h">
+      <Filter>CPP .H\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Input.h">
+      <Filter>CPP .H\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Module.h">
+      <Filter>CPP .H\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Render.h">
+      <Filter>CPP .H\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Textures.h">
+      <Filter>CPP .H\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Window.h">
+      <Filter>CPP .H\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer.h">
+      <Filter>CPP .H\Timers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SDL_Timer.h">
+      <Filter>CPP .H\Timers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PerfTimer.h">
+      <Filter>CPP .H\Timers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +178,12 @@
     </Filter>
     <Filter Include="CPP .H">
       <UniqueIdentifier>{59b1a90f-2b02-44cc-8cfb-428a731aafec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CPP .H\Core">
+      <UniqueIdentifier>{5ae822b1-65ce-4e29-97ed-f6a957ef9771}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CPP .H\Timers">
+      <UniqueIdentifier>{85ac2bcf-71c1-44ea-a514-bcde1b5e7f9f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

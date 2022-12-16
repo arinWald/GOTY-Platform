@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Item.h"
 #include "Mushroom.h"
+#include "TerrestreEnemy.h"
 
 struct SDL_Texture;
 
@@ -55,7 +56,8 @@ public:
 	//L02: DONE 3: Declare a Player attribute 
 	Player* player;
 
-	Mushroom* enemy1;
+	//terrestre enemies list
+	List<TerrestreEnemy*> terrestreEnemies;
 
 	GameplayState gameplayState = LOGO_SCREEN;
 	bool fading = false;
