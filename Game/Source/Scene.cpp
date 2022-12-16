@@ -256,13 +256,14 @@ bool Scene::Update(float dt)
 
 	//QUAN CAMERA ES MOU, EL QUADRAT TMB AL DOBLE DE VELOCITAT. MULTIPLICAR O DIVIDIR PER SCALE?
 	if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
-		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x / app->win->GetScale() - app->map->mapData.tileWidth / 2,
+		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x - app->map->mapData.tileWidth / 2,
 			mouseY - app->render->camera.y / app->win->GetScale() - app->map->mapData.tileHeight / 2);
 	}
 	if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
 		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x,
 			mouseY - app->render->camera.y);
 	}
+	//310
 
 	//cout << "MouseX: " << mouseX << " CameraX: " << app->render->camera.x << endl;
 
