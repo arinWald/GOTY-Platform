@@ -232,7 +232,6 @@ bool Scene::Update(float dt)
 		fading = false;
 	}
 
-	//app->render->DrawTexture(img, 380, 100); // Placeholder not needed any more
 	app->render->DrawTexture(game_over, 0, 0);
 	// Draw map
 	
@@ -241,30 +240,31 @@ bool Scene::Update(float dt)
 		app->map->Draw();
 	}
 
-	// L08: DONE 3: Test World to map method
 	int mouseX, mouseY;
 	app->input->GetMousePosition(mouseX, mouseY);
 
 	iPoint mouseTile = iPoint(0, 0);
 
+	//if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
+	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x - app->map->mapData.tileWidth / 2,
+	//		mouseY - app->render->camera.y - app->map->mapData.tileHeight / 2);
+	//}
+	//if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
+	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x,
+	//		mouseY - app->render->camera.y);
+	//}
+
+	//QUAN CAMERA ES MOU, EL QUADRAT TMB AL DOBLE DE VELOCITAT. MULTIPLICAR O DIVIDIR PER SCALE?
 	if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
-		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x - app->map->mapData.tileWidth / 2,
-			mouseY - app->render->camera.y - app->map->mapData.tileHeight / 2);
+		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x / app->win->GetScale() - app->map->mapData.tileWidth / 2,
+			mouseY - app->render->camera.y / app->win->GetScale() - app->map->mapData.tileHeight / 2);
 	}
 	if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
 		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x,
 			mouseY - app->render->camera.y);
 	}
 
-	//QUAN CAMERA ES MOU, EL QUADRAT TMB AL DOBLE DE VELOCITAT. MULTIPLICAR O DIVIDIR PER SCALE?
-	//if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
-	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x / app->win->GetScale() - app->map->mapData.tileWidth / 2,
-	//		mouseY - app->render->camera.y / app->win->GetScale() - app->map->mapData.tileHeight / 2);
-	//}
-	//if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
-	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x / app->win->GetScale(),
-	//		mouseY - app->render->camera.y / app->win->GetScale());
-	//}
+	//cout << "MouseX: " << mouseX << " CameraX: " << app->render->camera.x << endl;
 
 	//Convert again the tile coordinates to world coordinates to render the texture of the tile
 	iPoint highlightedTileWorld = app->map->MapToWorld(mouseTile.x, mouseTile.y);
