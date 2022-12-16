@@ -8,6 +8,9 @@
 #include "EntityManager.h"
 #include "Map.h"
 #include "Player.h"
+#include "Mushroom.h"
+#include "Entity.h"
+#include "EntityManager.h"
 #include "Pathfinding.h"
 #include <iostream>
 using namespace std;
@@ -272,8 +275,7 @@ bool Scene::Update(float dt)
 	{
 		if (originSelected == true && gameplayState == PLAYING)
 		{
-			cout << "Hola" << endl;
-			app->pathfinding->CreatePath(origin, mouseTile);
+			app->pathfinding->CreatePath(origin, mouseTile, "land");
 			originSelected = false;
 		}
 		else

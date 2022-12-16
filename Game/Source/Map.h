@@ -6,6 +6,7 @@
 #include "Point.h"
 #include "PQueue.h"
 #include "DynArray.h"
+#include "SDL/include/SDL.h"
 
 #include "PugiXml\src\pugixml.hpp"
 

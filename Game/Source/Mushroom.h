@@ -1,5 +1,5 @@
-#ifndef __SMALL_ENEMY_1__
-#define __SMALL_ENEMY_1__
+#ifndef __MUSHROOM__
+#define __MUSHROOM__
 
 #include "Entity.h"
 #include "Point.h"
@@ -7,14 +7,15 @@
 #include "SDL_Timer.h"
 #include "Animation.h"
 
+
 struct SDL_Texture;
 
-class SmallEnemy1 : public Entity
+class Mushroom : public Entity
 {
 public:
 
-	SmallEnemy1();
-	virtual ~SmallEnemy1();
+	Mushroom();
+	virtual ~Mushroom();
 
 	bool Awake();
 
@@ -68,9 +69,9 @@ public:
 	Animation attackRAnimEnemy;
 	Animation attackLAnimEnemy;
 
-	//bool destroy;
+	bool destroy;
 
-	enum estadoSEnemy1 {
+	enum mushroomState1 {
 		STOP = 0,
 		SENTRY,
 		CHASE,
@@ -80,7 +81,7 @@ public:
 	};
 	int estadoSE1;
 
-	enum direccionEnemy {
+	enum mushroomDirection {
 		IZQUIERDA,
 		DERECHA,
 	};
@@ -91,8 +92,8 @@ private:
 	SDL_Texture* texture;
 	const char* texturePath;
 	SDL_Timer attackAnimTimer;
-	//DONE 4: Add a physics
-//	PhysBody* pbody;
+
+	PhysBody* pbody;
 
 	iPoint lastPos;
 	int pathIterator;
@@ -143,5 +144,5 @@ private:
 	int intBug;
 };
 
-#endif // !__SMALL_ENEMY_1__
+#endif
 

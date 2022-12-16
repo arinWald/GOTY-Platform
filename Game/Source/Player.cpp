@@ -332,7 +332,7 @@ bool Player::Update()
 
 	}
 
-	printf("Position camera.x %d \n", app->render->camera.x);
+	/*printf("Position camera.x %d \n", app->render->camera.x);*/
 
 
 		

@@ -10,23 +10,25 @@
 #include "Physics.h"
 #include "EntityManager.h" 
 #include "Scene.h"
-
 #include "Window.h"
+
+#include "Box2D/Box2D/Box2D.h"
 
 #include "Map.h"
 #include "Pathfinding.h"
 #include "Defs.h"
 #include <cmath>
+#include <iostream>
 
 
-SmallEnemy1::SmallEnemy1() : Entity(EntityType::MUSHROOM)
+Mushroom::Mushroom() : Entity(EntityType::MUSHROOM)
 {
 	name.Create("Mushroom");
 }
 
-SmallEnemy1::~SmallEnemy1() {}
+Mushroom::~Mushroom() {}
 
-bool SmallEnemy1::Awake() {
+bool Mushroom::Awake() {
 
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
@@ -44,7 +46,7 @@ bool SmallEnemy1::Awake() {
 	return true;
 }
 
-bool SmallEnemy1::Start() {
+bool Mushroom::Start() {
 
 
 
@@ -146,7 +148,7 @@ bool SmallEnemy1::Start() {
 	return true;
 }
 
-//void SmallEnemy1::ChaseMovement()
+//void Mushroom::ChaseMovement()
 //{
 //
 //	if (!attackAnimation)
@@ -229,7 +231,7 @@ bool SmallEnemy1::Start() {
 //
 //}
 
-void SmallEnemy1::ReturnMovement2()
+void Mushroom::ReturnMovement2()
 {
 	int ret = 0;
 	b2Vec2 vel = b2Vec2(0, 0);
@@ -297,7 +299,7 @@ void SmallEnemy1::ReturnMovement2()
 
 }
 
-//void SmallEnemy1::ReturnMovement()
+//void Mushroom::ReturnMovement()
 //{
 //
 //	if (position.y / 64 != leftBorder.y)
@@ -375,7 +377,7 @@ void SmallEnemy1::ReturnMovement2()
 //	}
 //}
 
-//void SmallEnemy1::SentryMovement()
+//void Mushroom::SentryMovement()
 //{
 //	int ret = 0;
 //	if (position.y / 64 != leftBorder.y)
@@ -501,7 +503,7 @@ void SmallEnemy1::ReturnMovement2()
 //	}
 //}
 
-void SmallEnemy1::ChaseMovement2()
+void Mushroom::ChaseMovement2()
 {
 
 	int ret = 0;
@@ -512,7 +514,7 @@ void SmallEnemy1::ChaseMovement2()
 
 	if (!attackAnimation)
 	{
-		attackAnimTimer.Start(0.30);
+		attackAnimTimer.Start(0.30f);
 		attackAnimation = true;
 	}
 
@@ -611,7 +613,7 @@ void SmallEnemy1::ChaseMovement2()
 
 }
 
-void SmallEnemy1::SentryMovement2()
+void Mushroom::SentryMovement2()
 {
 	int ret = 0;
 	b2Vec2 vel = b2Vec2(0, 0);
@@ -779,7 +781,7 @@ void SmallEnemy1::SentryMovement2()
 
 }
 
-bool SmallEnemy1::Update()
+bool Mushroom::Update()
 {
 
 	// L07 DONE 4: Add a physics  - update the position of the object from the physics.  
@@ -900,7 +902,7 @@ bool SmallEnemy1::Update()
 }
 
 
-bool SmallEnemy1::CleanUp()
+bool Mushroom::CleanUp()
 {
 	//memoryleak
 
@@ -910,7 +912,7 @@ bool SmallEnemy1::CleanUp()
 	return true;
 }
 
-void SmallEnemy1::OnCollision(PhysBody* physA, PhysBody* physB)
+void Mushroom::OnCollision(PhysBody* physA, PhysBody* physB)
 {
 
 	switch (physB->ctype)
@@ -923,7 +925,7 @@ void SmallEnemy1::OnCollision(PhysBody* physA, PhysBody* physB)
 	}
 }
 
-void SmallEnemy1::LoadInfo(iPoint pos, int state)
+void Mushroom::LoadInfo(iPoint pos, int state)
 {
 
 	newData.posX = pos.x;
@@ -950,7 +952,7 @@ void SmallEnemy1::LoadInfo(iPoint pos, int state)
 
 }
 
-void SmallEnemy1::SaveInfo()
+void Mushroom::SaveInfo()
 {
 
 	newData.startPath = startPath;
@@ -964,7 +966,7 @@ void SmallEnemy1::SaveInfo()
 	newData.animation = currentAnimationEnemy;
 }
 
-int SmallEnemy1::GetState()
+int Mushroom::GetState()
 {
 	return estadoSE1;
 }
