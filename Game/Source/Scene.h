@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Player.h"
 #include "Item.h"
+#include "Mushroom.h"
 
 struct SDL_Texture;
 
@@ -53,6 +54,8 @@ public:
 
 	//L02: DONE 3: Declare a Player attribute 
 	Player* player;
+
+	Mushroom* enemy1;
 
 	GameplayState gameplayState = LOGO_SCREEN;
 	bool fading = false;

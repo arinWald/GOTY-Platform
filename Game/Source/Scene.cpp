@@ -45,6 +45,9 @@ bool Scene::Awake(pugi::xml_node& config)
 
 	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 	player->parameters = config.child("player");
+
+	enemy1 = (Mushroom*)app->entityManager->CreateEntity(EntityType::MUSHROOM);
+	enemy1->parameters = config.child("mushroom1");
 	
 	pugi::xml_node logo = config.child("logo");
 	logotexturePath = logo.attribute("texturepath").as_string();

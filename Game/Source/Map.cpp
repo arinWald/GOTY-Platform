@@ -93,17 +93,14 @@ void Map::Draw()
 
     while (mapLayerItem != NULL) {
 
-        //L06: DONE 7: use GetProperty method to ask each layer if your “Draw” property is true.
         if (mapLayerItem->data->properties.GetProperty("Draw") != NULL && mapLayerItem->data->properties.GetProperty("Draw")->value) {
 
             for (int x = 0; x < mapLayerItem->data->width; x++)
             {
                 for (int y = 0; y < mapLayerItem->data->height; y++)
                 {
-                    // L05: DONE 9: Complete the draw function
                     int gid = mapLayerItem->data->Get(x, y);
 
-                    //L06: DONE 3: Obtain the tile set using GetTilesetFromTileId
                     TileSet* tileset = GetTilesetFromTileId(gid);
 
                     SDL_Rect r = tileset->GetTileRect(gid);
@@ -179,8 +176,6 @@ SDL_Rect TileSet::GetTileRect(int gid) const
     return rect;
 }
 
-
-// L06: DONE 2: Pick the right Tileset based on a tile id
 TileSet* Map::GetTilesetFromTileId(int gid) const
 {
     ListItem<TileSet*>* item = mapData.tilesets.start;
@@ -204,7 +199,6 @@ bool Map::CleanUp()
 {
     LOG("Unloading map");
 
-    // L04: DONE 2: Make sure you clean up any memory allocated from tilesets/map
 	ListItem<TileSet*>* item;
 	item = mapData.tilesets.start;
 
@@ -215,7 +209,6 @@ bool Map::CleanUp()
 	}
 	mapData.tilesets.Clear();
 
-    // L05: DONE 2: clean up all layer data
     // Remove all layers
     ListItem<MapLayer*>* layerItem;
     layerItem = mapData.maplayers.start;
@@ -334,7 +327,6 @@ bool Map::LoadMap(pugi::xml_node mapFile)
     return ret;
 }
 
-// L04: DONE 4: Implement the LoadTileSet function to load the tileset properties
 bool Map::LoadTileSet(pugi::xml_node mapFile){
 
     bool ret = true; 
@@ -375,7 +367,6 @@ bool Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
     layer->width = node.attribute("width").as_int();
     layer->height = node.attribute("height").as_int();
 
-    //L06: DONE 6 Call Load Propoerties
     LoadProperties(node, layer->properties);
 
     //Reserve the memory for the data 
@@ -394,7 +385,6 @@ bool Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
     return ret;
 }
 
-// L05: DONE 4: Iterate all layers and load each of them
 bool Map::LoadAllLayers(pugi::xml_node mapNode) {
     bool ret = true;
 
