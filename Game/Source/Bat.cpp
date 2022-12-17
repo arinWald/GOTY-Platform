@@ -1,19 +1,34 @@
+
 #include "Bat.h"
 #include "App.h"
 #include "Render.h"
 #include "Player.h"
 #include "Pathfinding.h"
 #include "Map.h"
-#include "Debug.h"
-#include "ModuleUI.h"
+#include "Scene.h"
 #include "Log.h"
-#include "Collisions.h"
-#include "Audio.h"
-#include "Entities.h"
+#include "Physics.h"
+#include "EntityManager.h"
+#include "Textures.h"
+#include "Audio.h"	
+
 
 #include <math.h>
+#include <iostream>
+using namespace std;
 
-Bat::Bat(Module* parent, fPoint position, SDL_Texture* texture, Type type, int s) : Entity(parent, position, texture, type)
+Bat::Bat() : Entity(EntityType::BAT) {
+
+
+	name.Create("Bat");
+
+
+}
+
+Bat::~Bat() {
+
+}
+bool Bat::Awake()
 {
 	idleAnimation.GenerateAnimation(SDL_Rect({ 0, 0, 216, 25 }), 1, 12);
 	idleAnimation.speed = 6.0f;
@@ -31,27 +46,36 @@ Bat::Bat(Module* parent, fPoint position, SDL_Texture* texture, Type type, int s
 	deathAnimation.speed = 10.0f;
 	deathAnimation.loop = false;
 
-	currentAnimation = &idleAnimation;
+	texturePath = parameters.attribute("texturepath").as_string();
 
-	lastPlayerPosition.x = -1;
-	lastPlayerPosition.y = -1;
 
-	collider = app->collisions->AddCollider(SDL_Rect({ (int)position.x, (int)position.y, 18, 24 }), Collider::Type::BAT, parent);
-
-	speed = s;
-
-	initialPosition = position;
-
-	state = State::IDLE;
 }
-
-void Bat::CleanUp()
+bool Bat::CleanUp()
 {
 	delete& path;
+	return true;
 }
 
 bool Bat::Start()
 {
+
+BatTexture = app->tex->Load(texturePath);
+
+currentAnimation = &idleAnimation;
+
+lastPlayerPosition.x = -1;
+lastPlayerPosition.y = -1;
+
+batbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
+
+// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
+batbody->listener = this;
+
+// L07 DONE 7: Assign collider type
+batbody->ctype = ColliderType::PLAYER;
+
+state = State::IDLE;
+
 	return true;
 }
 
@@ -60,14 +84,16 @@ bool Bat::Update(float dt)
 	currentAnimation->Update(dt);
 
 	iPoint playerPos;
-	playerPos.x = app->entities->GetPlayer()->position.x / app->map->data.tileWidth;
-	playerPos.y = app->entities->GetPlayer()->position.y / app->map->data.tileHeight;
+	playerPos.x = app->scene->player->pbody->body->GetPosition().x/ app->map->mapData.tileWidth;
+	playerPos.y = app->scene->player->pbody->body->GetPosition().y / app->map->mapData.tileHeight;
 
 	iPoint gridPos;
-	gridPos.x = position.x / app->map->data.tileWidth;
-	gridPos.y = position.y / app->map->data.tileHeight;
+	gridPos.x = position.x / app->map->mapData.tileWidth;
+	gridPos.y = position.y / app->map->mapData.tileHeight;
 
-	if (playerPos != lastPlayerPosition && playerPos.DistanceTo(gridPos) <= 12 && state != State::DYING && !app->entities->GetPlayer()->godMode)
+	b2Vec2 vel;
+
+	if (playerPos != lastPlayerPosition && playerPos.DistanceTo(gridPos) <= 12 && state != State::DYING && !app->scene->godMode)
 	{
 		lastPlayerPosition = playerPos;
 
@@ -110,18 +136,19 @@ bool Bat::Update(float dt)
 	{
 	case State::IDLE:
 		currentAnimation = &idleAnimation;
+		vel = b2Vec2(0, 0);
 		break;
 	case State::FLYING:
 
 		//currentAnimation = &flyingLeftAnimation;
-		if (app->entities->GetPlayer()->godMode)
+		if (app->scene->godMode)
 			break;
 
 		if (pathIndex >= path.Count())
 			break;
 
-		pixelPosition.x = path[pathIndex].x * app->map->data.tileWidth;
-		pixelPosition.y = path[pathIndex].y * app->map->data.tileHeight;
+		pixelPosition.x = path[pathIndex].x * app->map->mapData.tileWidth;
+		pixelPosition.y = path[pathIndex].y * app->map->mapData.tileHeight;
 
 		distance = pixelPosition.DistanceTo(position);
 
@@ -175,7 +202,7 @@ bool Bat::Update(float dt)
 		break;
 	}
 
-	collider->SetPos(position.x, position.y);
+	
 
 	questionMarkAnimation.Update(dt);
 
@@ -186,22 +213,22 @@ bool Bat::Draw()
 {
 	if (state == State::FLYING)
 	{
-		app->render->DrawTexture(texture, position.x - 14, position.y, &currentAnimation->GetCurrentFrame());
+		app->render->DrawTexture(BatTexture, position.x - 14, position.y, &currentAnimation->GetCurrentFrame());
 	}
 	else if (state == State::DYING)
 	{
 		currentAnimation = &deathAnimation;
-		app->render->DrawTexture(texture, position.x - 20, position.y - 15, &currentAnimation->GetCurrentFrame());
+		app->render->DrawTexture(BatTexture, position.x - 20, position.y - 15, &currentAnimation->GetCurrentFrame());
 	}
 	else
-		app->render->DrawTexture(texture, position.x, position.y, &currentAnimation->GetCurrentFrame());
+		app->render->DrawTexture(BatTexture, position.x, position.y, &currentAnimation->GetCurrentFrame());
 
 	if (hasPath)
 	{
-		if (app->debug->showPaths)
+		if (app->physics->debug)
 		{
 			if (pathIndex < path.Count())
-				app->render->DrawRectangle(SDL_Rect({ path[pathIndex].x * app->map->data.tileWidth - 3 + app->map->data.tileWidth / 2, path[pathIndex].y * app->map->data.tileHeight - 3 + app->map->data.tileHeight / 2, 6, 6 }), 255, 0, 0);
+				app->render->DrawRectangle(SDL_Rect({ path[pathIndex].x * app->map->mapData.tileWidth - 3 + app->map->mapData.tileWidth / 2, path[pathIndex].y * app->map->mapData.tileHeight - 3 + app->map->mapData.tileHeight / 2, 6, 6 }), 255, 0, 0);
 			app->pathfinding->DrawPath(&path, 255, 0, 0);
 		}
 	}
@@ -209,32 +236,37 @@ bool Bat::Draw()
 	{
 		if (state == State::FLYING)
 		{
-			app->render->DrawTexture(texture, position.x - 6, position.y - 32, &questionMarkAnimation.GetCurrentFrame());
+			app->render->DrawTexture(BatTexture, position.x - 6, position.y - 32, &questionMarkAnimation.GetCurrentFrame());
 		}
 	}
 
 	return true;
 }
 
-void Bat::Collision(Collider* other, float dt)
-{
-	if (other == app->entities->GetPlayer()->collider)
-	{
-		iPoint center = iPoint(collider->rect.x + (collider->rect.w / 2), collider->rect.y + (collider->rect.h / 2));
-		iPoint playerCenter = iPoint(other->rect.x + (other->rect.w / 2), other->rect.y + (other->rect.h / 2));
+//void Bat::Collision(Collider* other, float dt)
+//{
+//	if (other == app->entities->GetPlayer()->collider)
+//	{
+//		iPoint center = iPoint(collider->rect.x + (collider->rect.w / 2), collider->rect.y + (collider->rect.h / 2));
+//		iPoint playerCenter = iPoint(other->rect.x + (other->rect.w / 2), other->rect.y + (other->rect.h / 2));
+//
+//		int xDiff = center.x - playerCenter.x;
+//		int yDiff = center.y - playerCenter.y;
+//
+//		if (abs(yDiff) > abs(xDiff) && yDiff > 0 && app->entities->GetPlayer()->verticalVelocity < 0.0f)
+//		{
+//			app->ui->score += 5000;
+//			app->audio->PlayFx(app->entities->GetPlayer()->doubleJumpFx, 0);
+//			state = State::DYING;
+//			collider->pendingToDelete = true;
+//			app->entities->GetPlayer()->verticalVelocity = app->entities->GetPlayer()->jumpForce;
+//		}
+//	}
+//}
 
-		int xDiff = center.x - playerCenter.x;
-		int yDiff = center.y - playerCenter.y;
+void Bat::OnCollision(PhysBody* physA, PhysBody* physB) {
 
-		if (abs(yDiff) > abs(xDiff) && yDiff > 0 && app->entities->GetPlayer()->verticalVelocity < 0.0f)
-		{
-			app->ui->score += 5000;
-			app->audio->PlayFx(app->entities->GetPlayer()->doubleJumpFx, 0);
-			state = State::DYING;
-			collider->pendingToDelete = true;
-			app->entities->GetPlayer()->verticalVelocity = app->entities->GetPlayer()->jumpForce;
-		}
-	}
+
 }
 
 void Bat::Reset()
@@ -242,3 +274,4 @@ void Bat::Reset()
 	position = initialPosition;
 	state = State::IDLE;
 }
+
