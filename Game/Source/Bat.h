@@ -44,7 +44,7 @@ public:
 
 	void Bat::ChangePosition(int x, int y);
 
-
+	void Reset();
 
 
 
@@ -65,13 +65,14 @@ public :
 	iPoint lastPlayerPosition;
 	DynArray<iPoint> path;
 	int pathIndex = 0;
-
-
+	int speed;
+	bool hasPath = false;
+	fPoint initialPosition;
 
 private:
 
 
-	fPoint initialPosition;
+	
 
 
 

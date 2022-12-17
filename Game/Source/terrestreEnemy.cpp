@@ -142,7 +142,7 @@ bool TerrestreEnemy::Start() {
 	return true;
 }
 
-bool TerrestreEnemy::Update()
+bool TerrestreEnemy::Update(float dt)
 {
 	PhysBody* pbody = app->scene->player->pbody;
 	b2Vec2 vel, distanceVector;
@@ -350,7 +350,7 @@ bool TerrestreEnemy::Update()
 		position.y = METERS_TO_PIXELS(tebody->body->GetTransform().p.y) - 16;
 
 		//blit sprite at the end
-		currentAnimation->Update();
+		currentAnimation->Update(dt);
 	}
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 	app->render->DrawTexture(texture, position.x, position.y - 9, &rect);
