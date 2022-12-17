@@ -226,7 +226,31 @@ bool Map::CleanUp()
         layerItem = layerItem->next;
     }
 
+    //REMOVE ALL COLLIDERS
+    ListItem<PhysBody*>* collisionsItem;
+    collisionsItem = Colliders.start;
+
+    while (collisionsItem != NULL)
+    {
+        collisionsItem->data->body->DestroyFixture(collisionsItem->data->body->GetFixtureList());
+        app->physics->world->DestroyBody(collisionsItem->data->body);
+        RELEASE(collisionsItem->data);
+        collisionsItem = collisionsItem->next;
+    }
     Colliders.Clear();
+
+    //REMOVE ENEMIES
+    ListItem<PhysBody*>* enemyItem;
+    enemyItem = enemies.start;
+
+    while (enemyItem != NULL)
+    {
+        enemyItem->data->body->DestroyFixture(enemyItem->data->body->GetFixtureList());
+        app->physics->world->DestroyBody(enemyItem->data->body);
+        RELEASE(enemyItem->data);
+        enemyItem = enemyItem->next;
+    }
+    enemies.Clear();
 
     return true;
 }

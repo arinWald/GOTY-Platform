@@ -169,6 +169,7 @@ public:
 	MapData mapData;
 
 	List<PhysBody*> Colliders;
+	List<PhysBody*> enemies;
 
 private:
 

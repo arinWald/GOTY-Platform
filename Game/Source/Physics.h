@@ -24,7 +24,8 @@ enum bodyType {
 };
 
 enum class ColliderType {
-	PLAYER, 
+	PLAYER,
+	TERRESTREENEMY,
 	ITEM,
 	PLATFORM, 
 	DEATH,
@@ -67,6 +68,7 @@ public:
 	// Main module steps
 	bool Start();
 	bool PreUpdate();
+	bool Update(float dt);
 	bool PostUpdate();
 	bool CleanUp();
 
@@ -80,11 +82,15 @@ public:
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
 
-private:
+	void Pause();
+
+public:
 
 	// Debug mode
 	bool debug;
 
 	// Box2D World
 	b2World* world;
+
+	bool pause = false;
 };

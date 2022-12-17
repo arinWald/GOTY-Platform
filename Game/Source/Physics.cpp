@@ -51,25 +51,29 @@ bool Physics::PreUpdate()
 {
 	bool ret = true;
 
-	// Step (update) the World
-	// WARNING: WE ARE STEPPING BY CONSTANT 1/60 SECONDS!
-	world->Step(1.0f / 60.0f, 6, 2);
-
-	// Because Box2D does not automatically broadcast collisions/contacts with sensors, 
-	// we have to manually search for collisions and "call" the equivalent to the ModulePhysics::BeginContact() ourselves...
-	for (b2Contact* c = world->GetContactList(); c; c = c->GetNext())
+	if (!pause)
 	{
-		// For each contact detected by Box2D, see if the first one colliding is a sensor
-		if (c->IsTouching() && c->GetFixtureA()->IsSensor())
+		// Step (update) the World
+		// WARNING: WE ARE STEPPING BY CONSTANT 1/60 SECONDS!
+		world->Step(1.0f / 60.0f, 6, 2);
+
+		// Because Box2D does not automatically broadcast collisions/contacts with sensors, 
+		// we have to manually search for collisions and "call" the equivalent to the ModulePhysics::BeginContact() ourselves...
+		for (b2Contact* c = world->GetContactList(); c; c = c->GetNext())
 		{
-			// If so, we call the OnCollision listener function (only of the sensor), passing as inputs our custom PhysBody classes
-			PhysBody* pb1 = (PhysBody*)c->GetFixtureA()->GetBody()->GetUserData();
-			PhysBody* pb2 = (PhysBody*)c->GetFixtureB()->GetBody()->GetUserData();
-			
-			if (pb1 && pb2 && pb1->listener)
-				pb1->listener->OnCollision(pb1, pb2);
+			// For each contact detected by Box2D, see if the first one colliding is a sensor
+			if (c->IsTouching() && c->GetFixtureA()->IsSensor())
+			{
+				// If so, we call the OnCollision listener function (only of the sensor), passing as inputs our custom PhysBody classes
+				PhysBody* pb1 = (PhysBody*)c->GetFixtureA()->GetBody()->GetUserData();
+				PhysBody* pb2 = (PhysBody*)c->GetFixtureB()->GetBody()->GetUserData();
+
+				if (pb1 && pb2 && pb1->listener)
+					pb1->listener->OnCollision(pb1, pb2);
+			}
 		}
 	}
+	
 
 	return ret;
 }
@@ -251,7 +255,22 @@ PhysBody* Physics::CreateChain(int x, int y, int* points, int size, bodyType typ
 	return pbody;
 }
 
-// 
+
+bool Physics::Update(float dt)
+{
+	if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+	{
+		Pause();
+	}
+
+	return true;
+}
+
+void Physics::Pause()
+{
+	pause = !pause;
+}
+ 
 bool Physics::PostUpdate()
 {
 	bool ret = true;

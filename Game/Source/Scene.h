@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Player.h"
 #include "Item.h"
+#include "terrestreEnemy.h"
 
 struct SDL_Texture;
 
@@ -53,6 +54,15 @@ public:
 
 	//L02: DONE 3: Declare a Player attribute 
 	Player* player;
+
+	//terrestre enemies list
+	List<TerrestreEnemy*> terrestreEnemies;
+
+	//ray
+	Point<int> ray;
+
+	//window data
+	uint width, height, scale;
 
 	GameplayState gameplayState = LOGO_SCREEN;
 	bool fading = false;
