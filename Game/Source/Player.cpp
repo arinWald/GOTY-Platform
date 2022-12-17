@@ -331,12 +331,7 @@ bool Player::Update()
 	for (int i = 0; i < (playerlives ); ++i) {
 		app->render->DrawTexture(playerLivesTexture, (-app->render->camera.x*0.5)+ 30*i+5, 5);
 
-	}
-
-	printf("Position camera.x %d \n", app->render->camera.x);
-
-
-		
+	}		
 	
 	return true;
 }
