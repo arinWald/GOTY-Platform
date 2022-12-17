@@ -28,7 +28,7 @@
 			  jumpfxpath="Assets/Audio/Fx/jump.wav"
 			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"
 			  defeatfx="Assets/Audio/Fx/defeat.wav"/>
-	  <terrestreEnemy x="855" y="277" level="1" texturepath="Assets/Textures/cocodrileEnemy.png">
+	  <terrestreEnemy x="270" y="70" level="1" texturepath="Assets/Textures/cocodrileEnemy.png">
 		  <idleAnim>
 			  <pushback x="0" y="0" w="32" h="32"/>
 		  </idleAnim>

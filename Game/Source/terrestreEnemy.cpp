@@ -377,7 +377,7 @@ void TerrestreEnemy::OnCollision(PhysBody* physA, PhysBody* physB)
 {
 	if (physA->ctype == ColliderType::TERRESTREENEMY)
 	{
-		if (physB->ctype == ColliderType::PLATFORM) {
+		if (physB->ctype == ColliderType::PLATFORM || physB->ctype == ColliderType::PLATFORMLIMIT) {
 			collisionWith = physB;
 			if (attackState == jumpAttack)
 			{
