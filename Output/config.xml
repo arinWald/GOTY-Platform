@@ -37,7 +37,7 @@
 	<level_1_song audiopath="Assets/Audio/Music/level1Song.ogg"/>
 	<victory_song audiopath="Assets/Audio/Music/victorySong.ogg"/>
 	<pathfinding  slimePathTile="Assets/Textures/Slime/path.png" />
-	<slime x="23" y="189" texturepath="Assets/Textures/Slime/Slime_Spiked_Full.png"/>
+	<slime x="23" y="89" texturepath="Assets/Textures/Slime/Slime_Spiked_Full.png"/>
 	<originTexture origintexturePath = "Assets/Maps/x_square.png" />
   </scene>
 

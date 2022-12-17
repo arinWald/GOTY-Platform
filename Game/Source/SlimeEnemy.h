@@ -60,7 +60,7 @@ public:
 	PhysBody* hitbox;
 	b2Vec2 hitboxPos;
 
-	int lives = 2;
+	int lives = 1;
 
 private:
 

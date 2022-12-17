@@ -78,7 +78,7 @@ bool SlimeEnemy::Start() {
 
 	currentAnim = &idleEnemy;
 	dead = false;
-	lives = 2;
+	lives = 1;
 
 	//Add physics to the player - initialize physics body
 	pbody = app->physics->CreateCircle(startPos.x, startPos.y, width / 4.5, bodyType::DYNAMIC);
@@ -102,10 +102,18 @@ bool SlimeEnemy::PreUpdate() {
 bool SlimeEnemy::Update()
 {
 	currentAnim = &idleEnemy;
-	velocity = { 0, -GRAVITY_Y };
+	if (app->scene->gameplayState == app->scene->GameplayState::PLAYING)
+	{
+		velocity = { 0, -GRAVITY_Y };
+	}
+	else
+	{
+		velocity = { 0, 0 };
+	}
+	
 
 	//Takes player pos for the path destination
-	iPoint playerTile = app->map->WorldToMap(app->scene->player->position.x + 32, app->scene->player->position.y);
+	iPoint playerTile = app->map->WorldToMap(app->scene->player->position.x - 16, app->scene->player->position.y);
 
 	//Check if the enemy is visible on camera, if not, don't create path and don't move
 	if (pbody->body->GetPosition().x > app->render->camera.x - app->render->camera.w / 2 && pbody->body->GetPosition().x < app->render->camera.x + app->render->camera.w / 2)
