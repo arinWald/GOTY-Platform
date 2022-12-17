@@ -226,7 +226,39 @@ bool Map::CleanUp()
         layerItem = layerItem->next;
     }
 
-    Colliders.Clear();
+    
+    ////COLLIDERS CLEANUP
+    //ListItem<PhysBody*>* collisionsItem;
+    //collisionsItem = mapColliders.start;
+
+    //while (collisionsItem != NULL)
+    //{
+    //    collisionsItem->data->body->DestroyFixture(collisionsItem->data->body->GetFixtureList());
+    //    RELEASE(collisionsItem->data);
+    //    collisionsItem = collisionsItem->next;
+    //}
+    //mapColliders.Clear();
+
+    ////Chain Collider Points clean up
+    //ListItem<ObjectGroup*>* ObjectGroupItem;
+    //ObjectGroupItem = mapData.mapObjectGroups.start;
+
+    //while (ObjectGroupItem != NULL)
+    //{
+    //    ListItem<Object*>* ObjectItem;
+    //    ObjectItem = ObjectGroupItem->data->objects.start;
+
+    //    while (ObjectItem != NULL)
+    //    {
+    //        RELEASE(ObjectGroupItem->data);
+    //        ObjectItem = ObjectItem->next;
+    //    }
+    //    //ObjectGroupItem->data->objects.Clear();
+
+    //    RELEASE(ObjectGroupItem->data);
+    //    ObjectGroupItem = ObjectGroupItem->next;
+    //}
+    //mapData.mapObjectGroups.Clear();
 
     return true;
 }

@@ -36,6 +36,9 @@
 	<win_screen texturepath="Assets/Textures/Scenas/Win.png"/>
 	<level_1_song audiopath="Assets/Audio/Music/level1Song.ogg"/>
 	<victory_song audiopath="Assets/Audio/Music/victorySong.ogg"/>
+	<pathfinding  slimePathTile="Assets/Textures/Slime/path.png" />
+	<slime x="23" y="389" texturepath="Assets/Textures/Slime/Slime_Spiked_Full.png"/>
+	<originTexture origintexturePath = "Assets/Maps/x_square.png" />
   </scene>
 
   <map>

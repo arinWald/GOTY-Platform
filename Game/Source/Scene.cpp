@@ -8,6 +8,7 @@
 #include "EntityManager.h"
 #include "Map.h"
 #include "Player.h"
+#include "Physics.h"
 #include "Pathfinding.h"
 #include <iostream>
 using namespace std;
@@ -42,6 +43,11 @@ bool Scene::Awake(pugi::xml_node& config)
 
 	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 	player->parameters = config.child("player");
+
+	origintexturePath = config.child("originTexture").attribute("origintexturePath").as_string();
+	slimeTilePath = config.child("pathfinding").attribute("slimePathTile").as_string();
+	slime = (SlimeEnemy*)app->entityManager->CreateEntity(EntityType::ENEMY);
+	slime->parameters = config.child("slime");
 	
 	pugi::xml_node logo = config.child("logo");
 	logotexturePath = logo.attribute("texturepath").as_string();
@@ -80,11 +86,25 @@ bool Scene::Start()
 
 	app->win->SetTitle(title.GetString());
 
+	app->physics->Enable();
+	app->pathfinding->Enable();
+	app->entityManager->Enable();
+	app->map->Enable();
+	LOG("--STARTS GAME SCENE--");
+	app->physics->debug = false;
+	app->scene->slime->lives = 1;
+
 	
 	logo = app->tex->Load(logotexturePath);
 	intro = app->tex->Load(introtexturePath);
 	game_over = app->tex->Load(game_over_texturePath);
 	win_screen = app->tex->Load(win_screen_texturePath);
+
+	// Texture to highligh mouse position 
+	slimeTilePathTex = app->tex->Load(slimeTilePath);
+
+	// Texture to show path origin 
+	originTex = app->tex->Load(origintexturePath);
 
 	godMode = false;
 
@@ -123,6 +143,8 @@ bool Scene::Start()
 		// Texture to show path origin 
 		originTex = app->tex->Load("Assets/Maps/x_square.png");
 	}
+
+	
 
 	return true;
 }

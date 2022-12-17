@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Player.h"
 #include "Item.h"
+#include "SlimeEnemy.h"
 
 struct SDL_Texture;
 
@@ -54,6 +55,14 @@ public:
 	//L02: DONE 3: Declare a Player attribute 
 	Player* player;
 
+	SlimeEnemy* slime;
+
+	SDL_Texture* originTex = nullptr;
+	const char* origintexturePath;
+
+	SDL_Texture* slimeTilePathTex = nullptr;
+	const char* slimeTilePath;
+
 	GameplayState gameplayState = LOGO_SCREEN;
 	bool fading = false;
 
@@ -85,7 +94,6 @@ private:
 	GameplayState targetState = gameplayState;
 
 	SDL_Texture* mouseTileTex = nullptr;
-	SDL_Texture* originTex = nullptr;
 
 	// L12: Debug pathfing
 	iPoint origin;
