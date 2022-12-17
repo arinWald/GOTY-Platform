@@ -1,6 +1,11 @@
 #include "EntityManager.h"
 #include "Player.h"
 #include "Item.h"
+<<<<<<< Updated upstream
+=======
+#include "terrestreEnemy.h"
+#include "Bat.h"
+>>>>>>> Stashed changes
 #include "App.h"
 #include "Textures.h"
 #include "Scene.h"
@@ -94,6 +99,9 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		break;
 	case EntityType::FLYINGENEMY:
 		entity = new FlyingEnemy();
+		break;
+	case EntityType::BAT:
+		entity = new Bat();
 		break;
 
 	default: break;

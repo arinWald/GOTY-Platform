@@ -159,6 +159,11 @@ bool App::LoadConfig()
 // ---------------------------------------------
 void App::PrepareUpdate()
 {
+<<<<<<< Updated upstream
+=======
+	
+	frameTime.Start();
+>>>>>>> Stashed changes
 }
 
 // ---------------------------------------------

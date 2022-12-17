@@ -15,6 +15,7 @@
     <ClCompile Include="Source\External\PugiXml\src\pugixml.cpp">
       <Filter>External\PugiXml</Filter>
     </ClCompile>
+<<<<<<< Updated upstream
     <ClCompile Include="Source\EntityManager.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\Item.cpp" />
@@ -22,6 +23,65 @@
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\ModuleFadeToBlack.cpp" />
     <ClCompile Include="Source\FlyingEnemy.cpp" />
+=======
+    <ClCompile Include="Source\App.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Audio.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EntityManager.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Input.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Item.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Main.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Map.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleFadeToBlack.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PerfTimer.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Player.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Render.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Textures.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Timer.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Window.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Pathfinding.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\terrestreEnemy.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Bat.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window.h" />
@@ -59,6 +119,7 @@
     <ClInclude Include="Source\Queue.h">
       <Filter>Utils</Filter>
     </ClInclude>
+<<<<<<< Updated upstream
     <ClInclude Include="Source\EntityManager.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\Entity.h" />
@@ -68,6 +129,77 @@
     <ClInclude Include="Source\Animation.h" />
     <ClInclude Include="Source\ModuleFadeToBlack.h" />
     <ClInclude Include="Source\FlyingEnemy.h" />
+=======
+    <ClInclude Include="Source\Defs.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Entity.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EntityManager.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Input.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Item.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Map.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Module.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleFadeToBlack.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PerfTimer.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Physics.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Player.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Render.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Textures.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Window.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Animation.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Pathfinding.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PQueue.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\terrestreEnemy.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bat.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

@@ -11,12 +11,17 @@
 
 struct SDL_Texture;
 
+<<<<<<< Updated upstream
 struct transformPosition {
 	float posX;
 	float posY;
 	bool turn;
 
 };
+=======
+class Bat : Entity
+{
+>>>>>>> Stashed changes
 
 class FlyingEnemy : public Entity
 {
@@ -24,7 +29,13 @@ public:
 
 	FlyingEnemy();
 
+<<<<<<< Updated upstream
 	virtual ~FlyingEnemy();
+=======
+	Bat();
+
+	virtual ~Bat();
+>>>>>>> Stashed changes
 
 	bool Awake();
 
@@ -34,6 +45,7 @@ public:
 
 	bool CleanUp();
 
+<<<<<<< Updated upstream
 	// L07 DONE 6: Define OnCollision function for the player. Check the virtual function on Entity class
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
@@ -42,8 +54,33 @@ public:
 
 public:
 
+=======
+	void OnCollision(PhysBody* physA, PhysBody* physB);
+
+	bool CleanUp();
+>>>>>>> Stashed changes
 
 
+<<<<<<< Updated upstream
+=======
+public :
+
+	SDL_Texture* BatTexture;
+	const char* texturePath;
+
+	Animation idleAnimation;
+	Animation flyingLeftAnimation;
+	Animation flyingRightAnimation;
+	Animation questionMarkAnimation;
+	Animation deathAnimation;
+	Animation* currentAnimation;
+
+	State state;
+	PhysBody* batbody;
+	iPoint lastPlayerPosition;
+	DynArray<iPoint> path;
+	int pathIndex = 0;
+>>>>>>> Stashed changes
 	int speed;
 	int jumpspeed;
 	bool ground;
@@ -79,6 +116,12 @@ private:
 
 
 
+<<<<<<< Updated upstream
+=======
+	fPoint initialPosition;
+private:
+
+>>>>>>> Stashed changes
 };
 
 #endif

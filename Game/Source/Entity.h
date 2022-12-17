@@ -12,7 +12,12 @@ enum class EntityType
 {
 	PLAYER,
 	ITEM,
+<<<<<<< Updated upstream
 	FLYINGENEMY,
+=======
+	TERRESTREENEMY,
+	BAT,
+>>>>>>> Stashed changes
 	UNKNOWN
 };
 
@@ -79,11 +84,17 @@ public:
 	SString name;
 	EntityType type;
 	bool active = true;
+	bool pendingToDelete = false;
 	pugi::xml_node parameters;
 
 	// Possible properties, it depends on how generic we
 	// want our Entity class, maybe it's not renderable...
+<<<<<<< Updated upstream
 	iPoint position;       
+=======
+	fPoint position;       
+	iPoint initialPosition;
+>>>>>>> Stashed changes
 	bool renderable = true;
 };
 

@@ -37,9 +37,9 @@ public:
 		return !loop && !pingpong && loopCount > 0;
 	}
 
-	void Update()
+	void Update(float dt)
 	{
-		currentFrame += speed;
+		currentFrame += speed * dt;
 		if (currentFrame >= totalFrames)
 		{
 			currentFrame = (loop || pingpong) ? 0.0f : totalFrames - 1;
@@ -58,6 +58,32 @@ public:
 
 		return frames[actualFrame];
 	}
+<<<<<<< Updated upstream
+=======
+
+	int GetTotalFrames() const
+	{
+		return totalFrames;
+	}
+
+	void GenerateAnimation(const SDL_Rect& rect, int rows, int columns)
+	{
+
+		int frameWidth = rect.w / columns;
+		int frameHeight = rect.h / rows;
+
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < columns; j++) {
+				SDL_Rect frame;
+				frame.x = rect.x + (j * frameWidth);
+				frame.y = rect.y + (i * frameHeight);
+				frame.w = frameWidth;
+				frame.h = frameHeight;
+				PushBack(frame);
+			}
+		}
+	}
+>>>>>>> Stashed changes
 };
 
 #endif
