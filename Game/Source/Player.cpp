@@ -153,11 +153,11 @@ bool Player::Update(float dt)
 	
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
-<<<<<<< Updated upstream
+
 		currentAnimation->Update();
-=======
+
 	currentAnimation->Update(dt);
->>>>>>> Stashed changes
+
 
 
 		//printf("PositionX: %d PositionY: %d\n", position.x, position.y);

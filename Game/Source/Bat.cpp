@@ -1,5 +1,4 @@
-<<<<<<< Updated upstream
-=======
+
 #include "Bat.h"
 #include "App.h"
 #include "Render.h"

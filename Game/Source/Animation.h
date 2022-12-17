@@ -58,8 +58,6 @@ public:
 
 		return frames[actualFrame];
 	}
-<<<<<<< Updated upstream
-=======
 
 	int GetTotalFrames() const
 	{
@@ -83,7 +81,7 @@ public:
 			}
 		}
 	}
->>>>>>> Stashed changes
+
 };
 
 #endif

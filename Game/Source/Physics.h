@@ -24,13 +24,10 @@ enum bodyType {
 };
 
 enum class ColliderType {
-<<<<<<< Updated upstream
+
 	PLAYER, 
-=======
-	PLAYER,
 	TERRESTREENEMY,
 	BAT,
->>>>>>> Stashed changes
 	ITEM,
 	PLATFORM, 
 	DEATH,

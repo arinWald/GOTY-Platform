@@ -12,12 +12,8 @@ enum class EntityType
 {
 	PLAYER,
 	ITEM,
-<<<<<<< Updated upstream
-	FLYINGENEMY,
-=======
 	TERRESTREENEMY,
 	BAT,
->>>>>>> Stashed changes
 	UNKNOWN
 };
 
@@ -89,12 +85,11 @@ public:
 
 	// Possible properties, it depends on how generic we
 	// want our Entity class, maybe it's not renderable...
-<<<<<<< Updated upstream
 	iPoint position;       
-=======
+
 	fPoint position;       
 	iPoint initialPosition;
->>>>>>> Stashed changes
+
 	bool renderable = true;
 };
 
