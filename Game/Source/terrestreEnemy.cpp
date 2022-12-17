@@ -12,6 +12,9 @@
 #include "ModuleFadeToBlack.h"
 #include "Map.h"
 
+#include <iostream>
+using namespace std;
+
 TerrestreEnemy::TerrestreEnemy(bool startEnabled) : Entity(EntityType::TERRESTREENEMY)
 {
 	name.Create("terrestreEnemy");
@@ -158,13 +161,8 @@ bool TerrestreEnemy::Update()
 
 	if (!app->physics->pause)
 	{
-		//FIRST, I WILL SET THE STATE OF THE TERRESTRE ENEMY
-		if (!alive)
-		{
-			state = STATE::DYING;
-		}
 		//condition if player is REALLY close from terrestre enemy
-		else if (distancePlayerTE <= 3)
+		if (distancePlayerTE <= 3)
 		{
 			state = STATE::ATTACKING;
 		}
@@ -179,16 +177,11 @@ bool TerrestreEnemy::Update()
 			state = STATE::NORMALPATH;
 		}
 
-
-
-
 		switch (state)
 		{
 		case STATE::NORMALPATH:
 			//TO IMPLEMENT NORMAL PATH THE IDEA IS -> TAKE THE CLOSER WALL OR PLATFORM COLLIDER -> COMPARE THIS COLLIDER X WITH TE X, AND THEN, MOVE LEFT OR RIGHT.
 			//ANOTHER IDEA IS TO IMPLEMENT MODULE PATHS FROM LAST YEAR PROJECT 1
-
-
 
 			switch (direction)
 			{
@@ -277,6 +270,7 @@ bool TerrestreEnemy::Update()
 				direction = DIRECTION::RIGHT;
 				currentAnimation = &walkRightAnimation;
 			}
+
 			if (app->physics->debug)//ray that is the PATH of the terrestre enemy
 			{
 				app->render->DrawLine(METERS_TO_PIXELS(tebody->body->GetPosition().x),
@@ -386,48 +380,24 @@ void TerrestreEnemy::OnCollision(PhysBody* physA, PhysBody* physB)
 		}
 		switch (physB->ctype)
 		{
-		case ColliderType::ITEM:
-			LOG("TERRESTRE ENEMY Collision ITEM");
-			break;
-		//case ColliderType::PLATFORM:
-		//	LOG("TERRESTRE ENEMY Collision PLATFORM");
-		//	break;
-		//case ColliderType::WALL:
-		//	LOG("TERRESTRE ENEMY Collision Wall");
-		//	break;
-		//case ColliderType::WATER:
-		//	LOG("TERRESTRE ENEMY Collision Water");
-		//	alive = false;
-		//	break;
-		//case ColliderType::VICTORY:
-		//	LOG("TERRESTRE ENEMY Collision Victory");
-		//	break;
 		case ColliderType::PLAYER:
 			LOG("TERRESTRE ENEMY Collision Player");
-			//int py, tey;
-			//py = METERS_TO_PIXELS(physB->body->GetPosition().y);
-			//tey = METERS_TO_PIXELS(physA->body->GetPosition().y);
+			int py, tey;
+			py = METERS_TO_PIXELS(physB->body->GetPosition().y);
+			tey = METERS_TO_PIXELS(physA->body->GetPosition().y);
 
-			////terrestre enemy dies
-			//if (!app->scene->godMode &&
-			//	alive &&
-			//	app->scene->player->alive &&
-			//	py + physB->height + 3 <= tey)
-			//{
-			//	alive = false;
-			//	physB->body->SetLinearVelocity(b2Vec2(0, -20.0f));
-			//}
-			////player dies
-			//else if (!app->scene->godMode &&
-			//	app->scene->player->alive &&
-			//	alive &&
-			//	tey < physA->height + 4 + py)
-			//{
-			//	app->scene->player->alive = false;
-			//	app->sceneIntro->Win = false;
-			//	app->sceneIntro->beforePlay = false;
-			//	app->fade->FadeToBlack(app->scene, (Module*)app->sceneIntro, 20);
-			//}
+			//terrestre enemy dies
+			if (!app->scene->godMode && alive && !app->scene->player->isDead && py + physB->height + 3 <= tey)
+			{
+				alive = false;
+				physB->body->SetLinearVelocity(b2Vec2(0, -20.0f));
+			}
+			//player dies
+			else if (!app->scene->godMode && !app->scene->player->isDead && alive && tey < physA->height + 4 + py)
+			{
+				app->scene->player->isDead = false;
+				//CANVI D'ESCENA
+			}
 			break;
 		case ColliderType::TERRESTREENEMY:
 			if (direction == DIRECTION::RIGHT && state != STATE::ATTACKING)
@@ -442,6 +412,70 @@ void TerrestreEnemy::OnCollision(PhysBody* physA, PhysBody* physB)
 		case ColliderType::UNKNOWN:
 			LOG("TERRESTRE ENEMY Collision UNKNOWN");
 			break;
+		case ColliderType::PLATFORMLIMIT:
+			LOG("TERESTRE ENEMY Collision PlatformLimit");
+			if (direction == DIRECTION::RIGHT && state != STATE::ATTACKING)
+			{
+				cout << "TURN LEFT" << endl;
+				direction = DIRECTION::LEFT;
+			}
+			else if (direction == DIRECTION::LEFT && state != STATE::ATTACKING)
+			{
+				cout << "TURN RIGHT" << endl;
+				direction = DIRECTION::RIGHT;
+			}
+			break;
 		}
 	}
+	//if (physB->ctype == ColliderType::PLATFORM || physB->ctype == ColliderType::PLATFORMLIMIT) {
+	//	collisionWith = physB;
+	//	if (attackState == jumpAttack)
+	//	{
+	//		attackState = chargingAttack;
+	//	}
+	//}
+	//switch (physB->ctype)
+	//{
+	//case ColliderType::DEATH:
+	//	LOG("TERRESTRE ENEMY Collision DEATH");
+	//	int py, tey;
+	//	py = METERS_TO_PIXELS(physB->body->GetPosition().y);
+	//	tey = METERS_TO_PIXELS(physA->body->GetPosition().y);
+
+	//	//terrestre enemy dies
+	//	if (alive && !app->scene->player->isDead && py + physB->height + 3 <= tey)
+	//	{
+	//		alive = false;
+	//		physB->body->SetLinearVelocity(b2Vec2(0, -20.0f));
+	//	}
+	//	break;
+	//case ColliderType::TERRESTREENEMY:
+	//	if (direction == DIRECTION::RIGHT && state != STATE::ATTACKING)
+	//	{
+	//		direction = DIRECTION::LEFT;
+	//	}
+	//	else if (direction == DIRECTION::LEFT && state != STATE::ATTACKING)
+	//	{
+	//		direction = DIRECTION::RIGHT;
+	//	}
+	//	break;
+	//case ColliderType::PLATFORMLIMIT:
+	//	if (state == STATE::NORMALPATH)
+	//	{
+	//		tebody->body->ApplyLinearImpulse({ 0,-0.5 }, tebody->body->GetPosition(), true);
+	//		if (direction == DIRECTION::RIGHT)
+	//		{
+	//			direction = DIRECTION::LEFT;
+	//		}
+	//		else if (direction == DIRECTION::LEFT)
+	//		{
+	//			direction = DIRECTION::RIGHT;
+	//		}
+	//		cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << endl;
+	//		break;
+	//	}
+	//case ColliderType::UNKNOWN:
+	//	LOG("TERRESTRE ENEMY Collision UNKNOWN");
+	//	break;
+	//}
 }

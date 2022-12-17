@@ -25,7 +25,7 @@ enum class DIRECTION
 
 #define chargingAttack true
 #define jumpAttack false
-#define chargingAttackTimeInSeconds 0.2f
+#define chargingAttackTimeInSeconds 1.0f
 
 class TerrestreEnemy : public Entity
 {

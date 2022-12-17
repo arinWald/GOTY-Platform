@@ -156,10 +156,11 @@ bool Player::Update()
 	currentAnimation->Update();
 
 
-	if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
-	{
-		pbody->body->ApplyLinearImpulse({ 100, 0 }, { 0, 0 }, true);
-	}
+	//if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
+	//{
+	//	b2Vec2 force = { -5.5f, 0 };
+	//	pbody->body->ApplyForceToCenter(force, true);
+	//}
 
 	b2Vec2 vel ;
 	if (!app->scene->godMode)
@@ -330,12 +331,7 @@ bool Player::Update()
 	for (int i = 0; i < (playerlives ); ++i) {
 		app->render->DrawTexture(playerLivesTexture, (-app->render->camera.x*0.5)+ 30*i+5, 5);
 
-	}
-
-	printf("Position camera.x %d \n", app->render->camera.x);
-
-
-		
+	}		
 	
 	return true;
 }
