@@ -158,6 +158,8 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	cout << "Slime Position: " << slime->position.x << ", " << slime->position.y << endl;
+
 	// L03: DONE 3: Request App to Load / Save when pressing the keys F5 (save) / F6 (load)
 	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && gameplayState == LOGO_SCREEN)
 	{
@@ -294,7 +296,6 @@ bool Scene::Update(float dt)
 	{
 		if (originSelected == true && gameplayState == PLAYING)
 		{
-			cout << "Hola" << endl;
 			app->pathfinding->CreatePath(origin, mouseTile);
 			originSelected = false;
 		}

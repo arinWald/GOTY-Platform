@@ -88,6 +88,12 @@ bool Render::Update(float dt)
 
 		if (camera.y > -0)
 			camera.y = -0;
+
+		//CAMERA FOLLOW ENEMY
+		//camera.x = -(int)app->scene->slime->position.x * scale + camera.w / 2;
+		//camera.y = -(int)app->scene->slime->position.y * scale + camera.h / 2;
+
+
 		//if (camera.y < -16 * 78 * 1.425)
 		//	camera.y = -16 * 78 * 1.425;
 	}
