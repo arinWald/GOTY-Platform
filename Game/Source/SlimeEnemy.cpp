@@ -116,7 +116,7 @@ bool SlimeEnemy::Update()
 
 	//Takes player pos for the path destination
 	iPoint playerTile = app->map->WorldToMap(app->scene->player->position.x, app->scene->player->position.y);
-	cout << "PLAYER TILE " << playerTile.x << " " << playerTile.y << endl;
+	//cout << "PLAYER TILE " << playerTile.x << " " << playerTile.y << endl;
 
 	//Check if the enemy is visible on camera, if not, don't create path and don't move
 	if (pbody->body->GetPosition().x > app->render->camera.x - app->render->camera.w / 2 - 50 && pbody->body->GetPosition().x < app->render->camera.x + app->render->camera.w / 2 - 50)
