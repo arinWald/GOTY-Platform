@@ -12,6 +12,8 @@
 #include "PathFinding.h"
 #include "ModuleFadeToBlack.h"
 #include "EntityManager.h"
+#include <iostream>
+using namespace std;
 
 
 SlimeEnemy::SlimeEnemy() : Entity(EntityType::ENEMY)
@@ -113,10 +115,11 @@ bool SlimeEnemy::Update()
 	
 
 	//Takes player pos for the path destination
-	iPoint playerTile = app->map->WorldToMap(app->scene->player->position.x - 16, app->scene->player->position.y);
+	iPoint playerTile = app->map->WorldToMap(app->scene->player->position.x, app->scene->player->position.y);
+	cout << "PLAYER TILE " << playerTile.x << " " << playerTile.y << endl;
 
 	//Check if the enemy is visible on camera, if not, don't create path and don't move
-	if (pbody->body->GetPosition().x > app->render->camera.x - app->render->camera.w / 2 && pbody->body->GetPosition().x < app->render->camera.x + app->render->camera.w / 2)
+	if (pbody->body->GetPosition().x > app->render->camera.x - app->render->camera.w / 2 - 50 && pbody->body->GetPosition().x < app->render->camera.x + app->render->camera.w / 2 - 50)
 	{
 		//Test compute path function
 		if (originSelected == true)
@@ -135,6 +138,9 @@ bool SlimeEnemy::Update()
 			app->pathfinding->ClearLastPath();
 			refreshPathTime = 0;
 		}
+
+		origin.x = pbody->body->GetPosition().x;
+		origin.y = pbody->body->GetPosition().y;
 
 		MovementDirection(origin, playerTile);
 	}
