@@ -95,6 +95,7 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		break;
 	case EntityType::WALKENEMY:
 		entity = new WalkEnemy();
+		break;
 	case EntityType::BAT:
 		entity = new Bat();
 		break;

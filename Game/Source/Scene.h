@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Player.h"
 #include "WalkEnemy.h"
+#include "Bat.h"
 #include "Item.h"
 
 struct SDL_Texture;
@@ -53,7 +54,7 @@ public:
 public:
 
 	Player* player;
-
+	Bat* bat;
 	WalkEnemy* walkEnemy;
 
 	GameplayState gameplayState = LOGO_SCREEN;

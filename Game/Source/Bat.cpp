@@ -206,6 +206,7 @@ bool Bat::Update( )
 	
 
 	questionMarkAnimation.Update();
+	Draw();
 
 	return true;
 }

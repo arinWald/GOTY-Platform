@@ -42,6 +42,9 @@ bool Scene::Awake(pugi::xml_node& config)
 	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 	player->parameters = config.child("player");
 
+	bat = (Bat*)app->entityManager->CreateEntity(EntityType::BAT);
+	bat->parameters = config.child("bat");
+
 	walkEnemy = (WalkEnemy*)app->entityManager->CreateEntity(EntityType::WALKENEMY);
 	walkEnemy->parameters = config.child("walkenemy");
 
