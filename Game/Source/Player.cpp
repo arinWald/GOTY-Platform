@@ -86,22 +86,22 @@ Player::~Player() {
 
 bool Player::Awake() {
 
-		//L02: DONE 1: Initialize Player parameters
-		//pos = position;
-		//texturePath = "Assets/Textures/player/idle1.png";
+	//L02: DONE 1: Initialize Player parameters
+	//pos = position;
+	//texturePath = "Assets/Textures/player/idle1.png";
 	livesTexturePath = "Assets/Textures/heart-icon.png";
-		//L02: DONE 5: Get Player parameters from XML
-		position.x = parameters.attribute("x").as_int();
-		position.y = parameters.attribute("y").as_int();
-		speed = parameters.attribute("speed").as_int();
-		livesTexturePath = parameters.attribute("livestexturepath").as_string();
-		texturePath = parameters.attribute("texturepath").as_string();
-		jumpFxPath = parameters.attribute("jumpfxpath").as_string();
-		deathFxPath = parameters.attribute("deathfxpath").as_string();
-		level1SongPath = parameters.attribute("level1songpath").as_string();
-		playerlives = parameters.attribute("lives").as_int();
-		jumpspeed = parameters.attribute("jumpspeed").as_int();
-		defeatFxPath = parameters.attribute("defeatfx").as_string();
+	//L02: DONE 5: Get Player parameters from XML
+	position.x = parameters.attribute("x").as_int();
+	position.y = parameters.attribute("y").as_int();
+	speed = parameters.attribute("speed").as_int();
+	livesTexturePath = parameters.attribute("livestexturepath").as_string();
+	texturePath = parameters.attribute("texturepath").as_string();
+	jumpFxPath = parameters.attribute("jumpfxpath").as_string();
+	deathFxPath = parameters.attribute("deathfxpath").as_string();
+	level1SongPath = parameters.attribute("level1songpath").as_string();
+	playerlives = parameters.attribute("lives").as_int();
+	jumpspeed = parameters.attribute("jumpspeed").as_int();
+	defeatFxPath = parameters.attribute("defeatfx").as_string();
 	
 	return true;
 }
@@ -110,58 +110,49 @@ bool Player::Start() {
 
 	//initilize textures
 	playerLivesTexture = app->tex->Load(livesTexturePath);
-		playerTexture = app->tex->Load(texturePath);
-		transformPosition teleport;
-		//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
-		deathFxId = app->audio->LoadFx(deathFxPath);
-		jumpFxId = app->audio->LoadFx(jumpFxPath);
-		defeatFxId = app->audio->LoadFx(defeatFxPath);
-		//app->audio->PlayMusic(level1SongPath, 0);
-		currentAnimation = &rightIdleAnimation;
+	playerTexture = app->tex->Load(texturePath);
+	transformPosition teleport;
+	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
+	deathFxId = app->audio->LoadFx(deathFxPath);
+	jumpFxId = app->audio->LoadFx(jumpFxPath);
+	defeatFxId = app->audio->LoadFx(defeatFxPath);
+	//app->audio->PlayMusic(level1SongPath, 0);
+	currentAnimation = &rightIdleAnimation;
 
-		timerJump = 0;
-		jumpspeed = -5.5;
-		jumpsavailable = 2;
+	timerJump = 0;
+	jumpsavailable = 2;
 
-		isDead = false;
-		isWin = false;
+	isDead = false;
+	isWin = false;
 
 
-		initialPosX = 40;
-		initialPosY = 270;
+	initialPosX = 40;
+	initialPosY = 270;
 
-		LastDir = 1;
+	LastDir = 1;
 
-		timerDeath = DEATH_TIME;
+	timerDeath = DEATH_TIME;
 		
-		// L07 DONE 5: Add physics to the player - initialize physics body
-		pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
+	// L07 DONE 5: Add physics to the player - initialize physics body
+	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
 
-		// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
-		pbody->listener = this;
+	// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
+	pbody->listener = this;
 
-		// L07 DONE 7: Assign collider type
-		pbody->ctype = ColliderType::PLAYER;
-		pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
+	// L07 DONE 7: Assign collider type
+	pbody->ctype = ColliderType::PLAYER;
+	pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
 	
-		return true;
+	return true;
 	
 }
 
 bool Player::Update()
 {
 	
-	// L07 DONE 5: Add physics to the player - updated player position using physics
-
 	currentAnimation->Update();
 
-
-	if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
-	{
-		pbody->body->ApplyLinearImpulse({ 100, 0 }, { 0, 0 }, true);
-	}
-
-	b2Vec2 vel ;
+	b2Vec2 vel;
 	if (!app->scene->godMode)
 	{
 		vel = b2Vec2(0, -GRAVITY_Y);
@@ -213,9 +204,6 @@ bool Player::Update()
 
 	}
 
-	//cout << "JUMPS AVAILABLE: " << jumpsavailable << endl;
-	//cout << "LIVES: " << playerlives << endl;
-
 	//Manage Death Timer
 	if (isDead)
 	{
@@ -237,12 +225,13 @@ bool Player::Update()
 	if (!app->scene->godMode && app->scene->gameplayState == app->scene->GameplayState::PLAYING && !isDead)
 	{
 		//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-		if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
+		if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0 || autoJump) {
 			//
 			timerJump = 15;
 			app->audio->PlayFx(jumpFxId);
 			jumpsavailable--;
 			/*vel =  b2Vec2(vel.x,jumpspeed);*/
+			if (jumpsavailable <= 1) autoJump = false;
 		}
 
 		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
@@ -332,11 +321,6 @@ bool Player::Update()
 
 	}
 
-	printf("Position camera.x %d \n", app->render->camera.x);
-
-
-		
-	
 	return true;
 }
 
@@ -391,6 +375,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			//cout << "WINNNNNN" << endl;
 			isWin = true;
 			ChangePosition(initialPosX, initialPosY);
+		case ColliderType::ENEMYHEAD:
+			app->scene->walkEnemy->isDead = true;
+			autoJump = true;
+			//app->audio->PlayFx(walkEnemyDiesFx);
 
 		case ColliderType::UNKNOWN:
 			//LOG("Collision UNKNOWN");

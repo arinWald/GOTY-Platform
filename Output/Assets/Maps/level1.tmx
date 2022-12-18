@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="250" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="20" nextobjectid="323">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="250" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="22" nextobjectid="360">
  <tileset firstgid="1" name="terrain" tilewidth="16" tileheight="16" tilecount="242" columns="22">
   <image source="Terrain (16x16).png" width="352" height="176"/>
   <wangsets>
@@ -104,7 +104,7 @@
  <tileset firstgid="293" name="MetaData" tilewidth="16" tileheight="16" tilecount="4" columns="2">
   <image source="MetaData.png" width="32" height="32"/>
  </tileset>
- <layer id="2" name="Background" width="250" height="30" visible="0">
+ <layer id="2" name="Background" width="250" height="30">
   <properties>
    <property name="Draw" type="bool" value="true"/>
    <property name="Navigation" type="bool" value="false"/>
@@ -22628,7 +22628,7 @@
    <tile/>
   </data>
  </layer>
- <layer id="10" name="Obstacles" width="250" height="30" visible="0">
+ <layer id="10" name="Obstacles" width="250" height="30">
   <properties>
    <property name="Draw" type="bool" value="true"/>
    <property name="Navigation" type="bool" value="false"/>
@@ -37645,7 +37645,7 @@
    <tile/>
   </data>
  </layer>
- <objectgroup id="15" name="Colliders" visible="0">
+ <objectgroup id="15" name="Colliders">
   <object id="30" x="0" y="320" width="192" height="16"/>
   <object id="31" x="192" y="304" width="32" height="16"/>
   <object id="32" x="224" y="288" width="64" height="16"/>
@@ -37759,7 +37759,7 @@
   <object id="152" x="0" y="320" width="192" height="16"/>
   <object id="218" x="2944" y="160" width="192" height="16"/>
  </objectgroup>
- <objectgroup id="7" name="Death" visible="0">
+ <objectgroup id="7" name="Death">
   <object id="10" x="639.859" y="359.625" width="191.783" height="8.375"/>
   <object id="13" x="1072" y="473" width="80" height="7"/>
   <object id="14" x="1264" y="473" width="48" height="7"/>
@@ -37779,7 +37779,7 @@
   <object id="28" x="3760" y="473.5" width="32" height="6.5"/>
   <object id="154" x="640" y="359.636" width="192" height="8.36364"/>
  </objectgroup>
- <objectgroup id="14" name="Win" visible="0">
+ <objectgroup id="14" name="Win">
   <object id="151" x="3936" y="224" width="32" height="32"/>
   <object id="153" x="3936" y="224" width="32" height="32"/>
  </objectgroup>
@@ -37841,5 +37841,10 @@
   <object id="224" x="289.818" y="299.818" width="44.3636" height="4.18182"/>
   <object id="225" x="338.182" y="235.273" width="59.6364" height="4.72727"/>
   <object id="226" x="400" y="266.909" width="96" height="5.09091"/>
+ </objectgroup>
+ <objectgroup id="21" name="PlatformLimit">
+  <object id="353" x="-26" y="-23.5" width="7.5" height="36"/>
+  <object id="358" x="401.5" y="262.125" width="1.875" height="6.625"/>
+  <object id="359" x="493.375" y="260.25" width="1.5" height="7.125"/>
  </objectgroup>
 </map>

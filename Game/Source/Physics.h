@@ -25,6 +25,9 @@ enum bodyType {
 
 enum class ColliderType {
 	PLAYER, 
+	WALKENEMY,
+	ENEMYHEAD,
+	PLATFORMLIMIT,
 	ITEM,
 	PLATFORM, 
 	DEATH,
@@ -80,7 +83,7 @@ public:
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
 
-private:
+public:
 
 	// Debug mode
 	bool debug;
