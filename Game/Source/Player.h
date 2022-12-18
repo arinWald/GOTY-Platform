@@ -89,6 +89,8 @@ public:
 
 	bool isWin;
 
+	bool autoJump;
+
 	int jumpFxId;
 	int LastDir;
 

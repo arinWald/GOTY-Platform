@@ -230,12 +230,13 @@ bool Player::Update()
 	if (!app->scene->godMode && app->scene->gameplayState == app->scene->GameplayState::PLAYING && !isDead)
 	{
 		//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-		if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
+		if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0 || autoJump) {
 			//
 			timerJump = 15;
 			app->audio->PlayFx(jumpFxId);
 			jumpsavailable--;
 			/*vel =  b2Vec2(vel.x,jumpspeed);*/
+			if (jumpsavailable <= 1) autoJump = false;
 		}
 
 		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
@@ -379,6 +380,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			//cout << "WINNNNNN" << endl;
 			isWin = true;
 			ChangePosition(initialPosX, initialPosY);
+		case ColliderType::ENEMYHEAD:
+			app->scene->walkEnemy->isDead = true;
+			autoJump = true;
+			//app->audio->PlayFx(walkEnemyDiesFx);
 
 		case ColliderType::UNKNOWN:
 			//LOG("Collision UNKNOWN");

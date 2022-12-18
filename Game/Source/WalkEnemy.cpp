@@ -16,7 +16,7 @@
 #include <iostream>
 using namespace std;
 
-#define DEATH_TIME 40;
+#define DEATH_TIME 20;
 
 WalkEnemy::WalkEnemy() : Entity(EntityType::WALKENEMY)
 {
@@ -40,17 +40,17 @@ WalkEnemy::WalkEnemy() : Entity(EntityType::WALKENEMY)
 
 		for (int i = 0; i < 16; ++i)
 		{
-			leftRunAnimation.PushBack({ 32*i, 68, 32, 32 });
+			leftRunAnimation.PushBack({ 32*i, 74, 32, 32 });
 		}
 		leftRunAnimation.loop;
 		leftRunAnimation.speed = 0.3f;
 
-		/*for (int i = 0; i < 7; ++i)
+		for (int i = 0; i < 7; ++i)
 		{
-			dissappearAnimation.PushBack({(63 * i), 197, 63, 63});
+			disappearAnimation.PushBack({(64 * i), 214, 64, 64});
 		}
-		dissappearAnimation.pingpong = true;
-		dissappearAnimation.speed = 0.3f;*/
+		disappearAnimation.pingpong = false;
+		disappearAnimation.speed = 0.3f;
 	
 }
 
@@ -117,6 +117,10 @@ bool WalkEnemy::Update()
 	{
 		currentAnimation = &leftIdleAnimation;
 	}
+	if (app->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN)
+	{
+		currentAnimation = &disappearAnimation;
+	}
 	// DEBUG SWITCH TO CHANGE MANUALLY MOVE STATES
 	if (app->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
 	{
@@ -164,9 +168,9 @@ bool WalkEnemy::Update()
 
 		break;
 	case DYING:
-		//currentAnimation = &disappearAnimation;
+		currentAnimation = &disappearAnimation;
 		isDead = true;
-
+		cout << "DEAD " << endl;
 		break;
 	default:
 		break;
@@ -178,13 +182,16 @@ bool WalkEnemy::Update()
 		if (timerDeath >= 0)
 		{
 			//cout << "IS DEAD ";
-			//currentAnimation = &dissappearAnimation;
+			currentAnimation = &disappearAnimation;
 			--timerDeath;
 		}
 		else
 		{
+			app->entityManager->DestroyEntity(app->scene->walkEnemy);
+			app->physics->world->DestroyBody(pbody->body);
+			app->physics->world->DestroyBody(headBody->body);
 			isDead = false;
-			timerDeath = DEATH_TIME;
+			//timerDeath = DEATH_TIME;
 		}
 	}
 
@@ -204,7 +211,10 @@ bool WalkEnemy::Update()
 		teleport.turn = false;
 	}
 
-
+	if (app->input->GetKey(SDL_SCANCODE_V) == KEY_REPEAT)
+	{
+		currentAnimation = &disappearAnimation;
+	}
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 	//Death animation needs offset
 	if (isDead)
@@ -233,6 +243,7 @@ void WalkEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::PLATFORM:
 			break;
+		//COllision with spikes
 		case ColliderType::DEATH:
 			LOG("Collision ENEMY DEATH");
 			isDead = true;
