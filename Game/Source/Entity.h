@@ -33,7 +33,7 @@ public:
 		return true;
 	}
 
-	virtual bool Update(float dt)
+	virtual bool Update()
 	{
 		return true;
 	}
@@ -85,8 +85,8 @@ public:
 
 	// Possible properties, it depends on how generic we
 	// want our Entity class, maybe it's not renderable...
-	fPoint position;
-
+	fPoint Enemyposition;
+	iPoint position;
 	/*fPoint position;*/
 	iPoint initialPosition;
 

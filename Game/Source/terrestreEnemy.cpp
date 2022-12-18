@@ -350,7 +350,7 @@ bool TerrestreEnemy::Update(float dt)
 		position.y = METERS_TO_PIXELS(tebody->body->GetTransform().p.y) - 16;
 
 		//blit sprite at the end
-		currentAnimation->Update(dt);
+		currentAnimation->Update();
 	}
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 	app->render->DrawTexture(texture, position.x, position.y - 9, &rect);

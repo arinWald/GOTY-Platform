@@ -165,7 +165,7 @@ bool App::LoadConfig()
 // ---------------------------------------------
 void App::PrepareUpdate()
 {
-	dt = frameTime.ReadSec();
+	
 	frameTime.Start();
 }
 

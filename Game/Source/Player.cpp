@@ -148,12 +148,12 @@ bool Player::Start() {
 	
 }
 
-bool Player::Update(float dt)
+bool Player::Update()
 {
 	
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
-	currentAnimation->Update(dt);
+	currentAnimation->Update();
 
 
 	//if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)

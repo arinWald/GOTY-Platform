@@ -96,7 +96,9 @@ Entity* EntityManager::CreateEntity(EntityType type)
 	case EntityType::TERRESTREENEMY:
 		entity = new TerrestreEnemy(true);
 		break;
-
+	case EntityType::BAT:
+		entity = new Bat();
+		break;
 	default: break;
 	}
 
@@ -121,7 +123,7 @@ void EntityManager::AddEntity(Entity* entity)
 	if ( entity != nullptr) entities.Add(entity);
 }
 
-bool EntityManager::Update(float dt)
+bool EntityManager::Update()
 {
 	bool ret = true;
 	ListItem<Entity*>* item;
@@ -132,7 +134,7 @@ bool EntityManager::Update(float dt)
 		pEntity = item->data;
 
 		if (pEntity->active == false) continue;
-		ret = item->data->Update(dt);
+		ret = item->data->Update();
 	}
 
 	return ret;

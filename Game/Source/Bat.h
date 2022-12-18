@@ -33,7 +33,7 @@ public:
 
 	bool Start();
 
-	bool Update(float dt);
+	bool Update();
 
 	bool Draw();
 

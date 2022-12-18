@@ -80,17 +80,17 @@ state = State::IDLE;
 	return true;
 }
 
-bool Bat::Update(float dt)
+bool Bat::Update( )
 {
-	currentAnimation->Update(dt);
+	currentAnimation->Update();
 
 	iPoint playerPos;
 	playerPos.x = app->scene->player->pbody->body->GetPosition().x/ app->map->mapData.tileWidth;
 	playerPos.y = app->scene->player->pbody->body->GetPosition().y / app->map->mapData.tileHeight;
 
 	iPoint gridPos;
-	gridPos.x = position.x / app->map->mapData.tileWidth;
-	gridPos.y = position.y / app->map->mapData.tileHeight;
+	gridPos.x = Enemyposition.x / app->map->mapData.tileWidth;
+	gridPos.y = Enemyposition.y / app->map->mapData.tileHeight;
 
 	b2Vec2 vel;
 
@@ -151,7 +151,7 @@ bool Bat::Update(float dt)
 		pixelPosition.x = path[pathIndex].x * app->map->mapData.tileWidth;
 		pixelPosition.y = path[pathIndex].y * app->map->mapData.tileHeight;
 
-		distance = pixelPosition.DistanceTo(position);
+		distance = pixelPosition.DistanceTo(Enemyposition);
 
 		if (distance == 0)
 		{
@@ -159,8 +159,8 @@ bool Bat::Update(float dt)
 		}
 		else
 		{
-			float xDiff = pixelPosition.x - position.x;
-			float yDiff = pixelPosition.y - position.y;
+			float xDiff = pixelPosition.x - Enemyposition.x;
+			float yDiff = pixelPosition.y - Enemyposition.y;
 
 			if (xDiff < 0)
 			{
@@ -174,22 +174,22 @@ bool Bat::Update(float dt)
 			if (abs(xDiff) > abs(yDiff))
 			{
 				int xDir = (xDiff > 0) ? 1 : -1;
-				if (abs(xDiff) < abs(xDir * speed * dt))
+				if (abs(xDiff) < abs(xDir * speed ))
 				{
-					position.x += xDiff;
+					Enemyposition.x += xDiff;
 				}
 				else
-					position.x += xDir * speed * dt;
+					position.x += xDir * speed ;
 			}
 			else
 			{
 				int yDir = (yDiff > 0) ? 1 : -1;
-				if (abs(yDiff) < abs(yDir * speed * dt))
+				if (abs(yDiff) < abs(yDir * speed ))
 				{
-					position.y += yDiff;
+					Enemyposition.y += yDiff;
 				}
 				else
-					position.y += yDir * speed * dt;
+					Enemyposition.y += yDir * speed ;
 			}
 		}
 		break;
@@ -205,7 +205,7 @@ bool Bat::Update(float dt)
 
 	
 
-	questionMarkAnimation.Update(dt);
+	questionMarkAnimation.Update();
 
 	return true;
 }
@@ -214,15 +214,15 @@ bool Bat::Draw()
 {
 	if (state == State::FLYING)
 	{
-		app->render->DrawTexture(BatTexture, position.x - 14, position.y, &currentAnimation->GetCurrentFrame());
+		app->render->DrawTexture(BatTexture, Enemyposition.x - 14, Enemyposition.y, &currentAnimation->GetCurrentFrame());
 	}
 	else if (state == State::DYING)
 	{
 		currentAnimation = &deathAnimation;
-		app->render->DrawTexture(BatTexture, position.x - 20, position.y - 15, &currentAnimation->GetCurrentFrame());
+		app->render->DrawTexture(BatTexture, Enemyposition.x - 20, Enemyposition.y - 15, &currentAnimation->GetCurrentFrame());
 	}
 	else
-		app->render->DrawTexture(BatTexture, position.x, position.y, &currentAnimation->GetCurrentFrame());
+		app->render->DrawTexture(BatTexture, Enemyposition.x, Enemyposition.y, &currentAnimation->GetCurrentFrame());
 
 	if (hasPath)
 	{
@@ -237,7 +237,7 @@ bool Bat::Draw()
 	{
 		if (state == State::FLYING)
 		{
-			app->render->DrawTexture(BatTexture, position.x - 6, position.y - 32, &questionMarkAnimation.GetCurrentFrame());
+			app->render->DrawTexture(BatTexture, Enemyposition.x - 6, Enemyposition.y - 32, &questionMarkAnimation.GetCurrentFrame());
 		}
 	}
 
@@ -272,7 +272,7 @@ void Bat::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 void Bat::Reset()
 {
-	position = initialPosition;
+	Enemyposition = initialPosition;
 	state = State::IDLE;
 }
 
