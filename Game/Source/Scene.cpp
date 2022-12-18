@@ -284,9 +284,11 @@ bool Scene::Update(float dt)
 		}
 
 		// Debug pathfinding
+		if (app->physics->debug)
+		{
 		iPoint originScreen = app->map->MapToWorld(origin.x, origin.y);
 		if (app->physics->debug) app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
-
+	    }
 	}
 
 	return true;

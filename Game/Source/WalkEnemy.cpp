@@ -92,7 +92,7 @@ bool WalkEnemy::Start() {
 	pbody->ctype = ColliderType::WALKENEMY;
 	pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
 
-	headBody = app->physics->CreateRectangle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x), METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 12, 5, 2, bodyType::STATIC);
+	headBody = app->physics->CreateRectangle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x), METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 12, 10, 2, bodyType::STATIC);
 	headBody->ctype = ColliderType::WALKENEMYHEAD;
 	headBody->body->SetFixedRotation(true);
 

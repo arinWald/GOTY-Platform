@@ -81,7 +81,7 @@ batbody->listener = this;
 batbody->ctype = ColliderType::BAT;
 
 
-headBody = app->physics->CreateRectangleSensor(METERS_TO_PIXELS(batbody->body->GetTransform().p.x), METERS_TO_PIXELS(batbody->body->GetTransform().p.y) - 12, 5, 2, bodyType::STATIC);
+headBody = app->physics->CreateRectangleSensor(METERS_TO_PIXELS(batbody->body->GetTransform().p.x), METERS_TO_PIXELS(batbody->body->GetTransform().p.y) - 12, 15, 2, bodyType::STATIC);
 headBody->ctype = ColliderType::FLYENEMYHEAD;
 headBody->body->SetFixedRotation(true);
 isDead = false;
@@ -112,13 +112,11 @@ bool Bat::Update( )
 	//cout << playerPos.x << endl;
 
 	//cout << app->scene->player->pbody->body->GetPosition().x << endl;
-<<<<<<< Updated upstream
-	b2Vec2 vel;
-=======
+
 
 	b2Vec2 vel(0,0);
 	if (isDead == true) { state = State::DYING; }
->>>>>>> Stashed changes
+
 
 	if (playerPos != lastPlayerPosition && playerPos.DistanceTo(gridPos) <= 12 && state != State::DYING && !app->scene->godMode)
 	{
