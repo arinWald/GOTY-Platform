@@ -1,4 +1,5 @@
 #include "WalkEnemy.h"
+#include "Player.h"
 #include "App.h"
 #include "Textures.h"
 #include "Audio.h"
@@ -12,11 +13,12 @@
 #include "Animation.h"
 #include "EntityManager.h"
 #include "Window.h"
+#include <cmath>
 
 #include <iostream>
 using namespace std;
 
-#define DEATH_TIME 20;
+#define DEATH_TIME 18;
 
 WalkEnemy::WalkEnemy() : Entity(EntityType::WALKENEMY)
 {
@@ -104,8 +106,10 @@ bool WalkEnemy::Update()
 {
 	currentAnimation->Update();
 
+	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
+
 	//TESTING ANIMATIONS
-	if (app->input->GetKey(SDL_SCANCODE_J) == KEY_DOWN)
+	/*if (app->input->GetKey(SDL_SCANCODE_J) == KEY_DOWN)
 	{
 		currentAnimation = &leftRunAnimation;
 	}
@@ -120,7 +124,8 @@ bool WalkEnemy::Update()
 	if (app->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN)
 	{
 		currentAnimation = &disappearAnimation;
-	}
+	}*/
+
 	// DEBUG SWITCH TO CHANGE MANUALLY MOVE STATES
 	if (app->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
 	{
@@ -146,6 +151,7 @@ bool WalkEnemy::Update()
 		//if (debug_changeStateNum > 3) debug_changeStateNum = 0;
 
 	}
+
 	//Jump Test
 	if (app->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
 	{
@@ -176,6 +182,19 @@ bool WalkEnemy::Update()
 		break;
 	}
 
+	float distanceFromPlayer;
+	distanceFromPlayer = sqrt(pow(abs(app->scene->player->pbody->body->GetPosition().x - pbody->body->GetPosition().x),2)+
+							pow(abs(app->scene->player->pbody->body->GetPosition().y - pbody->body->GetPosition().y), 2));
+
+	cout << distanceFromPlayer << endl;
+
+	//if (app->scene->gameplayState == app->scene->GameplayState::PLAYING)
+	//{
+	//	vel = b2Vec2(-speed, vel.y);
+	//}
+
+	pbody->body->SetLinearVelocity(vel);
+
 	//Manage Death Timer
 	if (isDead)
 	{
@@ -190,7 +209,6 @@ bool WalkEnemy::Update()
 			app->entityManager->DestroyEntity(app->scene->walkEnemy);
 			app->physics->world->DestroyBody(pbody->body);
 			app->physics->world->DestroyBody(headBody->body);
-			isDead = false;
 			//timerDeath = DEATH_TIME;
 		}
 	}
@@ -211,10 +229,6 @@ bool WalkEnemy::Update()
 		teleport.turn = false;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_V) == KEY_REPEAT)
-	{
-		currentAnimation = &disappearAnimation;
-	}
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 	//Death animation needs offset
 	if (isDead)
@@ -255,6 +269,10 @@ void WalkEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 		case ColliderType::UNKNOWN:
 			//LOG("Collision UNKNOWN");
 			break;	
+		case ColliderType::PLATFORMLIMIT:
+			cout << "PLATFORM LIMIT HIT" << endl;
+
+			break;
 	}
 }
 void WalkEnemy::ChangePosition(int x, int y)

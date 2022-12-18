@@ -150,11 +150,9 @@ bool Player::Start() {
 bool Player::Update()
 {
 	
-	// L07 DONE 5: Add physics to the player - updated player position using physics
-
 	currentAnimation->Update();
 
-	b2Vec2 vel ;
+	b2Vec2 vel;
 	if (!app->scene->godMode)
 	{
 		vel = b2Vec2(0, -GRAVITY_Y);
@@ -205,9 +203,6 @@ bool Player::Update()
 		vel = b2Vec2(vel.x, jumpspeed);
 
 	}
-
-	//cout << "JUMPS AVAILABLE: " << jumpsavailable << endl;
-	//cout << "LIVES: " << playerlives << endl;
 
 	//Manage Death Timer
 	if (isDead)

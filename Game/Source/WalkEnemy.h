@@ -7,6 +7,7 @@
 #include "Physics.h"
 #include "SDL/include/SDL.h"
 #include "Animation.h"
+#include "Timer.h"
 
 struct SDL_Texture;
 

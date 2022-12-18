@@ -27,6 +27,7 @@ enum class ColliderType {
 	PLAYER, 
 	WALKENEMY,
 	ENEMYHEAD,
+	PLATFORMLIMIT,
 	ITEM,
 	PLATFORM, 
 	DEATH,
