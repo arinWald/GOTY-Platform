@@ -13,7 +13,7 @@
 struct SDL_Texture;
 
 
-class Bat : Entity
+class Bat : public Entity
 {
 	enum class State
 	{
@@ -48,12 +48,6 @@ public:
 	void Reset();
 
 
-
-
-private:
-
-
-	
 	SDL_Texture* BatTexture;
 	const char* texturePath;
 
@@ -72,6 +66,12 @@ private:
 	int speed;
 	bool hasPath = false;
 	fPoint initialPosition;
+
+
+private:
+
+
+	
 
 
 };

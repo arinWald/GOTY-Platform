@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "EntityManager.h"
 #include "Map.h"
+#include "Bat.h"
 #include "Player.h"
 #include "Pathfinding.h"
 #include <iostream>
@@ -58,6 +59,9 @@ bool Scene::Awake(pugi::xml_node& config)
 
 	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 	player->parameters = config.child("player");
+
+	bat = (Bat*)app->entityManager->CreateEntity(EntityType::BAT);
+	bat->parameters = config.child("bat");
 	
 	pugi::xml_node logo = config.child("logo");
 	logotexturePath = logo.attribute("texturepath").as_string();

@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "Player.h"
+#include "Bat.h"
 #include "Item.h"
 #include "terrestreEnemy.h"
 
@@ -54,6 +55,7 @@ public:
 
 	//L02: DONE 3: Declare a Player attribute 
 	Player* player;
+	Bat* bat;
 
 	//terrestre enemies list
 	List<TerrestreEnemy*> terrestreEnemies;
