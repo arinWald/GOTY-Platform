@@ -69,6 +69,8 @@ public:
 	int speed;
 
 	PhysBody* pbody;
+	PhysBody* headBody;
+	b2Vec2 headBodyPos;
 
 	int timerDeath;
 	bool isDead;

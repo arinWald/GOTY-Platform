@@ -27,7 +27,7 @@ WalkEnemy::WalkEnemy() : Entity(EntityType::WALKENEMY)
 
 		for (int i = 0; i < 14; ++i)
 		{
-			leftIdleAnimation.PushBack({ 32 * i, 35, 32, 32 });
+			leftIdleAnimation.PushBack({ 32 * i, 40, 32, 32 });
 		}
 		leftIdleAnimation.loop;
 		leftIdleAnimation.speed = 0.3f;
@@ -82,11 +82,17 @@ bool WalkEnemy::Start() {
 
 	timerDeath = DEATH_TIME;
 		
-	pbody = app->physics->CreateRectangle(position.x, position.y, 20, 30, bodyType::DYNAMIC);
+	pbody = app->physics->CreateRectangle(position.x + 16, position.y + 16, 20, 20, bodyType::DYNAMIC);
+	/*pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);*/
+	pbody->body->SetGravityScale(1.5f);
 	pbody->body->SetFixedRotation(true);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::WALKENEMY;
 	pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
+
+	headBody = app->physics->CreateRectangleSensor(METERS_TO_PIXELS(pbody->body->GetTransform().p.x), METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 12, 5, 2, bodyType::STATIC);
+	headBody->ctype = ColliderType::ENEMYHEAD;
+	headBody->body->SetFixedRotation(true);
 
 	currentMoveState = IDLE;
 	
@@ -99,15 +105,15 @@ bool WalkEnemy::Update()
 	currentAnimation->Update();
 
 	//TESTING ANIMATIONS
-	if (app->input->GetKey(SDL_SCANCODE_I) == KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_J) == KEY_DOWN)
 	{
 		currentAnimation = &leftRunAnimation;
 	}
-	if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
 	{
 		currentAnimation = &leftHitAnimation;
 	}
-	if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
 	{
 		currentAnimation = &leftIdleAnimation;
 	}
@@ -136,6 +142,7 @@ bool WalkEnemy::Update()
 		//if (debug_changeStateNum > 3) debug_changeStateNum = 0;
 
 	}
+	//Jump Test
 	if (app->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
 	{
 		pbody->body->ApplyLinearImpulse({ 0, -1 }, pbody->body->GetLocalCenter(), true);
@@ -184,6 +191,9 @@ bool WalkEnemy::Update()
 	//Update player position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+	headBodyPos.x = pbody->body->GetTransform().p.x;
+	headBodyPos.y = pbody->body->GetTransform().p.y - PIXEL_TO_METERS(12);
+	headBody->body->SetTransform({ headBodyPos.x, headBodyPos.y }, 0);
 
 	//PLAYER TELEPORT
 	if (teleport.turn == true)
