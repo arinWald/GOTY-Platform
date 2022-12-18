@@ -80,13 +80,10 @@ bool WalkEnemy::Start() {
 
 	isDead = false;
 
-
-	initialPosX = 40;
-	initialPosY = 270;
-
 	timerDeath = DEATH_TIME;
 		
-	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
+	pbody = app->physics->CreateRectangle(position.x, position.y, 20, 30, bodyType::DYNAMIC);
+	pbody->body->SetFixedRotation(true);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::WALKENEMY;
 	pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
@@ -138,6 +135,10 @@ bool WalkEnemy::Update()
 		if (debug_changeStateNum > 1) debug_changeStateNum = 0;
 		//if (debug_changeStateNum > 3) debug_changeStateNum = 0;
 
+	}
+	if (app->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
+	{
+		pbody->body->ApplyLinearImpulse({ 0, -1 }, pbody->body->GetLocalCenter(), true);
 	}
 
 	//All code related to each state

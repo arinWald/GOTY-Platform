@@ -86,22 +86,19 @@ Player::~Player() {
 
 bool Player::Awake() {
 
-		//L02: DONE 1: Initialize Player parameters
-		//pos = position;
-		//texturePath = "Assets/Textures/player/idle1.png";
 	livesTexturePath = "Assets/Textures/heart-icon.png";
-		//L02: DONE 5: Get Player parameters from XML
-		position.x = parameters.attribute("x").as_int();
-		position.y = parameters.attribute("y").as_int();
-		speed = parameters.attribute("speed").as_int();
-		livesTexturePath = parameters.attribute("livestexturepath").as_string();
-		texturePath = parameters.attribute("texturepath").as_string();
-		jumpFxPath = parameters.attribute("jumpfxpath").as_string();
-		deathFxPath = parameters.attribute("deathfxpath").as_string();
-		level1SongPath = parameters.attribute("level1songpath").as_string();
-		playerlives = parameters.attribute("lives").as_int();
-		jumpspeed = parameters.attribute("jumpspeed").as_int();
-		defeatFxPath = parameters.attribute("defeatfx").as_string();
+	//L02: DONE 5: Get Player parameters from XML
+	position.x = parameters.attribute("x").as_int();
+	position.y = parameters.attribute("y").as_int();
+	speed = parameters.attribute("speed").as_int();
+	livesTexturePath = parameters.attribute("livestexturepath").as_string();
+	texturePath = parameters.attribute("texturepath").as_string();
+	jumpFxPath = parameters.attribute("jumpfxpath").as_string();
+	deathFxPath = parameters.attribute("deathfxpath").as_string();
+	level1SongPath = parameters.attribute("level1songpath").as_string();
+	playerlives = parameters.attribute("lives").as_int();
+	jumpspeed = parameters.attribute("jumpspeed").as_int();
+	defeatFxPath = parameters.attribute("defeatfx").as_string();
 	
 	return true;
 }
@@ -110,48 +107,57 @@ bool Player::Start() {
 
 	//initilize textures
 	playerLivesTexture = app->tex->Load(livesTexturePath);
-		playerTexture = app->tex->Load(texturePath);
-		transformPosition teleport;
-		//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
-		deathFxId = app->audio->LoadFx(deathFxPath);
-		jumpFxId = app->audio->LoadFx(jumpFxPath);
-		defeatFxId = app->audio->LoadFx(defeatFxPath);
-		//app->audio->PlayMusic(level1SongPath, 0);
-		currentAnimation = &rightIdleAnimation;
+	playerTexture = app->tex->Load(texturePath);
+	transformPosition teleport;
+	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
+	deathFxId = app->audio->LoadFx(deathFxPath);
+	jumpFxId = app->audio->LoadFx(jumpFxPath);
+	defeatFxId = app->audio->LoadFx(defeatFxPath);
+	//app->audio->PlayMusic(level1SongPath, 0);
+	currentAnimation = &rightIdleAnimation;
 
-		timerJump = 0;
-		jumpspeed = -5.5;
-		jumpsavailable = 2;
+	timerJump = 0;
+	jumpsavailable = 2;
 
-		isDead = false;
-		isWin = false;
+	isDead = false;
+	isWin = false;
 
 
-		initialPosX = 40;
-		initialPosY = 270;
+	initialPosX = 40;
+	initialPosY = 270;
 
-		LastDir = 1;
+	LastDir = 1;
 
-		timerDeath = DEATH_TIME;
-		
-		// L07 DONE 5: Add physics to the player - initialize physics body
-		pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
+	timerDeath = DEATH_TIME;
 
-		// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
-		pbody->listener = this;
+	pbody = app->physics->CreateRectangle(position.x + 16, position.y + 16, 26, 30, bodyType::DYNAMIC);
+	pbody->body->SetFixedRotation(true);
+	pbody->body->SetGravityScale(4.0f);
 
-		// L07 DONE 7: Assign collider type
-		pbody->ctype = ColliderType::PLAYER;
-		pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
+	/*pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
+	pbody->body->SetGravityScale(4.0f);*/
+
+	pbody->listener = this;
+
+	pbody->ctype = ColliderType::PLAYER;
+	pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
 	
-		return true;
+	return true;
 	
 }
 
 bool Player::Update()
 {
+
+	cout << "X SPEED " << pbody->body->GetLinearVelocity().x << endl;
 	
 	currentAnimation->Update();
+
+	if (app->input->GetKey(SDL_SCANCODE_U) == KEY_DOWN)
+	{
+		float upForce = -1 * jumpspeed;
+		pbody->body->ApplyLinearImpulse({ 0, upForce }, pbody->body->GetLocalCenter(), true);
+	}
 
 	b2Vec2 vel ;
 	if (!app->scene->godMode)
@@ -171,7 +177,7 @@ bool Player::Update()
 		currentAnimation = &leftIdleAnimation;
 	}
 
-	if (timerJump > 0) {
+	/*if (timerJump > 0) {
 		timerJump--;
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 			vel.x = speed;
@@ -203,7 +209,7 @@ bool Player::Update()
 
 		vel = b2Vec2(vel.x, jumpspeed);
 
-	}
+	}*/
 
 	//cout << "JUMPS AVAILABLE: " << jumpsavailable << endl;
 	//cout << "LIVES: " << playerlives << endl;
@@ -228,28 +234,27 @@ bool Player::Update()
 	//PLAYER MOVE INPUT
 	if (!app->scene->godMode && app->scene->gameplayState == app->scene->GameplayState::PLAYING && !isDead)
 	{
-		//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-		if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
-			//
-			timerJump = 15;
-			app->audio->PlayFx(jumpFxId);
-			jumpsavailable--;
-			/*vel =  b2Vec2(vel.x,jumpspeed);*/
-		}
+		//if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
+		//	//
+		//	timerJump = 15;
+		//	app->audio->PlayFx(jumpFxId);
+		//	jumpsavailable--;
+		//	/*vel =  b2Vec2(vel.x,jumpspeed);*/
+		//}
 
 		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 			//
 		}
 
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
-			vel = b2Vec2(-speed, vel.y);
+			vel = b2Vec2(-speed, pbody->body->GetLinearVelocity().y);
 			currentAnimation = &leftRunAnimation;
 			LastDir = 2;
 		}
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
 			currentAnimation = &rightRunAnimation;
 			LastDir = 1;
-			vel = b2Vec2(speed, vel.y);
+			vel = b2Vec2(speed, pbody->body->GetLinearVelocity().y);
 		}
 	}
 	//GOD MODE INPUT
@@ -287,7 +292,7 @@ bool Player::Update()
 	}
 	else
 	{
-		pbody->body->SetLinearVelocity(vel);
+		pbody->body->SetLinearVelocity({ vel.x, pbody->body->GetLinearVelocity().y });
 	}
 
 	//Update player position in pixels
