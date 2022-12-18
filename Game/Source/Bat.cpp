@@ -47,6 +47,8 @@ bool Bat::Awake()
 	deathAnimation.loop = false;
 
 	texturePath = parameters.attribute("texturepath").as_string();
+	Enemyposition.x = parameters.attribute("x").as_int();
+	Enemyposition.y = parameters.attribute("y").as_int();
 
 	return true;
 
@@ -67,7 +69,7 @@ currentAnimation = &idleAnimation;
 lastPlayerPosition.x = -1;
 lastPlayerPosition.y = -1;
 
-batbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
+batbody = app->physics->CreateCircle(Enemyposition.x + 16, Enemyposition.y + 16, 14, bodyType::DYNAMIC);
 
  //L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 batbody->listener = this;
@@ -85,13 +87,22 @@ bool Bat::Update( )
 	currentAnimation->Update();
 
 	iPoint playerPos;
-	playerPos.x = app->scene->player->pbody->body->GetPosition().x/ app->map->mapData.tileWidth;
-	playerPos.y = app->scene->player->pbody->body->GetPosition().y / app->map->mapData.tileHeight;
+	playerPos.x = METERS_TO_PIXELS(app->scene->player->pbody->body->GetPosition().x) / app->map->mapData.tileWidth;
+	playerPos.y = METERS_TO_PIXELS(app->scene->player->pbody->body->GetPosition().y) / app->map->mapData.tileHeight;
 
 	iPoint gridPos;
 	gridPos.x = Enemyposition.x / app->map->mapData.tileWidth;
 	gridPos.y = Enemyposition.y / app->map->mapData.tileHeight;
 
+	printf("Enemyposition X: %f \n", Enemyposition.x);
+	printf("Enemyposition Y: %f \n", Enemyposition.y);
+
+	printf("gridPos X: %d \n", gridPos.x);
+	printf("gridPos Y: %d \n", gridPos.y);
+
+	cout << playerPos.x << endl;
+
+	cout << app->scene->player->pbody->body->GetPosition().x << endl;
 	b2Vec2 vel;
 
 	if (playerPos != lastPlayerPosition && playerPos.DistanceTo(gridPos) <= 12 && state != State::DYING && !app->scene->godMode)
@@ -179,7 +190,7 @@ bool Bat::Update( )
 					Enemyposition.x += xDiff;
 				}
 				else
-					position.x += xDir * speed ;
+					Enemyposition.x += xDir * speed ;
 			}
 			else
 			{
@@ -203,7 +214,8 @@ bool Bat::Update( )
 		break;
 	}
 
-	
+	Enemyposition.x = METERS_TO_PIXELS(batbody->body->GetTransform().p.x) - 16;
+	Enemyposition.y = METERS_TO_PIXELS(batbody->body->GetTransform().p.y) - 16;
 
 	questionMarkAnimation.Update();
 	Draw();
