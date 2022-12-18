@@ -204,7 +204,6 @@ bool Map::CleanUp()
 {
     LOG("Unloading map");
 
-    // L04: DONE 2: Make sure you clean up any memory allocated from tilesets/map
 	ListItem<TileSet*>* item;
 	item = mapData.tilesets.start;
 
@@ -215,7 +214,6 @@ bool Map::CleanUp()
 	}
 	mapData.tilesets.Clear();
 
-    // L05: DONE 2: clean up all layer data
     // Remove all layers
     ListItem<MapLayer*>* layerItem;
     layerItem = mapData.maplayers.start;

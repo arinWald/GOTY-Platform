@@ -59,6 +59,8 @@ public:
 	bool LoadFromFile();
 	bool SaveToFile() ;
 
+	int FPS = 60;
+
 private:
 
 	// Load config file

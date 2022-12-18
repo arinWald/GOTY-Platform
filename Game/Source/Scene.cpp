@@ -220,6 +220,18 @@ bool Scene::Update(float dt)
 		}
 	}
 
+	if (app->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN)//caps fps to 30 or 60
+	{
+		if (app->FPS == 60)
+		{
+			app->FPS = 30;
+		}
+		else
+		{
+			app->FPS = 60;
+		}
+	}
+
 	if (gameplayState != targetState)
 	{
 		//Abans era 0.05f
@@ -248,52 +260,34 @@ bool Scene::Update(float dt)
 		app->map->Draw();
 	}
 
-	// L08: DONE 3: Test World to map method
-	int mouseX, mouseY;
-	app->input->GetMousePosition(mouseX, mouseY);
-
-	iPoint mouseTile = iPoint(0, 0);
-
-	if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
-		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x - app->map->mapData.tileWidth / 2,
-			mouseY - app->render->camera.y - app->map->mapData.tileHeight / 2);
-	}
-	if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
-		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x,
-			mouseY - app->render->camera.y);
-	}
-
-	//Convert again the tile coordinates to world coordinates to render the texture of the tile
-	iPoint highlightedTileWorld = app->map->MapToWorld(mouseTile.x, mouseTile.y);
-	app->render->DrawTexture(mouseTileTex, highlightedTileWorld.x, highlightedTileWorld.y);
-
-	//Test compute path function
-	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	//PATHFINDING WALK ENEMY
+	if (walkEnemy->currentMoveState == WalkEnemy::MoveState::CHASING)
 	{
-		if (originSelected == true && gameplayState == PLAYING)
+		origin.x = walkEnemy->pbody->body->GetPosition().x;
+		origin.y = walkEnemy->pbody->body->GetPosition().y;
+		iPoint destination;
+		destination.x = player->pbody->body->GetPosition().x;
+		destination.y = player->pbody->body->GetPosition().y;
+		app->pathfinding->ClearLastPath();
+		app->pathfinding->CreatePath(origin, destination);
+		// Get the latest calculated path and draw
+		const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
+		for (uint i = 0; i < path->Count(); ++i)
 		{
-			app->pathfinding->CreatePath(origin, mouseTile);
-			originSelected = false;
+			iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+			if (i == 1)
+			{
+				walkEnemy->objective.x = PIXEL_TO_METERS(pos.x);
+				walkEnemy->objective.y = PIXEL_TO_METERS(pos.y);
+			}
+			if (app->physics->debug) app->render->DrawTexture(mouseTileTex, pos.x, pos.y);
 		}
-		else
-		{
-			origin = mouseTile;
-			originSelected = true;
-			app->pathfinding->ClearLastPath();
-		}
-	}
 
-	// L12: Get the latest calculated path and draw
-	const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
-	for (uint i = 0; i < path->Count(); ++i)
-	{
-		iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-		app->render->DrawTexture(mouseTileTex, pos.x, pos.y);
-	}
+		// Debug pathfinding
+		iPoint originScreen = app->map->MapToWorld(origin.x, origin.y);
+		if (app->physics->debug) app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
 
-	// L12: Debug pathfinding
-	iPoint originScreen = app->map->MapToWorld(origin.x, origin.y);
-	app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
+	}
 
 	return true;
 }
@@ -339,6 +333,9 @@ bool Scene::LoadState(pugi::xml_node& data)
 {
 	player->ChangePosition(data.child("player").attribute("x").as_int() , data.child("player").attribute("y").as_int());
 
+	walkEnemy->ChangePosition(data.child("walkEnemy").attribute("x").as_int(), data.child("walkEnemy").attribute("y").as_int());
+	walkEnemy->ChangeMoveState(data.child("walkEnemy").attribute("moveState").as_int());
+
 	return true;
 }
 
@@ -348,6 +345,16 @@ bool Scene::SaveState(pugi::xml_node& data)
 
 	playerNode.append_attribute("x") = player->position.x;
 	playerNode.append_attribute("y") = player->position.y;
+
+	pugi::xml_node walkEnemyNode = data.append_child("walkEnemy");
+	walkEnemyNode.append_attribute("x") = walkEnemy->position.x;
+	walkEnemyNode.append_attribute("y") = walkEnemy->position.y;
+	walkEnemyNode.append_attribute("moveState") = (int*)walkEnemy->currentMoveState;
+
+	pugi::xml_node batNode = data.append_child("batEnemy");
+	batNode.append_attribute("x") = bat->position.x;
+	batNode.append_attribute("y") = bat->position.y;
+	batNode.append_attribute("state") = (int*)bat->state;
 
 	return true;
 }

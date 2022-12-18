@@ -94,15 +94,15 @@ bool Bat::Update( )
 	gridPos.x = Enemyposition.x / app->map->mapData.tileWidth;
 	gridPos.y = Enemyposition.y / app->map->mapData.tileHeight;
 
-	printf("Enemyposition X: %f \n", Enemyposition.x);
-	printf("Enemyposition Y: %f \n", Enemyposition.y);
+	//printf("Enemyposition X: %f \n", Enemyposition.x);
+	//printf("Enemyposition Y: %f \n", Enemyposition.y);
 
-	printf("gridPos X: %d \n", gridPos.x);
-	printf("gridPos Y: %d \n", gridPos.y);
+	//printf("gridPos X: %d \n", gridPos.x);
+	//printf("gridPos Y: %d \n", gridPos.y);
 
-	cout << playerPos.x << endl;
+	//cout << playerPos.x << endl;
 
-	cout << app->scene->player->pbody->body->GetPosition().x << endl;
+	//cout << app->scene->player->pbody->body->GetPosition().x << endl;
 	b2Vec2 vel;
 
 	if (playerPos != lastPlayerPosition && playerPos.DistanceTo(gridPos) <= 12 && state != State::DYING && !app->scene->godMode)

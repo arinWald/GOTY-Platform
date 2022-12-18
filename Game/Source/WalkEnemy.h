@@ -28,10 +28,15 @@ public:
 		GETTINGHURT,
 		DYING
 	};
+	enum Direction
+	{
+		LEFT,
+		RIGHT
+	};
 public:
 
 	WalkEnemy();
-	
+
 	virtual ~WalkEnemy();
 
 	bool Awake();
@@ -47,10 +52,11 @@ public:
 	void WalkEnemy::ChangePosition(int x, int y);
 
 	void WalkEnemy::ChangeMoveState(MoveState moveState);
+	void WalkEnemy::ChangeMoveState(int moveState);
 
 
 public:
-	
+
 	SDL_Texture* enemyTexture;
 	const char* texturePath;
 	const char* deathFxPath;
@@ -82,6 +88,14 @@ public:
 	int initialPosY;
 
 	MoveState currentMoveState;
+
+	Direction direction;
+
+	float distanceFromPlayer;
+
+	iPoint objective;
+
+	b2Vec2 force;
 
 private:
 

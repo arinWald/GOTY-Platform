@@ -7,7 +7,9 @@
 	<:anonymous />
 	<pathfinding />
 	<scene>
-		<player x="23" y="289" />
+		<player x="103" y="289" />
+		<walkEnemy x="353" y="213" moveState="false" />
+		<batEnemy x="0" y="0" state="true" />
 	</scene>
 	<entitymanager />
 	<map />

@@ -22,38 +22,38 @@ using namespace std;
 
 WalkEnemy::WalkEnemy() : Entity(EntityType::WALKENEMY)
 {
-	
-		name.Create("Enemy");
 
-		//Animation pushbacks
+	name.Create("Enemy");
 
-		for (int i = 0; i < 14; ++i)
-		{
-			leftIdleAnimation.PushBack({ 32 * i, 40, 32, 32 });
-		}
-		leftIdleAnimation.loop;
-		leftIdleAnimation.speed = 0.3f;
+	//Animation pushbacks
 
-		for (int i = 0; i < 5; ++i)
-		{
-			leftHitAnimation.PushBack({ 32 * i, 1, 32, 32 });
-		}
-		leftHitAnimation.speed = 0.3f;
+	for (int i = 0; i < 14; ++i)
+	{
+		leftIdleAnimation.PushBack({ 32 * i, 40, 32, 32 });
+	}
+	leftIdleAnimation.loop;
+	leftIdleAnimation.speed = 0.3f;
 
-		for (int i = 0; i < 16; ++i)
-		{
-			leftRunAnimation.PushBack({ 32*i, 74, 32, 32 });
-		}
-		leftRunAnimation.loop;
-		leftRunAnimation.speed = 0.3f;
+	for (int i = 0; i < 5; ++i)
+	{
+		leftHitAnimation.PushBack({ 32 * i, 1, 32, 32 });
+	}
+	leftHitAnimation.speed = 0.3f;
 
-		for (int i = 0; i < 7; ++i)
-		{
-			disappearAnimation.PushBack({(64 * i), 214, 64, 64});
-		}
-		disappearAnimation.pingpong = false;
-		disappearAnimation.speed = 0.3f;
-	
+	for (int i = 0; i < 16; ++i)
+	{
+		leftRunAnimation.PushBack({ 32 * i, 74, 32, 32 });
+	}
+	leftRunAnimation.loop;
+	leftRunAnimation.speed = 0.3f;
+
+	for (int i = 0; i < 7; ++i)
+	{
+		disappearAnimation.PushBack({ (64 * i), 214, 64, 64 });
+	}
+	disappearAnimation.pingpong = false;
+	disappearAnimation.speed = 0.3f;
+
 }
 
 WalkEnemy::~WalkEnemy() {
@@ -67,7 +67,7 @@ bool WalkEnemy::Awake() {
 	speed = parameters.attribute("speed").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
 	deathFxPath = parameters.attribute("deathfxpath").as_string();
-	
+
 	return true;
 }
 
@@ -77,13 +77,13 @@ bool WalkEnemy::Start() {
 	enemyTexture = app->tex->Load(texturePath);
 	transformEnemyPosition teleport;
 	deathFxId = app->audio->LoadFx(deathFxPath);
-	
+
 	currentAnimation = &leftIdleAnimation;
 
 	isDead = false;
 
 	timerDeath = DEATH_TIME;
-		
+
 	pbody = app->physics->CreateRectangle(position.x, position.y, 20, 20, bodyType::DYNAMIC);
 	/*pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);*/
 	pbody->body->SetGravityScale(1.5f);
@@ -97,14 +97,18 @@ bool WalkEnemy::Start() {
 	headBody->body->SetFixedRotation(true);
 
 	currentMoveState = IDLE;
-	
+	direction = LEFT;
+
 	return true;
-	
+
 }
 
 bool WalkEnemy::Update()
 {
 	currentAnimation->Update();
+
+	distanceFromPlayer = sqrt(pow(abs(app->scene->player->pbody->body->GetPosition().x - pbody->body->GetPosition().x), 2) +
+		pow(abs(app->scene->player->pbody->body->GetPosition().y - pbody->body->GetPosition().y), 2));
 
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 
@@ -126,38 +130,37 @@ bool WalkEnemy::Update()
 		currentAnimation = &disappearAnimation;
 	}*/
 
-	// DEBUG SWITCH TO CHANGE MANUALLY MOVE STATES
-	if (app->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
-	{
-		switch (debug_changeStateNum)
-		{
-		case IDLE:
-			currentMoveState = CHASING;
-			break;
-		case CHASING:
-			currentMoveState = IDLE;
-			break;
-		case GETTINGHURT:
-			currentMoveState = DYING;
-			break;
-		case DYING:
-			currentMoveState = IDLE;
-			break;
-		}
-		debug_changeStateNum++;
+	//// DEBUG SWITCH TO CHANGE MANUALLY MOVE STATES
+	//if (app->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+	//{
+	//	switch (debug_changeStateNum)
+	//	{
+	//	case IDLE:
+	//		currentMoveState = CHASING;
+	//		break;
+	//	case CHASING:
+	//		currentMoveState = IDLE;
+	//		break;
+	//	case GETTINGHURT:
+	//		currentMoveState = DYING;
+	//		break;
+	//	case DYING:
+	//		currentMoveState = IDLE;
+	//		break;
+	//	}
+	//	debug_changeStateNum++;
 
-		// Switch these two lines of code to switch from --> idle & chasing to --> all 4 possible states
-		if (debug_changeStateNum > 1) debug_changeStateNum = 0;
-		//if (debug_changeStateNum > 3) debug_changeStateNum = 0;
+	//	// Switch these two lines of code to switch from --> idle & chasing to --> all 4 possible states
+	//	if (debug_changeStateNum > 1) debug_changeStateNum = 0;
+	//	//if (debug_changeStateNum > 3) debug_changeStateNum = 0;
 
-	}
+	//}
 
 	//Jump Test
-	if (app->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
-	{
-		pbody->body->ApplyLinearImpulse({ 0, -1 }, pbody->body->GetLocalCenter(), true);
-	}
-
+	//if (app->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
+	//{
+	//	pbody->body->ApplyLinearImpulse({ 0, -1 }, pbody->body->GetLocalCenter(), true);
+	//}
 	//All code related to each state
 	switch (currentMoveState)
 	{
@@ -167,6 +170,72 @@ bool WalkEnemy::Update()
 		break;
 	case CHASING:
 		currentAnimation = &leftRunAnimation;
+
+		if (pbody->body->GetPosition().x > app->scene->player->pbody->body->GetPosition().x)
+		{
+			direction = LEFT;
+		}
+		else if (pbody->body->GetPosition().x < app->scene->player->pbody->body->GetPosition().x)
+		{
+			direction = RIGHT;
+		}
+		switch (direction)
+		{
+		case LEFT:
+			pbody->body->ApplyForceToCenter({ -5.0f,0 }, true);
+				if (vel.x < -3)
+				{
+					vel.x = -3;
+				}
+				direction = Direction::LEFT;
+				currentAnimation = &leftRunAnimation;
+			break;
+		case RIGHT:
+			pbody->body->ApplyForceToCenter({ 5.0f,0 }, true);
+				if (vel.x > 3)
+				{
+					vel.x = 3;
+				}
+				direction = Direction::RIGHT;
+				currentAnimation = &leftRunAnimation;
+			break;
+
+		}
+		//if (abs(objective.x + PIXEL_TO_METERS(app->map->mapData.tileWidth / 2) - pbody->body->GetPosition().x) <= PIXEL_TO_METERS(1))
+		//{
+		//	direction = Direction::LEFT;
+		//	vel.x = 0;
+		//	currentAnimation = &leftIdleAnimation;
+		//}
+		//else if (objective.x + PIXEL_TO_METERS(app->map->mapData.tileWidth / 2) < pbody->body->GetPosition().x)
+		//{
+		//	pbody->body->ApplyForceToCenter({-5.0f,0}, true);
+		//	if (vel.x < -3)
+		//	{
+		//		vel.x = -3;
+		//	}
+		//	direction = Direction::LEFT;
+		//	currentAnimation = &leftRunAnimation;
+		//}
+		//else if (objective.x + PIXEL_TO_METERS(app->map->mapData.tileWidth / 2) >= pbody->body->GetPosition().x)
+		//{
+		//	pbody->body->ApplyForceToCenter({5.0f,0}, true);
+		//	if (vel.x > 3)
+		//	{
+		//		vel.x = 3;
+		//	}
+		//	direction = Direction::RIGHT;
+		//	currentAnimation = &leftRunAnimation;
+		//}
+
+		if (app->physics->debug)//ray distance between player and enemy
+		{
+			app->render->DrawLine(METERS_TO_PIXELS(pbody->body->GetPosition().x),
+				METERS_TO_PIXELS(pbody->body->GetPosition().y),
+				METERS_TO_PIXELS(app->scene->player->pbody->body->GetPosition().x),
+				METERS_TO_PIXELS(app->scene->player->pbody->body->GetPosition().y),
+				0, 255, 0); //green
+		}
 
 		break;
 	case GETTINGHURT:
@@ -182,18 +251,24 @@ bool WalkEnemy::Update()
 		break;
 	}
 
-	float distanceFromPlayer;
-	distanceFromPlayer = sqrt(pow(abs(app->scene->player->pbody->body->GetPosition().x - pbody->body->GetPosition().x),2)+
-							pow(abs(app->scene->player->pbody->body->GetPosition().y - pbody->body->GetPosition().y), 2));
+	if (distanceFromPlayer <= 4)
+	{
+		ChangeMoveState(CHASING);
+	}
+	if (distanceFromPlayer > 4)
+	{
+		ChangeMoveState(IDLE);
+	}
 
-	cout << distanceFromPlayer << endl;
+	cout << vel.x << endl;
+	//cout << distanceFromPlayer << endl;
 
 	//if (app->scene->gameplayState == app->scene->GameplayState::PLAYING)
 	//{
 	//	vel = b2Vec2(-speed, vel.y);
 	//}
 
-	pbody->body->SetLinearVelocity(vel);
+	pbody->body->SetLinearVelocity({ vel.x, pbody->body->GetLinearVelocity().y });
 
 	//Manage Death Timer
 	if (isDead)
@@ -203,6 +278,7 @@ bool WalkEnemy::Update()
 			//cout << "IS DEAD ";
 			currentAnimation = &disappearAnimation;
 			--timerDeath;
+			app->audio->PlayFx(deathFxId, 0);
 		}
 		else
 		{
@@ -238,7 +314,7 @@ bool WalkEnemy::Update()
 	else
 	{
 		app->render->DrawTexture(enemyTexture, position.x, position.y, &rect);
-		
+
 	}
 
 	return true;
@@ -253,26 +329,26 @@ void WalkEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	switch (physB->ctype)
 	{
-		case ColliderType::ITEM:
-			break;
-		case ColliderType::PLATFORM:
-			break;
+	case ColliderType::ITEM:
+		break;
+	case ColliderType::PLATFORM:
+		break;
 		//COllision with spikes
-		case ColliderType::DEATH:
-			LOG("Collision ENEMY DEATH");
-			isDead = true;
-			break;
-		case ColliderType::GROUNDSENSOR:
-			break;
-		case ColliderType::WINSENSOR:
-			break;
-		case ColliderType::UNKNOWN:
-			//LOG("Collision UNKNOWN");
-			break;	
-		case ColliderType::PLATFORMLIMIT:
-			cout << "PLATFORM LIMIT HIT" << endl;
+	case ColliderType::DEATH:
+		LOG("Collision ENEMY DEATH");
+		isDead = true;
+		break;
+	case ColliderType::GROUNDSENSOR:
+		break;
+	case ColliderType::WINSENSOR:
+		break;
+	case ColliderType::UNKNOWN:
+		//LOG("Collision UNKNOWN");
+		break;
+	case ColliderType::PLATFORMLIMIT:
+		//cout << "PLATFORM LIMIT HIT" << endl;
 
-			break;
+		break;
 	}
 }
 void WalkEnemy::ChangePosition(int x, int y)
@@ -300,6 +376,29 @@ void WalkEnemy::ChangeMoveState(MoveState newState)
 		currentMoveState = GETTINGHURT;
 		break;
 	case DYING:
+		currentMoveState = DYING;
+		break;
+	}
+}
+
+
+//Function redefinition to save it on XML
+void WalkEnemy::ChangeMoveState(int newState)
+{
+	if (currentMoveState == newState) return;
+
+	switch (newState)
+	{
+	case 0:
+		currentMoveState = IDLE;
+		break;
+	case 1:
+		currentMoveState = CHASING;
+		break;
+	case 2:
+		currentMoveState = GETTINGHURT;
+		break;
+	case 3:
 		currentMoveState = DYING;
 		break;
 	}
