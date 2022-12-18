@@ -17,16 +17,16 @@ struct transformEnemyPosition {
 
 };
 
-enum moveState
-{
-	IDLE,
-	CHASING,
-	GETTINGHURT,
-	DYING
-};
-
 class WalkEnemy : public Entity
 {
+public:
+	enum MoveState
+	{
+		IDLE,
+		CHASING,
+		GETTINGHURT,
+		DYING
+	};
 public:
 
 	WalkEnemy();
@@ -45,9 +45,11 @@ public:
 
 	void WalkEnemy::ChangePosition(int x, int y);
 
+	void WalkEnemy::ChangeMoveState(MoveState moveState);
+
 
 public:
-
+	
 	SDL_Texture* enemyTexture;
 	const char* texturePath;
 	const char* deathFxPath;
@@ -62,7 +64,7 @@ public:
 	Animation leftHitAnimation;
 	Animation leftRunAnimation;
 
-	Animation dissappearAnimation;
+	Animation disappearAnimation;
 
 	int speed;
 
@@ -76,11 +78,11 @@ public:
 	int initialPosX;
 	int initialPosY;
 
-	int currentMoveState;
+	MoveState currentMoveState;
 
 private:
 
-
+	int debug_changeStateNum = 0;
 
 };
 

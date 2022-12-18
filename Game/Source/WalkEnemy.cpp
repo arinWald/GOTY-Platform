@@ -99,7 +99,6 @@ bool WalkEnemy::Start() {
 
 bool WalkEnemy::Update()
 {
-	
 	currentAnimation->Update();
 
 	//TESTING ANIMATIONS
@@ -115,6 +114,55 @@ bool WalkEnemy::Update()
 	{
 		currentAnimation = &leftIdleAnimation;
 	}
+	// DEBUG SWITCH TO CHANGE MANUALLY MOVE STATES
+	if (app->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+	{
+		switch (debug_changeStateNum)
+		{
+		case IDLE:
+			currentMoveState = CHASING;
+			break;
+		case CHASING:
+			currentMoveState = IDLE;
+			break;
+		case GETTINGHURT:
+			currentMoveState = DYING;
+			break;
+		case DYING:
+			currentMoveState = IDLE;
+			break;
+		}
+		debug_changeStateNum++;
+
+		// Switch these two lines of code to switch from --> idle & chasing to --> all 4 possible states
+		if (debug_changeStateNum > 1) debug_changeStateNum = 0;
+		//if (debug_changeStateNum > 3) debug_changeStateNum = 0;
+
+	}
+
+	//All code related to each state
+	switch (currentMoveState)
+	{
+	case IDLE:
+		currentAnimation = &leftIdleAnimation;
+
+		break;
+	case CHASING:
+		currentAnimation = &leftRunAnimation;
+
+		break;
+	case GETTINGHURT:
+		currentAnimation = &leftHitAnimation;
+
+		break;
+	case DYING:
+		//currentAnimation = &disappearAnimation;
+		isDead = true;
+
+		break;
+	default:
+		break;
+	}
 
 	//Manage Death Timer
 	if (isDead)
@@ -122,7 +170,7 @@ bool WalkEnemy::Update()
 		if (timerDeath >= 0)
 		{
 			//cout << "IS DEAD ";
-			currentAnimation = &dissappearAnimation;
+			//currentAnimation = &dissappearAnimation;
 			--timerDeath;
 		}
 		else
@@ -145,8 +193,8 @@ bool WalkEnemy::Update()
 		teleport.turn = false;
 	}
 
-	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 
+	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 	//Death animation needs offset
 	if (isDead)
 	{
@@ -194,4 +242,25 @@ void WalkEnemy::ChangePosition(int x, int y)
 	teleport.posY = y;
 	teleport.turn = true;
 
+}
+
+void WalkEnemy::ChangeMoveState(MoveState newState)
+{
+	if (currentMoveState == newState) return;
+
+	switch (newState)
+	{
+	case IDLE:
+		currentMoveState = IDLE;
+		break;
+	case CHASING:
+		currentMoveState = CHASING;
+		break;
+	case GETTINGHURT:
+		currentMoveState = GETTINGHURT;
+		break;
+	case DYING:
+		currentMoveState = DYING;
+		break;
+	}
 }
