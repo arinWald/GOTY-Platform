@@ -17,6 +17,8 @@
 #include <iostream>
 using namespace std;
 
+#define DEATH_TIME 18;
+
 Bat::Bat() : Entity(EntityType::BAT) {
 
 
@@ -49,6 +51,7 @@ bool Bat::Awake()
 	texturePath = parameters.attribute("texturepath").as_string();
 	Enemyposition.x = parameters.attribute("x").as_int();
 	Enemyposition.y = parameters.attribute("y").as_int();
+	speed = parameters.attribute("speed").as_int();
 
 	return true;
 
@@ -69,7 +72,7 @@ currentAnimation = &idleAnimation;
 lastPlayerPosition.x = -1;
 lastPlayerPosition.y = -1;
 
-batbody = app->physics->CreateCircle(Enemyposition.x + 16, Enemyposition.y + 16, 14, bodyType::DYNAMIC);
+batbody = app->physics->CreateCircle(Enemyposition.x-10 , Enemyposition.y, 10, bodyType::DYNAMIC);
 
  //L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 batbody->listener = this;
@@ -77,7 +80,13 @@ batbody->listener = this;
  //L07 DONE 7: Assign collider type
 batbody->ctype = ColliderType::BAT;
 
+
+headBody = app->physics->CreateRectangleSensor(METERS_TO_PIXELS(batbody->body->GetTransform().p.x), METERS_TO_PIXELS(batbody->body->GetTransform().p.y) - 12, 5, 2, bodyType::STATIC);
+headBody->ctype = ColliderType::FLYENEMYHEAD;
+headBody->body->SetFixedRotation(true);
+isDead = false;
 state = State::IDLE;
+timerDeath = DEATH_TIME;
 
 	return true;
 }
@@ -103,7 +112,13 @@ bool Bat::Update( )
 	//cout << playerPos.x << endl;
 
 	//cout << app->scene->player->pbody->body->GetPosition().x << endl;
+<<<<<<< Updated upstream
 	b2Vec2 vel;
+=======
+
+	b2Vec2 vel(0,0);
+	if (isDead == true) { state = State::DYING; }
+>>>>>>> Stashed changes
 
 	if (playerPos != lastPlayerPosition && playerPos.DistanceTo(gridPos) <= 12 && state != State::DYING && !app->scene->godMode)
 	{
@@ -115,6 +130,7 @@ bool Bat::Update( )
 			hasPath = false;
 			path.Clear();
 			path.PushBack(iPoint(gridPos.x, gridPos.y));
+			
 		}
 		else
 		{
@@ -153,6 +169,7 @@ bool Bat::Update( )
 	case State::FLYING:
 
 		currentAnimation = &flyingLeftAnimation;
+		vel = b2Vec2(0, 0);
 		if (app->scene->godMode)
 			break;
 
@@ -162,17 +179,24 @@ bool Bat::Update( )
 		pixelPosition.x = path[pathIndex].x * app->map->mapData.tileWidth;
 		pixelPosition.y = path[pathIndex].y * app->map->mapData.tileHeight;
 
+
+
 		distance = pixelPosition.DistanceTo(Enemyposition);
 
 		if (distance == 0)
 		{
 			pathIndex++;
+			vel.y = 0;
+			vel.x = 0;
 		}
 		else
 		{
 			float xDiff = pixelPosition.x - Enemyposition.x;
 			float yDiff = pixelPosition.y - Enemyposition.y;
 
+			cout << xDiff << endl;
+			cout << yDiff << endl;
+		
 			if (xDiff < 0)
 			{
 				currentAnimation = &flyingLeftAnimation;
@@ -187,26 +211,44 @@ bool Bat::Update( )
 				int xDir = (xDiff > 0) ? 1 : -1;
 				if (abs(xDiff) < abs(xDir * speed ))
 				{
-					Enemyposition.x += xDiff;
+					vel.x += xDiff;
+					vel.y = 0;
 				}
-				else
-					Enemyposition.x += xDir * speed ;
+				else 
+				{
+					vel.x = speed * xDir;
+					vel.y = 0;
+				}
 			}
 			else
 			{
 				int yDir = (yDiff > 0) ? 1 : -1;
-				if (abs(yDiff) < abs(yDir * speed ))
+				if (abs(yDiff) < abs(yDir * speed))
 				{
-					Enemyposition.y += yDiff;
+					vel.y += yDiff;
+					vel.x = 0;
 				}
 				else
-					Enemyposition.y += yDir * speed ;
+				{
+					vel.y += yDir * speed;
+					vel.x = 0;
+			    }
+				
 			}
 		}
 		break;
 
 	case State::DYING:
-		currentAnimation = &deathAnimation;
+		if (timerDeath >= 0) {
+			currentAnimation = &deathAnimation;
+		}
+		else
+		{
+			app->entityManager->DestroyEntity(app->scene->bat);
+			app->physics->world->DestroyBody(batbody->body);
+			app->physics->world->DestroyBody(headBody->body);
+			//timerDeath = DEATH_TIME;
+		}
 		if (currentAnimation->HasFinished())
 		{
 			pendingToDelete = true;
@@ -214,10 +256,15 @@ bool Bat::Update( )
 		break;
 	}
 
-	Enemyposition.x = METERS_TO_PIXELS(batbody->body->GetTransform().p.x) - 16;
-	Enemyposition.y = METERS_TO_PIXELS(batbody->body->GetTransform().p.y) - 16;
+
+	Enemyposition.x = METERS_TO_PIXELS(batbody->body->GetTransform().p.x-10);
+	Enemyposition.y = METERS_TO_PIXELS(batbody->body->GetTransform().p.y-10);
+	headBodyPos.x = batbody->body->GetTransform().p.x;
+	headBodyPos.y = batbody->body->GetTransform().p.y - PIXEL_TO_METERS(12);
+	headBody->body->SetTransform({ headBodyPos.x, headBodyPos.y }, 0);
 
 	questionMarkAnimation.Update();
+	batbody->body->SetLinearVelocity(vel);
 	Draw();
 
 	return true;
@@ -231,8 +278,12 @@ bool Bat::Draw()
 	}
 	else if (state == State::DYING)
 	{
-		currentAnimation = &deathAnimation;
-		app->render->DrawTexture(BatTexture, Enemyposition.x - 20, Enemyposition.y - 15, &currentAnimation->GetCurrentFrame());
+		
+		
+			currentAnimation = &deathAnimation;
+		    app->render->DrawTexture(BatTexture, Enemyposition.x - 20, Enemyposition.y - 15, &currentAnimation->GetCurrentFrame());
+	     
+		
 	}
 	else
 		app->render->DrawTexture(BatTexture, Enemyposition.x, Enemyposition.y, &currentAnimation->GetCurrentFrame());

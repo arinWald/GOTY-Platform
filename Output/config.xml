@@ -28,8 +28,13 @@
 			  jumpfxpath="Assets/Audio/Fx/jump.wav"
 			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"
 			  defeatfx="Assets/Audio/Fx/defeat.wav"/>
+<<<<<<< Updated upstream
           <bat x="60" y="300" speed="4" texturepath="Assets/Textures/bat.png"/>
 	  <walkenemy x="532" y="179" speed="3" texturepath="Assets/Textures/WalkEnemy/mush_spritesheet.png"
+=======
+          <bat x="1624" y="165" speed="4" texturepath="Assets/Textures/bat.png"/>
+	  <walkenemy x="420" y="245" speed="2" texturepath="Assets/Textures/WalkEnemy/mush_spritesheet.png"
+>>>>>>> Stashed changes
 			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"></walkenemy>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png" 
 		  coinfxpath="Assets/Audio/Fx/coinPickup.ogg"/>

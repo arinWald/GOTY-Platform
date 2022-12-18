@@ -360,6 +360,33 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 				app->audio->PlayFx(defeatFxId);
 			}
 			break;
+
+		case ColliderType::BAT:
+			//LOG("Collision DEATH");
+			if (!app->scene->godMode)
+			{
+				app->audio->PlayFx(deathFxId);
+				playerlives--;
+				isDead = true;
+			}
+			if (playerlives <= 0)
+			{
+				app->audio->PlayFx(defeatFxId);
+			}
+			break;
+		case ColliderType::WALKENEMY:
+			//LOG("Collision DEATH");
+			if (!app->scene->godMode)
+			{
+				app->audio->PlayFx(deathFxId);
+				playerlives--;
+				isDead = true;
+			}
+			if (playerlives <= 0)
+			{
+				app->audio->PlayFx(defeatFxId);
+			}
+			break;
 		case ColliderType::GROUNDSENSOR:
 			//LOG("TOUCHING GROUND");
 			//cout << "Touching Ground" << endl;
@@ -375,10 +402,14 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			//cout << "WINNNNNN" << endl;
 			isWin = true;
 			ChangePosition(initialPosX, initialPosY);
-		case ColliderType::ENEMYHEAD:
+		case ColliderType::WALKENEMYHEAD:
 			app->scene->walkEnemy->isDead = true;
 			autoJump = true;
 			//app->audio->PlayFx(walkEnemyDiesFx);
+		case ColliderType::FLYENEMYHEAD:
+			app->scene->bat->isDead = true;
+			autoJump = true;
+			
 
 		case ColliderType::UNKNOWN:
 			//LOG("Collision UNKNOWN");

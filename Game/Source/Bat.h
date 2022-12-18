@@ -60,12 +60,16 @@ public:
 
 	State state;
 	PhysBody* batbody;
+	PhysBody* headBody;
+	b2Vec2 headBodyPos;
 	iPoint lastPlayerPosition;
 	DynArray<iPoint> path;
 	int pathIndex = 0;
 	int speed;
 	bool hasPath = false;
+	bool isDead;
 	fPoint initialPosition;
+	int timerDeath;
 
 
 private:

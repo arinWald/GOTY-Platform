@@ -92,8 +92,8 @@ bool WalkEnemy::Start() {
 	pbody->ctype = ColliderType::WALKENEMY;
 	pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
 
-	headBody = app->physics->CreateRectangleSensor(METERS_TO_PIXELS(pbody->body->GetTransform().p.x), METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 12, 5, 2, bodyType::STATIC);
-	headBody->ctype = ColliderType::ENEMYHEAD;
+	headBody = app->physics->CreateRectangle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x), METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 12, 5, 2, bodyType::STATIC);
+	headBody->ctype = ColliderType::WALKENEMYHEAD;
 	headBody->body->SetFixedRotation(true);
 
 	currentMoveState = IDLE;
@@ -300,7 +300,7 @@ bool WalkEnemy::Update()
 	if (teleport.turn == true)
 	{
 		b2Vec2 resetPos = b2Vec2(PIXEL_TO_METERS(teleport.posX), PIXEL_TO_METERS(teleport.posY));
-		pbody->body->SetTransform(resetPos, 0);
+		pbody->body->SetTransform(resetPos, 0);	
 
 		teleport.turn = false;
 	}
