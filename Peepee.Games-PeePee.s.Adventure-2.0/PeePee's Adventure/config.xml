@@ -1,0 +1,51 @@
+<config>
+  <app>
+    <title>Game Development Testbed</title>
+    <organization>UPC</organization>
+	<frcap value = "16"/>
+  </app>
+
+  <renderer>
+    <vsync value="false"/>
+  </renderer>
+
+  <window>
+    <resolution width="1280" height="960" scale="2"/>
+    <fullscreen value="false"/>
+    <borderless value="false"/>
+    <resizable value="false"/>
+    <fullscreen_window value="false"/>
+  </window>
+
+  <audio>
+    <music volume="128"/>
+    <fx volume="128"/>
+  </audio>
+
+  <scene>
+	  <!-- for future new jump: <player x="23" y="289" speed="5" jumpspeed="2.0" lives="3" livestexturepath="Assets/Textures/heart-icon.png" texturepath="Assets/Textures/Player/playerSpriteSheet.png" -->
+	  <player x="23" y="289" speed="4" jumpspeed ="-5.5" lives="3" livestexturepath="Assets/Textures/heart-icon.png" texturepath="Assets/Textures/Player/playerSpriteSheet.png"
+			  jumpfxpath="Assets/Audio/Fx/jump.wav"
+			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"
+			  defeatfx="Assets/Audio/Fx/defeat.wav"/>
+
+          <bat x="1624" y="165" speed="4" texturepath="Assets/Textures/bat.png"/>
+	  <walkenemy x="532" y="179" speed="3" texturepath="Assets/Textures/WalkEnemy/mush_spritesheet.png"
+
+			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"></walkenemy>
+    <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png" 
+		  coinfxpath="Assets/Audio/Fx/coinPickup.ogg"/>
+    <intro texturepath ="Assets/Textures/Scenas/Intro.png"/> 
+    <game_over texturepath ="Assets/Textures/Scenas/GameOver.png"/>
+	<logo texturepath ="Assets/Textures/Scenas/Logo.png"/>
+	<win_screen texturepath="Assets/Textures/Scenas/Win.png"/>
+	<level_1_song audiopath="Assets/Audio/Music/level1Song.ogg"/>
+	<victory_song audiopath="Assets/Audio/Music/victorySong.ogg"/>
+  </scene>
+
+  <map>
+    <mapfolder path="Assets/Maps/"/>
+    <mapfile path="Assets/Maps/level1.tmx"/>
+  </map>
+  
+</config>

@@ -13,6 +13,7 @@ CITM Student's project made in C++, Box2D and SDL libraries.
  - The player has animations
  - It can double jump!
  - Great music accompained with cool SFX
+ - Two types of enemies! Flying with pathfindingand walking 
  
 ## Controls
 
@@ -23,8 +24,9 @@ CITM Student's project made in C++, Box2D and SDL libraries.
  - F3 Start from the beginning of the current level
  - F5 Save the current player and camera position
  - F6 Load the saved player and camera position
- - F9 View colliders / logic
+ - F9 View colliders / logic / path
  - F10 God Mode(more speed, fly enabled and can't die)
+ - F11 FPS Cap (30 / 60 FPS)
 
 ## Developers
 
