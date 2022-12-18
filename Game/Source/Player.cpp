@@ -86,6 +86,9 @@ Player::~Player() {
 
 bool Player::Awake() {
 
+	//L02: DONE 1: Initialize Player parameters
+	//pos = position;
+	//texturePath = "Assets/Textures/player/idle1.png";
 	livesTexturePath = "Assets/Textures/heart-icon.png";
 	//L02: DONE 5: Get Player parameters from XML
 	position.x = parameters.attribute("x").as_int();
@@ -129,16 +132,14 @@ bool Player::Start() {
 	LastDir = 1;
 
 	timerDeath = DEATH_TIME;
+		
+	// L07 DONE 5: Add physics to the player - initialize physics body
+	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
 
-	pbody = app->physics->CreateRectangle(position.x + 16, position.y + 16, 26, 30, bodyType::DYNAMIC);
-	pbody->body->SetFixedRotation(true);
-	pbody->body->SetGravityScale(4.0f);
-
-	/*pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
-	pbody->body->SetGravityScale(4.0f);*/
-
+	// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	pbody->listener = this;
 
+	// L07 DONE 7: Assign collider type
 	pbody->ctype = ColliderType::PLAYER;
 	pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
 	
@@ -148,16 +149,10 @@ bool Player::Start() {
 
 bool Player::Update()
 {
-
-	cout << "X SPEED " << pbody->body->GetLinearVelocity().x << endl;
 	
-	currentAnimation->Update();
+	// L07 DONE 5: Add physics to the player - updated player position using physics
 
-	if (app->input->GetKey(SDL_SCANCODE_U) == KEY_DOWN)
-	{
-		float upForce = -1 * jumpspeed;
-		pbody->body->ApplyLinearImpulse({ 0, upForce }, pbody->body->GetLocalCenter(), true);
-	}
+	currentAnimation->Update();
 
 	b2Vec2 vel ;
 	if (!app->scene->godMode)
@@ -177,7 +172,7 @@ bool Player::Update()
 		currentAnimation = &leftIdleAnimation;
 	}
 
-	/*if (timerJump > 0) {
+	if (timerJump > 0) {
 		timerJump--;
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 			vel.x = speed;
@@ -209,7 +204,7 @@ bool Player::Update()
 
 		vel = b2Vec2(vel.x, jumpspeed);
 
-	}*/
+	}
 
 	//cout << "JUMPS AVAILABLE: " << jumpsavailable << endl;
 	//cout << "LIVES: " << playerlives << endl;
@@ -234,27 +229,28 @@ bool Player::Update()
 	//PLAYER MOVE INPUT
 	if (!app->scene->godMode && app->scene->gameplayState == app->scene->GameplayState::PLAYING && !isDead)
 	{
-		//if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
-		//	//
-		//	timerJump = 15;
-		//	app->audio->PlayFx(jumpFxId);
-		//	jumpsavailable--;
-		//	/*vel =  b2Vec2(vel.x,jumpspeed);*/
-		//}
+		//L02: DONE 4: modify the position of the player using arrow keys and render the texture
+		if ((app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && jumpsavailable > 0) {
+			//
+			timerJump = 15;
+			app->audio->PlayFx(jumpFxId);
+			jumpsavailable--;
+			/*vel =  b2Vec2(vel.x,jumpspeed);*/
+		}
 
 		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 			//
 		}
 
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && timerJump == 0) {
-			vel = b2Vec2(-speed, pbody->body->GetLinearVelocity().y);
+			vel = b2Vec2(-speed, vel.y);
 			currentAnimation = &leftRunAnimation;
 			LastDir = 2;
 		}
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && timerJump == 0) {
 			currentAnimation = &rightRunAnimation;
 			LastDir = 1;
-			vel = b2Vec2(speed, pbody->body->GetLinearVelocity().y);
+			vel = b2Vec2(speed, vel.y);
 		}
 	}
 	//GOD MODE INPUT
@@ -292,7 +288,7 @@ bool Player::Update()
 	}
 	else
 	{
-		pbody->body->SetLinearVelocity({ vel.x, pbody->body->GetLinearVelocity().y });
+		pbody->body->SetLinearVelocity(vel);
 	}
 
 	//Update player position in pixels
@@ -329,8 +325,6 @@ bool Player::Update()
 
 	}
 
-	/*printf("Position camera.x %d \n", app->render->camera.x);*/		
-	
 	return true;
 }
 
