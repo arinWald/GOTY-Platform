@@ -28,6 +28,7 @@
 			  jumpfxpath="Assets/Audio/Fx/jump.wav"
 			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"
 			  defeatfx="Assets/Audio/Fx/defeat.wav"/>
+          <bat x="60" y="300" speed="4" texturepath="Assets/Textures/bat.png"/>
 	  <walkenemy x="420" y="245" speed="2" texturepath="Assets/Textures/WalkEnemy/mush_spritesheet.png"
 			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"></walkenemy>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png" 

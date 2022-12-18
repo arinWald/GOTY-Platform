@@ -87,6 +87,8 @@ public:
 	fPoint Enemyposition;
 	iPoint position;       
 	bool renderable = true;
+
+	bool pendingToDelete = false;
 };
 
 #endif // __ENTITY_H__
