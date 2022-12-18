@@ -84,7 +84,7 @@ bool WalkEnemy::Start() {
 
 	timerDeath = DEATH_TIME;
 		
-	pbody = app->physics->CreateRectangle(position.x + 16, position.y + 16, 20, 20, bodyType::DYNAMIC);
+	pbody = app->physics->CreateRectangle(position.x, position.y, 20, 20, bodyType::DYNAMIC);
 	/*pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);*/
 	pbody->body->SetGravityScale(1.5f);
 	pbody->body->SetFixedRotation(true);

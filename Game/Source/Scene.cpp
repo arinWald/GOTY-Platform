@@ -44,6 +44,13 @@ bool Scene::Awake(pugi::xml_node& config)
 
 	walkEnemy = (WalkEnemy*)app->entityManager->CreateEntity(EntityType::WALKENEMY);
 	walkEnemy->parameters = config.child("walkenemy");
+
+	//iterate all enemies
+	/*for (pugi::xml_node enemyNode = config.child("walkenemy"); enemyNode; enemyNode = enemyNode.next_sibling("walkenemy"))
+	{
+		WalkEnemy* enemy = (WalkEnemy*)app->entityManager->CreateEntity(EntityType::WALKENEMY);
+		enemy->parameters = enemyNode;
+	}*/
 	
 	pugi::xml_node logo = config.child("logo");
 	logotexturePath = logo.attribute("texturepath").as_string();
