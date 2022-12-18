@@ -32,6 +32,7 @@ enum class ColliderType {
 	DEATH,
 	GROUNDSENSOR,
 	WINSENSOR,
+	BAT,
 	UNKNOWN
 	// ..
 };

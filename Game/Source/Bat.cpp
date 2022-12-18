@@ -20,7 +20,7 @@ using namespace std;
 Bat::Bat() : Entity(EntityType::BAT) {
 
 
-	name.Create("Bat");
+	/*name.Create("Bat");*/
 
 
 }
@@ -30,7 +30,7 @@ Bat::~Bat() {
 }
 bool Bat::Awake()
 {
-	idleAnimation.GenerateAnimation(SDL_Rect({ 0, 0, 216, 25 }), 1, 12);
+	/*idleAnimation.GenerateAnimation(SDL_Rect({ 0, 0, 216, 25 }), 1, 12);
 	idleAnimation.speed = 6.0f;
 
 	flyingLeftAnimation.GenerateAnimation(SDL_Rect({ 0, 25, 322, 26 }), 1, 7);
@@ -46,172 +46,173 @@ bool Bat::Awake()
 	deathAnimation.speed = 10.0f;
 	deathAnimation.loop = false;
 
-	texturePath = parameters.attribute("texturepath").as_string();
+	texturePath = parameters.attribute("texturepath").as_string();*/
 
+	return true;
 
 }
 bool Bat::CleanUp()
 {
-	delete &path;
+	///*delete &path;
 	return true;
 }
 
 bool Bat::Start()
 {
 
-BatTexture = app->tex->Load(texturePath);
-
-currentAnimation = &idleAnimation;
-
-lastPlayerPosition.x = -1;
-lastPlayerPosition.y = -1;
-
-batbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
-
-// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
-batbody->listener = this;
-
-// L07 DONE 7: Assign collider type
-batbody->ctype = ColliderType::PLAYER;
-
-state = State::IDLE;
+//BatTexture = app->tex->Load(texturePath);
+//
+//currentAnimation = &idleAnimation;
+//
+//lastPlayerPosition.x = -1;
+//lastPlayerPosition.y = -1;
+//
+//batbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 14, bodyType::DYNAMIC);
+//
+//// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
+//batbody->listener = this;
+//
+//// L07 DONE 7: Assign collider type
+//batbody->ctype = ColliderType::BAT;
+//
+//state = State::IDLE;
 
 	return true;
 }
 
 bool Bat::Update(float dt)
 {
-	currentAnimation->Update(dt);
+	//currentAnimation->Update(dt);
 
-	iPoint playerPos;
-	playerPos.x = app->scene->player->pbody->body->GetPosition().x/ app->map->mapData.tileWidth;
-	playerPos.y = app->scene->player->pbody->body->GetPosition().y / app->map->mapData.tileHeight;
+	//iPoint playerPos;
+	//playerPos.x = app->scene->player->pbody->body->GetPosition().x/ app->map->mapData.tileWidth;
+	//playerPos.y = app->scene->player->pbody->body->GetPosition().y / app->map->mapData.tileHeight;
 
-	iPoint gridPos;
-	gridPos.x = position.x / app->map->mapData.tileWidth;
-	gridPos.y = position.y / app->map->mapData.tileHeight;
+	//iPoint gridPos;
+	//gridPos.x = position.x / app->map->mapData.tileWidth;
+	//gridPos.y = position.y / app->map->mapData.tileHeight;
 
-	b2Vec2 vel;
+	//b2Vec2 vel;
 
-	if (playerPos != lastPlayerPosition && playerPos.DistanceTo(gridPos) <= 12 && state != State::DYING && !app->scene->godMode)
-	{
-		lastPlayerPosition = playerPos;
+	//if (playerPos != lastPlayerPosition && playerPos.DistanceTo(gridPos) <= 12 && state != State::DYING && !app->scene->godMode)
+	//{
+	//	lastPlayerPosition = playerPos;
 
-		int n = app->pathfinding->CreatePath(gridPos, playerPos, false, 0, 12);
-		if (n == -1)
-		{
-			hasPath = false;
-			path.Clear();
-			path.PushBack(iPoint(gridPos.x, gridPos.y));
-		}
-		else
-		{
-			hasPath = true;
-			const DynArray<iPoint>* newPath = app->pathfinding->GetLastPath();
-			int j = 0;
-			for (int i = 0; i < path.Count(); i++)
-			{
-				if (path[i] != (*newPath)[j])
-					continue;
-				j++;
-				break;
-			}
-			path.Clear();
-			for (int i = 0; i < newPath->Count(); i++)
-			{
-				path.PushBack((*newPath)[i]);
-			}
-			if (j < path.Count())
-				pathIndex = j;
-			else
-				pathIndex = 0;
-			state = State::FLYING;
-		}
-	}
+	//	int n = app->pathfinding->CreatePath(gridPos, playerPos, false, 0, 12);
+	//	if (n == -1)
+	//	{
+	//		hasPath = false;
+	//		path.Clear();
+	//		path.PushBack(iPoint(gridPos.x, gridPos.y));
+	//	}
+	//	else
+	//	{
+	//		hasPath = true;
+	//		const DynArray<iPoint>* newPath = app->pathfinding->GetLastPath();
+	//		int j = 0;
+	//		for (int i = 0; i < path.Count(); i++)
+	//		{
+	//			if (path[i] != (*newPath)[j])
+	//				continue;
+	//			j++;
+	//			break;
+	//		}
+	//		path.Clear();
+	//		for (int i = 0; i < newPath->Count(); i++)
+	//		{
+	//			path.PushBack((*newPath)[i]);
+	//		}
+	//		if (j < path.Count())
+	//			pathIndex = j;
+	//		else
+	//			pathIndex = 0;
+	//		state = State::FLYING;
+	//	}
+	//}
 
-	fPoint pixelPosition;
-	float distance;
+	//fPoint pixelPosition;
+	//float distance;
 
-	switch (state)
-	{
-	case State::IDLE:
-		currentAnimation = &idleAnimation;
-		vel = b2Vec2(0, 0);
-		break;
-	case State::FLYING:
+	//switch (state)
+	//{
+	//case State::IDLE:
+	//	currentAnimation = &idleAnimation;
+	//	vel = b2Vec2(0, 0);
+	//	break;
+	//case State::FLYING:
 
-		//currentAnimation = &flyingLeftAnimation;
-		if (app->scene->godMode)
-			break;
+	//	//currentAnimation = &flyingLeftAnimation;
+	//	if (app->scene->godMode)
+	//		break;
 
-		if (pathIndex >= path.Count())
-			break;
+	//	if (pathIndex >= path.Count())
+	//		break;
 
-		pixelPosition.x = path[pathIndex].x * app->map->mapData.tileWidth;
-		pixelPosition.y = path[pathIndex].y * app->map->mapData.tileHeight;
+	//	pixelPosition.x = path[pathIndex].x * app->map->mapData.tileWidth;
+	//	pixelPosition.y = path[pathIndex].y * app->map->mapData.tileHeight;
 
-		distance = pixelPosition.DistanceTo(position);
+	//	distance = pixelPosition.DistanceTo(position);
 
-		if (distance == 0)
-		{
-			pathIndex++;
-		}
-		else
-		{
-			float xDiff = pixelPosition.x - position.x;
-			float yDiff = pixelPosition.y - position.y;
+	//	if (distance == 0)
+	//	{
+	//		pathIndex++;
+	//	}
+	//	else
+	//	{
+	//		float xDiff = pixelPosition.x - position.x;
+	//		float yDiff = pixelPosition.y - position.y;
 
-			if (xDiff < 0)
-			{
-				currentAnimation = &flyingLeftAnimation;
-			}
-			else if (xDiff >= 0)
-			{
-				currentAnimation = &flyingRightAnimation;
-			}
+	//		if (xDiff < 0)
+	//		{
+	//			currentAnimation = &flyingLeftAnimation;
+	//		}
+	//		else if (xDiff >= 0)
+	//		{
+	//			currentAnimation = &flyingRightAnimation;
+	//		}
 
-			if (abs(xDiff) > abs(yDiff))
-			{
-				int xDir = (xDiff > 0) ? 1 : -1;
-				if (abs(xDiff) < abs(xDir * speed * dt))
-				{
-					position.x += xDiff;
-				}
-				else
-					position.x += xDir * speed * dt;
-			}
-			else
-			{
-				int yDir = (yDiff > 0) ? 1 : -1;
-				if (abs(yDiff) < abs(yDir * speed * dt))
-				{
-					position.y += yDiff;
-				}
-				else
-					position.y += yDir * speed * dt;
-			}
-		}
-		break;
+	//		if (abs(xDiff) > abs(yDiff))
+	//		{
+	//			int xDir = (xDiff > 0) ? 1 : -1;
+	//			if (abs(xDiff) < abs(xDir * speed * dt))
+	//			{
+	//				position.x += xDiff;
+	//			}
+	//			else
+	//				position.x += xDir * speed * dt;
+	//		}
+	//		else
+	//		{
+	//			int yDir = (yDiff > 0) ? 1 : -1;
+	//			if (abs(yDiff) < abs(yDir * speed * dt))
+	//			{
+	//				position.y += yDiff;
+	//			}
+	//			else
+	//				position.y += yDir * speed * dt;
+	//		}
+	//	}
+	//	break;
 
-	case State::DYING:
-		currentAnimation = &deathAnimation;
-		if (currentAnimation->HasFinished())
-		{
-			pendingToDelete = true;
-		}
-		break;
-	}
+	//case State::DYING:
+	//	currentAnimation = &deathAnimation;
+	//	if (currentAnimation->HasFinished())
+	//	{
+	//		pendingToDelete = true;
+	//	}
+	//	break;
+	//}
 
-	
+	//
 
-	questionMarkAnimation.Update(dt);
+	//questionMarkAnimation.Update(dt);
 
 	return true;
 }
 
 bool Bat::Draw()
 {
-	if (state == State::FLYING)
+	/*if (state == State::FLYING)
 	{
 		app->render->DrawTexture(BatTexture, position.x - 14, position.y, &currentAnimation->GetCurrentFrame());
 	}
@@ -238,7 +239,7 @@ bool Bat::Draw()
 		{
 			app->render->DrawTexture(BatTexture, position.x - 6, position.y - 32, &questionMarkAnimation.GetCurrentFrame());
 		}
-	}
+	}*/
 
 	return true;
 }
