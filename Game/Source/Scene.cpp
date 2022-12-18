@@ -45,11 +45,11 @@ bool Scene::Awake(pugi::xml_node& config)
 	walkEnemy = (WalkEnemy*)app->entityManager->CreateEntity(EntityType::WALKENEMY);
 	walkEnemy->parameters = config.child("walkenemy");
 
-	//iterate all enemies
-	/*for (pugi::xml_node enemyNode = config.child("walkenemy"); enemyNode; enemyNode = enemyNode.next_sibling("walkenemy"))
+	/*for (pugi::xml_node itemNode = config.child("walkenemy"); itemNode; itemNode = itemNode.next_sibling("walkenemy"))
 	{
-		WalkEnemy* enemy = (WalkEnemy*)app->entityManager->CreateEntity(EntityType::WALKENEMY);
-		enemy->parameters = enemyNode;
+		WalkEnemy* newWalkEnemy = (WalkEnemy*)app->entityManager->CreateEntity(EntityType::WALKENEMY);
+		newWalkEnemy->parameters = itemNode;
+		walkEnemiesList.Add(newWalkEnemy);
 	}*/
 	
 	pugi::xml_node logo = config.child("logo");
@@ -245,52 +245,33 @@ bool Scene::Update(float dt)
 		app->map->Draw();
 	}
 
-	// L08: DONE 3: Test World to map method
-	int mouseX, mouseY;
-	app->input->GetMousePosition(mouseX, mouseY);
-
-	iPoint mouseTile = iPoint(0, 0);
-
-	if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
-		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x - app->map->mapData.tileWidth / 2,
-			mouseY - app->render->camera.y - app->map->mapData.tileHeight / 2);
-	}
-	if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
-		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x,
-			mouseY - app->render->camera.y);
-	}
-
-	//Convert again the tile coordinates to world coordinates to render the texture of the tile
-	iPoint highlightedTileWorld = app->map->MapToWorld(mouseTile.x, mouseTile.y);
-	app->render->DrawTexture(mouseTileTex, highlightedTileWorld.x, highlightedTileWorld.y);
-
-	//Test compute path function
-	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	//PATHFINDING
+	if (walkEnemy->currentMoveState == WalkEnemy::MoveState::CHASING)
 	{
-		if (originSelected == true && gameplayState == PLAYING)
+		origin.x = walkEnemy->pbody->body->GetPosition().x;
+		origin.y = walkEnemy->pbody->body->GetPosition().y;
+		iPoint destination;
+		destination.x = player->pbody->body->GetPosition().x;
+		destination.y = player->pbody->body->GetPosition().y;
+		app->pathfinding->ClearLastPath();
+		app->pathfinding->CreatePath(origin, destination);
+		// Get the latest calculated path and draw
+		const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
+		for (uint i = 0; i < path->Count(); ++i)
 		{
-			app->pathfinding->CreatePath(origin, mouseTile);
-			originSelected = false;
+			iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+			if (i == 1)
+			{
+				walkEnemy->objective.x = PIXEL_TO_METERS(pos.x);
+				walkEnemy->objective.y = PIXEL_TO_METERS(pos.y);
+			}
+			if (app->physics->debug) app->render->DrawTexture(mouseTileTex, pos.x, pos.y);
 		}
-		else
-		{
-			origin = mouseTile;
-			originSelected = true;
-			app->pathfinding->ClearLastPath();
-		}
-	}
 
-	// L12: Get the latest calculated path and draw
-	const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
-	for (uint i = 0; i < path->Count(); ++i)
-	{
-		iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-		app->render->DrawTexture(mouseTileTex, pos.x, pos.y);
+		// Debug pathfinding
+		iPoint originScreen = app->map->MapToWorld(origin.x, origin.y);
+		if (app->physics->debug) app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
 	}
-
-	// L12: Debug pathfinding
-	iPoint originScreen = app->map->MapToWorld(origin.x, origin.y);
-	app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
 
 	return true;
 }

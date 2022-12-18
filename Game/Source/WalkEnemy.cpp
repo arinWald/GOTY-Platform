@@ -23,36 +23,36 @@ using namespace std;
 WalkEnemy::WalkEnemy() : Entity(EntityType::WALKENEMY)
 {
 	
-		name.Create("Enemy");
+	name.Create("Enemy");
 
-		//Animation pushbacks
+	//Animation pushbacks
 
-		for (int i = 0; i < 14; ++i)
-		{
-			leftIdleAnimation.PushBack({ 32 * i, 40, 32, 32 });
-		}
-		leftIdleAnimation.loop;
-		leftIdleAnimation.speed = 0.3f;
+	for (int i = 0; i < 14; ++i)
+	{
+		leftIdleAnimation.PushBack({ 32 * i, 40, 32, 32 });
+	}
+	leftIdleAnimation.loop;
+	leftIdleAnimation.speed = 0.3f;
 
-		for (int i = 0; i < 5; ++i)
-		{
-			leftHitAnimation.PushBack({ 32 * i, 1, 32, 32 });
-		}
-		leftHitAnimation.speed = 0.3f;
+	for (int i = 0; i < 5; ++i)
+	{
+		leftHitAnimation.PushBack({ 32 * i, 1, 32, 32 });
+	}
+	leftHitAnimation.speed = 0.3f;
 
-		for (int i = 0; i < 16; ++i)
-		{
-			leftRunAnimation.PushBack({ 32*i, 74, 32, 32 });
-		}
-		leftRunAnimation.loop;
-		leftRunAnimation.speed = 0.3f;
+	for (int i = 0; i < 16; ++i)
+	{
+		leftRunAnimation.PushBack({ 32*i, 74, 32, 32 });
+	}
+	leftRunAnimation.loop;
+	leftRunAnimation.speed = 0.3f;
 
-		for (int i = 0; i < 7; ++i)
-		{
-			disappearAnimation.PushBack({(64 * i), 214, 64, 64});
-		}
-		disappearAnimation.pingpong = false;
-		disappearAnimation.speed = 0.3f;
+	for (int i = 0; i < 7; ++i)
+	{
+		disappearAnimation.PushBack({(64 * i), 214, 64, 64});
+	}
+	disappearAnimation.pingpong = false;
+	disappearAnimation.speed = 0.3f;
 	
 }
 
@@ -97,6 +97,7 @@ bool WalkEnemy::Start() {
 	headBody->body->SetFixedRotation(true);
 
 	currentMoveState = IDLE;
+	direction = LEFT;
 	
 	return true;
 	
@@ -105,6 +106,9 @@ bool WalkEnemy::Start() {
 bool WalkEnemy::Update()
 {
 	currentAnimation->Update();
+
+	distanceFromPlayer = sqrt(pow(abs(app->scene->player->pbody->body->GetPosition().x - pbody->body->GetPosition().x), 2) +
+		pow(abs(app->scene->player->pbody->body->GetPosition().y - pbody->body->GetPosition().y), 2));
 
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 
@@ -157,7 +161,7 @@ bool WalkEnemy::Update()
 	{
 		pbody->body->ApplyLinearImpulse({ 0, -1 }, pbody->body->GetLocalCenter(), true);
 	}
-
+	float position_x = pbody->body->GetPosition().x;
 	//All code related to each state
 	switch (currentMoveState)
 	{
@@ -167,6 +171,35 @@ bool WalkEnemy::Update()
 		break;
 	case CHASING:
 		currentAnimation = &leftRunAnimation;
+
+		switch (direction)
+		{
+		case RIGHT:
+			if (objective.x + PIXEL_TO_METERS(app->map->mapData.tileWidth / 2) > pbody->body->GetPosition().x)
+			{
+				vel.x = speed;
+				direction = Direction::RIGHT;
+				currentAnimation = &leftRunAnimation;
+			}
+			break;
+		case LEFT:
+			if (objective.x + PIXEL_TO_METERS(app->map->mapData.tileWidth / 2) <= pbody->body->GetPosition().x)
+			{
+				vel.x = -speed;
+				direction = Direction::LEFT;
+				currentAnimation = &leftRunAnimation;
+			}
+			break;
+		}
+
+		if (app->physics->debug)//ray that is the PATH of the terrestre enemy
+		{
+			app->render->DrawLine(METERS_TO_PIXELS(pbody->body->GetPosition().x),
+				METERS_TO_PIXELS(pbody->body->GetPosition().y),
+				METERS_TO_PIXELS(app->scene->player->pbody->body->GetPosition().x),
+				METERS_TO_PIXELS(app->scene->player->pbody->body->GetPosition().y),
+				0, 255, 0); //green
+		}
 
 		break;
 	case GETTINGHURT:
@@ -182,18 +215,30 @@ bool WalkEnemy::Update()
 		break;
 	}
 
-	float distanceFromPlayer;
-	distanceFromPlayer = sqrt(pow(abs(app->scene->player->pbody->body->GetPosition().x - pbody->body->GetPosition().x),2)+
-							pow(abs(app->scene->player->pbody->body->GetPosition().y - pbody->body->GetPosition().y), 2));
+	if (pbody->body->GetPosition().x > app->scene->player->pbody->body->GetPosition().x)
+	{
+		direction = LEFT;
+	}
+	else direction = RIGHT;
 
-	cout << distanceFromPlayer << endl;
+	if (distanceFromPlayer <= 4)
+	{
+		ChangeMoveState(CHASING);
+	}
+	if (distanceFromPlayer > 4)
+	{
+		ChangeMoveState(IDLE);
+	}
+
+	cout << vel.x << endl;
+	//cout << distanceFromPlayer << endl;
 
 	//if (app->scene->gameplayState == app->scene->GameplayState::PLAYING)
 	//{
 	//	vel = b2Vec2(-speed, vel.y);
 	//}
 
-	pbody->body->SetLinearVelocity(vel);
+	pbody->body->SetLinearVelocity({ vel.x, pbody->body->GetLinearVelocity().y });
 
 	//Manage Death Timer
 	if (isDead)

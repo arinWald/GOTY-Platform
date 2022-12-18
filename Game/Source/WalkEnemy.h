@@ -28,6 +28,11 @@ public:
 		GETTINGHURT,
 		DYING
 	};
+	enum Direction
+	{
+		LEFT,
+		RIGHT
+	};
 public:
 
 	WalkEnemy();
@@ -82,6 +87,14 @@ public:
 	int initialPosY;
 
 	MoveState currentMoveState;
+
+	Direction direction;
+
+	float distanceFromPlayer;
+
+	iPoint objective;
+
+	b2Vec2 force;
 
 private:
 
