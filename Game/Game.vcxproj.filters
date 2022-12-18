@@ -58,10 +58,7 @@
     <ClCompile Include="Source\Pathfinding.cpp">
       <Filter>CPP .H</Filter>
     </ClCompile>
-    <ClCompile Include="Source\terrestreEnemy.cpp">
-      <Filter>CPP .H</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Bat.cpp">
+    <ClCompile Include="Source\Mushroom.cpp">
       <Filter>CPP .H</Filter>
     </ClCompile>
   </ItemGroup>
@@ -153,10 +150,7 @@
     <ClInclude Include="Source\PQueue.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\terrestreEnemy.h">
-      <Filter>CPP .H</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Bat.h">
+    <ClInclude Include="Source\Mushroom.h">
       <Filter>CPP .H</Filter>
     </ClInclude>
   </ItemGroup>

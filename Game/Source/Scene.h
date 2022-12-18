@@ -3,9 +3,7 @@
 
 #include "Module.h"
 #include "Player.h"
-#include "Bat.h"
 #include "Item.h"
-#include "terrestreEnemy.h"
 
 struct SDL_Texture;
 
@@ -37,7 +35,7 @@ public:
 	bool PreUpdate();
 
 	// Called each loop iteration
-	bool Update();
+	bool Update(float dt);
 
 	// Called before all Updates
 	bool PostUpdate();
@@ -55,16 +53,6 @@ public:
 
 	//L02: DONE 3: Declare a Player attribute 
 	Player* player;
-	Bat* bat;
-
-	//terrestre enemies list
-	List<TerrestreEnemy*> terrestreEnemies;
-
-	//ray
-	Point<int> ray;
-
-	//window data
-	uint width, height, scale;
 
 	GameplayState gameplayState = LOGO_SCREEN;
 	bool fading = false;

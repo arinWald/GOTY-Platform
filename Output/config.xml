@@ -28,45 +28,6 @@
 			  jumpfxpath="Assets/Audio/Fx/jump.wav"
 			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"
 			  defeatfx="Assets/Audio/Fx/defeat.wav"/>
-          <Bat x="60" y="300" speed="4" texturepath="Assets/Textures/bat.png"/>
-	  <terrestreEnemy x="855" y="277" level="1" texturepath="Assets/Textures/cocodrileEnemy.png">
-		  <idleAnim>
-			  <pushback x="0" y="0" w="32" h="32"/>
-		  </idleAnim>
-		  <walkLeftAnim speed="0.1f" loop="true">
-			  <pushback x="32" y="0" w="32" h="32"/>
-			  <pushback x="64" y="0" w="32" h="32"/>
-			  <pushback x="96" y="0" w="32" h="32"/>
-			  <pushback x="128" y="0" w="32" h="32"/>
-			  <pushback x="160" y="0" w="32" h="32"/>
-			  <pushback x="192" y="0" w="32" h="32"/>
-			  <pushback x="0" y="0" w="32" h="32"/>
-		  </walkLeftAnim>
-		  <walkRightAnim speed="0.1f" loop="true">
-			  <pushback x="32" y="64" w="32" h="32"/>
-			  <pushback x="64" y="64" w="32" h="32"/>
-			  <pushback x="96" y="64" w="32" h="32"/>
-			  <pushback x="128" y="64" w="32" h="32"/>
-			  <pushback x="160" y="64" w="32" h="32"/>
-			  <pushback x="192" y="64" w="32" h="32"/>
-			  <pushback x="0" y="64" w="32" h="32"/>
-		  </walkRightAnim>
-		  <attackLeftAnim speed="0.1f" loop="true">
-			  <pushback x="32" y="32" w="32" h="32"/>
-			  <pushback x="64" y="32" w="32" h="32"/>
-			  <pushback x="96" y="32" w="32" h="32"/>
-			  <pushback x="128" y="32" w="32" h="32"/>
-		  </attackLeftAnim>
-		  <attackRightAnim speed="0.1f" loop="true">
-			  <pushback x="32" y="96" w="32" h="32"/>
-			  <pushback x="64" y="96" w="32" h="32"/>
-			  <pushback x="96" y="96" w="32" h="32"/>
-			  <pushback x="128" y="96" w="32" h="32"/>
-		  </attackRightAnim>
-		  <deadAnim>
-			  <pushback x="192" y="96" w="32" h="32"/>
-		  </deadAnim>
-	  </terrestreEnemy>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png" 
 		  coinfxpath="Assets/Audio/Fx/coinPickup.ogg"/>
     <intro texturepath ="Assets/Textures/Scenas/Intro.png"/> 

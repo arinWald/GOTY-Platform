@@ -89,7 +89,7 @@ bool Player::Awake() {
 		//L02: DONE 1: Initialize Player parameters
 		//pos = position;
 		//texturePath = "Assets/Textures/player/idle1.png";
-	
+	livesTexturePath = "Assets/Textures/heart-icon.png";
 		//L02: DONE 5: Get Player parameters from XML
 		position.x = parameters.attribute("x").as_int();
 		position.y = parameters.attribute("y").as_int();
@@ -156,11 +156,10 @@ bool Player::Update()
 	currentAnimation->Update();
 
 
-	//if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
-	//{
-	//	b2Vec2 force = { -5.5f, 0 };
-	//	pbody->body->ApplyForceToCenter(force, true);
-	//}
+	if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
+	{
+		pbody->body->ApplyLinearImpulse({ 100, 0 }, { 0, 0 }, true);
+	}
 
 	b2Vec2 vel ;
 	if (!app->scene->godMode)
@@ -331,7 +330,12 @@ bool Player::Update()
 	for (int i = 0; i < (playerlives ); ++i) {
 		app->render->DrawTexture(playerLivesTexture, (-app->render->camera.x*0.5)+ 30*i+5, 5);
 
-	}		
+	}
+
+	printf("Position camera.x %d \n", app->render->camera.x);
+
+
+		
 	
 	return true;
 }

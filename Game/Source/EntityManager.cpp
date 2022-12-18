@@ -1,7 +1,6 @@
 #include "EntityManager.h"
 #include "Player.h"
 #include "Item.h"
-#include "terrestreEnemy.h"
 #include "App.h"
 #include "Textures.h"
 #include "Scene.h"
@@ -93,12 +92,7 @@ Entity* EntityManager::CreateEntity(EntityType type)
 	case EntityType::ITEM:
 		entity = new Item();
 		break;
-	case EntityType::TERRESTREENEMY:
-		entity = new TerrestreEnemy(true);
-		break;
-	case EntityType::BAT:
-		entity = new Bat();
-		break;
+
 	default: break;
 	}
 
@@ -123,7 +117,7 @@ void EntityManager::AddEntity(Entity* entity)
 	if ( entity != nullptr) entities.Add(entity);
 }
 
-bool EntityManager::Update()
+bool EntityManager::Update(float dt)
 {
 	bool ret = true;
 	ListItem<Entity*>* item;

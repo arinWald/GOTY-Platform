@@ -24,15 +24,12 @@ enum bodyType {
 };
 
 enum class ColliderType {
-	PLAYER,
-	TERRESTREENEMY,
+	PLAYER, 
 	ITEM,
 	PLATFORM, 
-	PLATFORMLIMIT,
 	DEATH,
 	GROUNDSENSOR,
 	WINSENSOR,
-	BAT,
 	UNKNOWN
 	// ..
 };
@@ -70,7 +67,6 @@ public:
 	// Main module steps
 	bool Start();
 	bool PreUpdate();
-	bool Update(float dt);
 	bool PostUpdate();
 	bool CleanUp();
 
@@ -84,15 +80,11 @@ public:
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
 
-	void Pause();
-
-public:
+private:
 
 	// Debug mode
 	bool debug;
 
 	// Box2D World
 	b2World* world;
-
-	bool pause = false;
 };

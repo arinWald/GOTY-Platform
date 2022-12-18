@@ -165,7 +165,6 @@ bool App::LoadConfig()
 // ---------------------------------------------
 void App::PrepareUpdate()
 {
-	
 	frameTime.Start();
 }
 

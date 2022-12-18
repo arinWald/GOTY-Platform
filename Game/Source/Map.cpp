@@ -226,31 +226,7 @@ bool Map::CleanUp()
         layerItem = layerItem->next;
     }
 
-    //REMOVE ALL COLLIDERS
-    ListItem<PhysBody*>* collisionsItem;
-    collisionsItem = Colliders.start;
-
-    while (collisionsItem != NULL)
-    {
-        collisionsItem->data->body->DestroyFixture(collisionsItem->data->body->GetFixtureList());
-        app->physics->world->DestroyBody(collisionsItem->data->body);
-        RELEASE(collisionsItem->data);
-        collisionsItem = collisionsItem->next;
-    }
     Colliders.Clear();
-
-    //REMOVE ENEMIES
-    ListItem<PhysBody*>* enemyItem;
-    enemyItem = enemies.start;
-
-    while (enemyItem != NULL)
-    {
-        enemyItem->data->body->DestroyFixture(enemyItem->data->body->GetFixtureList());
-        app->physics->world->DestroyBody(enemyItem->data->body);
-        RELEASE(enemyItem->data);
-        enemyItem = enemyItem->next;
-    }
-    enemies.Clear();
 
     return true;
 }
@@ -519,21 +495,6 @@ bool Map::LoadObject(pugi::xml_node node)
                 object.height = secondNode.next_sibling("object").attribute("height").as_int();
                 PhysBody* c1 = app->physics->CreateRectangle(object.x + object.width / 2, object.y + object.height / 2, object.width, object.height, STATIC);
                 c1->ctype = ColliderType::WINSENSOR;
-                Colliders.Add(c1);
-            }
-        }
-        //PLATFORM LIMIT = 20
-        else if (colNode.attribute("id").as_int() == 20)
-        {
-            for (pugi::xml_node secondNode = colNode.child("object"); secondNode && ret; secondNode = secondNode.next_sibling("object"))
-            {
-                //Load the attributes
-                object.x = secondNode.next_sibling("object").attribute("x").as_int();
-                object.y = secondNode.next_sibling("object").attribute("y").as_int();
-                object.width = secondNode.next_sibling("object").attribute("width").as_int();
-                object.height = secondNode.next_sibling("object").attribute("height").as_int();
-                PhysBody* c1 = app->physics->CreateRectangleSensor(object.x + object.width / 2, object.y + object.height / 2, object.width, object.height, STATIC);
-                c1->ctype = ColliderType::PLATFORMLIMIT;
                 Colliders.Add(c1);
             }
         }

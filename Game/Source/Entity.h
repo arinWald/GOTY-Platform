@@ -12,8 +12,6 @@ enum class EntityType
 {
 	PLAYER,
 	ITEM,
-	TERRESTREENEMY,
-	BAT,
 	UNKNOWN
 };
 
@@ -72,7 +70,7 @@ public:
 	}
 
 	virtual void OnCollision(PhysBody* physA, PhysBody* physB) {
-
+	
 	};
 
 public:
@@ -80,16 +78,11 @@ public:
 	SString name;
 	EntityType type;
 	bool active = true;
-	bool pendingToDelete = false;
 	pugi::xml_node parameters;
 
 	// Possible properties, it depends on how generic we
 	// want our Entity class, maybe it's not renderable...
-	fPoint Enemyposition;
-	iPoint position;
-	/*fPoint position;*/
-	iPoint initialPosition;
-
+	iPoint position;       
 	bool renderable = true;
 };
 

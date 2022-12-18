@@ -7,7 +7,6 @@
 #include "Scene.h"
 #include "EntityManager.h"
 #include "Map.h"
-#include "Bat.h"
 #include "Player.h"
 #include "Pathfinding.h"
 #include <iostream>
@@ -32,22 +31,6 @@ bool Scene::Awake(pugi::xml_node& config)
 	LOG("Loading Scene");
 	bool ret = true;
 
-	app->physics->pause = false;
-
-	//Loop all enemies in config file
-	for (pugi::xml_node itemNode = config.child("terrestreEnemy"); itemNode; itemNode = itemNode.next_sibling("terrestreEnemy"))
-	{
-		TerrestreEnemy* newTerrestreEnemy = (TerrestreEnemy*)app->entityManager->CreateEntity(EntityType::TERRESTREENEMY);
-		newTerrestreEnemy->parameters = itemNode;
-		terrestreEnemies.Add(newTerrestreEnemy);
-	}
-
-	//pathfinding stuff
-	// Texture to highligh mouse position 
-	mouseTileTex = app->tex->Load("Assets/Maps/path_square.png");
-	// Texture to show path origin 
-	originTex = app->tex->Load("Assets/Maps/x_square.png");
-
 	// iterate all objects in the scene
 	// Check https://pugixml.org/docs/quickstart.html#access
 	for (pugi::xml_node itemNode = config.child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
@@ -59,9 +42,6 @@ bool Scene::Awake(pugi::xml_node& config)
 
 	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 	player->parameters = config.child("player");
-
-	bat = (Bat*)app->entityManager->CreateEntity(EntityType::BAT);
-	bat->parameters = config.child("bat");
 	
 	pugi::xml_node logo = config.child("logo");
 	logotexturePath = logo.attribute("texturepath").as_string();
@@ -144,9 +124,6 @@ bool Scene::Start()
 		originTex = app->tex->Load("Assets/Maps/x_square.png");
 	}
 
-	scale = app->win->GetScale();
-	app->win->GetWindowSize(width, height);
-
 	return true;
 }
 
@@ -157,7 +134,7 @@ bool Scene::PreUpdate()
 }
 
 // Called each loop iteration
-bool Scene::Update()
+bool Scene::Update(float dt)
 {
 	// L03: DONE 3: Request App to Load / Save when pressing the keys F5 (save) / F6 (load)
 	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && gameplayState == LOGO_SCREEN)
@@ -261,57 +238,63 @@ bool Scene::Update()
 		app->map->Draw();
 	}
 
-	//does pathfinding using coord of enemy and player
-	ListItem<PhysBody*>* enemyItem;
-	enemyItem = app->map->enemies.start;
+	// L08: DONE 3: Test World to map method
+	int mouseX, mouseY;
+	app->input->GetMousePosition(mouseX, mouseY);
 
-	ListItem<TerrestreEnemy*>* terrestreEnemyItem = terrestreEnemies.start;
+	iPoint mouseTile = iPoint(0, 0);
 
-	/*cout << "PLAYER POSITION X: " << player->pbody->body->GetPosition().x << endl;
-	cout << "PLAYER POSITION Y: " << player->pbody->body->GetPosition().y << endl;*/
-
-	while (enemyItem != NULL)
-	{
-		if (terrestreEnemyItem != NULL && terrestreEnemyItem->data->state == STATE::ATTACKING)
-		{
-
-			//cout << "Enemy POSITION X: " << enemyItem->data->body->GetPosition().x << endl;
-			//cout << "Enemy POSITION Y: " << enemyItem->data->body->GetPosition().y << endl;
-
-			//origin = { enemyItem->data->body->GetPosition().x, enemyItem->data->body->GetPosition().x };//app->map->WorldToMap(enemyItem->data->body->GetPosition().x - app->render->camera.x * (float)1 / scale, enemyItem->data->body->GetPosition().y - app->render->camera.y * (float)1 / scale);
-			origin.x = enemyItem->data->body->GetPosition().x;
-			origin.y = enemyItem->data->body->GetPosition().y;
-			iPoint destination;// = { player->getPbody()->body->GetPosition().x, player->getPbody()->body->GetPosition().x };//app->map->WorldToMap(player->getPbody()->body->GetPosition().x - app->render->camera.x * (float)1 / scale, player->getPbody()->body->GetPosition().y - app->render->camera.y * (float)1 / scale);
-			destination.x = player->pbody->body->GetPosition().x;
-			destination.y = player->pbody->body->GetPosition().y;
-			app->pathfinding->ClearLastPath();
-			app->pathfinding->CreatePath(origin, destination);
-			// L12: Get the latest calculated path and draw
-			const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
-			for (uint i = 0; i < path->Count(); ++i)
-			{
-				iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-				if (i == 1)
-				{
-					terrestreEnemyItem->data->objective.x = PIXEL_TO_METERS(pos.x);
-					terrestreEnemyItem->data->objective.y = PIXEL_TO_METERS(pos.y);
-				}
-				if (app->physics->debug)
-				{
-					app->render->DrawTexture(mouseTileTex, pos.x, pos.y);
-				}
-			}
-
-			// L12: Debug pathfinding
-			iPoint originScreen = app->map->MapToWorld(origin.x, origin.y);
-			if (app->physics->debug)
-			{
-				app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
-			}
-		}
-		enemyItem = enemyItem->next;
-		terrestreEnemyItem = terrestreEnemyItem->next;
+	if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
+		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x - app->map->mapData.tileWidth / 2,
+			mouseY - app->render->camera.y - app->map->mapData.tileHeight / 2);
 	}
+	if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
+		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x,
+			mouseY - app->render->camera.y);
+	}
+
+	//QUAN CAMERA ES MOU, EL QUADRAT TMB AL DOBLE DE VELOCITAT. MULTIPLICAR O DIVIDIR PER SCALE?
+	//if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
+	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x / app->win->GetScale() - app->map->mapData.tileWidth / 2,
+	//		mouseY - app->render->camera.y / app->win->GetScale() - app->map->mapData.tileHeight / 2);
+	//}
+	//if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
+	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x / app->win->GetScale(),
+	//		mouseY - app->render->camera.y / app->win->GetScale());
+	//}
+
+	//Convert again the tile coordinates to world coordinates to render the texture of the tile
+	iPoint highlightedTileWorld = app->map->MapToWorld(mouseTile.x, mouseTile.y);
+	app->render->DrawTexture(mouseTileTex, highlightedTileWorld.x, highlightedTileWorld.y);
+
+	//Test compute path function
+	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	{
+		if (originSelected == true && gameplayState == PLAYING)
+		{
+			cout << "Hola" << endl;
+			app->pathfinding->CreatePath(origin, mouseTile);
+			originSelected = false;
+		}
+		else
+		{
+			origin = mouseTile;
+			originSelected = true;
+			app->pathfinding->ClearLastPath();
+		}
+	}
+
+	// L12: Get the latest calculated path and draw
+	const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
+	for (uint i = 0; i < path->Count(); ++i)
+	{
+		iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+		app->render->DrawTexture(mouseTileTex, pos.x, pos.y);
+	}
+
+	// L12: Debug pathfinding
+	iPoint originScreen = app->map->MapToWorld(origin.x, origin.y);
+	app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
 
 	return true;
 }
@@ -392,36 +375,11 @@ bool Scene::PostUpdate()
 {
 	bool ret = true;
 
-	if (app->physics->debug)
-	{
-		ListItem<PhysBody*>* ItemListTE = app->map->enemies.start;
-		ListItem<TerrestreEnemy*>* terrestreEnemyItem = terrestreEnemies.start;
-		PhysBody* tebody;
-		PhysBody* pbody = player->pbody;
-
-
-		while (ItemListTE != NULL)
-		{
-			tebody = ItemListTE->data;
-
-			if (ItemListTE->data->body->IsActive())
-			{
-				//ray between terrestre enemy and player
-				app->render->DrawLine(METERS_TO_PIXELS(tebody->body->GetPosition().x),
-					METERS_TO_PIXELS(tebody->body->GetPosition().y),
-					METERS_TO_PIXELS(pbody->body->GetPosition().x),
-					METERS_TO_PIXELS(pbody->body->GetPosition().y),
-					255, 0, 0);//red
-			}
-			terrestreEnemyItem = terrestreEnemyItem->next;
-			ItemListTE = ItemListTE->next;
-		}
-	}
-
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || (gameplayState == WIN_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 		|| (gameplayState == GAME_OVER_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN))
 	{
 		ret = false;
+
 	}
 
 	if (gameplayState == LOGO_SCREEN)

@@ -106,7 +106,7 @@ private:
 	pugi::xml_node configNode;
 
 	uint frames;
-	float dt = 0.0f;
+	float dt;
 
     bool saveGameRequested;
 	bool loadGameRequested;

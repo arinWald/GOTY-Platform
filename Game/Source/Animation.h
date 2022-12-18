@@ -16,7 +16,7 @@ public:
 
 private:
 	float currentFrame = 0.0f;
-
+	
 	int loopCount = 0;
 	int pingpongDirection = 1;
 
@@ -31,7 +31,7 @@ public:
 	{
 		currentFrame = 0;
 	}
-
+	
 	bool HasFinished()
 	{
 		return !loop && !pingpong && loopCount > 0;
@@ -39,7 +39,7 @@ public:
 
 	void Update()
 	{
-		currentFrame += speed ;
+		currentFrame += speed;
 		if (currentFrame >= totalFrames)
 		{
 			currentFrame = (loop || pingpong) ? 0.0f : totalFrames - 1;
@@ -58,30 +58,6 @@ public:
 
 		return frames[actualFrame];
 	}
-
-	int GetTotalFrames() const
-	{
-		return totalFrames;
-	}
-
-	void GenerateAnimation(const SDL_Rect& rect, int rows, int columns)
-	{
-
-		int frameWidth = rect.w / columns;
-		int frameHeight = rect.h / rows;
-
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < columns; j++) {
-				SDL_Rect frame;
-				frame.x = rect.x + (j * frameWidth);
-				frame.y = rect.y + (i * frameHeight);
-				frame.w = frameWidth;
-				frame.h = frameHeight;
-				PushBack(frame);
-			}
-		}
-	}
-
 };
 
 #endif
