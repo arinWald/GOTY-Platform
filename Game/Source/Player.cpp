@@ -405,11 +405,12 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		case ColliderType::WALKENEMYHEAD:
 			app->scene->walkEnemy->isDead = true;
 			autoJump = true;
+			break;
 			//app->audio->PlayFx(walkEnemyDiesFx);
 		case ColliderType::FLYENEMYHEAD:
 			app->scene->bat->isDead = true;
 			autoJump = true;
-			
+			break;
 
 		case ColliderType::UNKNOWN:
 			//LOG("Collision UNKNOWN");

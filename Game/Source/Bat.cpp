@@ -81,7 +81,7 @@ batbody->listener = this;
 batbody->ctype = ColliderType::BAT;
 
 
-headBody = app->physics->CreateRectangleSensor(METERS_TO_PIXELS(batbody->body->GetTransform().p.x), METERS_TO_PIXELS(batbody->body->GetTransform().p.y) - 12, 15, 2, bodyType::STATIC);
+headBody = app->physics->CreateRectangle(METERS_TO_PIXELS(batbody->body->GetTransform().p.x), METERS_TO_PIXELS(batbody->body->GetTransform().p.y) - 12, 15, 2, bodyType::STATIC);
 headBody->ctype = ColliderType::FLYENEMYHEAD;
 headBody->body->SetFixedRotation(true);
 isDead = false;
