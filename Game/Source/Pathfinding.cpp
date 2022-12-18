@@ -1,6 +1,7 @@
 #include "App.h"
 #include "PathFinding.h"
-
+#include "Render.h"
+#include "Map.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -24,6 +25,23 @@ bool PathFinding::CleanUp()
 	RELEASE_ARRAY(map);
 
 	return true;
+}
+
+void PathFinding::DrawPath(const DynArray<iPoint>* path, int r, int g, int b)
+{
+	int c = path->Count() - 1;
+	for (int i = 0; i < c; i++)
+	{
+		iPoint ap = (*path)[i];
+		iPoint bp = (*path)[i + 1];
+
+		ap.x = ap.x * app->map->mapData.tileWidth + app->map->mapData.tileWidth / 2;
+		ap.y = ap.y * app->map->mapData.tileHeight + app->map->mapData.tileHeight / 2;
+		bp.x = bp.x * app->map->mapData.tileWidth + app->map->mapData.tileWidth / 2;
+		bp.y = bp.y * app->map->mapData.tileHeight + app->map->mapData.tileHeight / 2;
+
+		app->render->DrawLine(ap.x, ap.y, bp.x, bp.y, r, g, b);
+	}
 }
 
 // Sets up the walkability map
@@ -111,42 +129,87 @@ ListItem<PathNode>* PathList::GetNodeLowestScore() const
 // PathNode -------------------------------------------------------------------------
 // Convenient constructors
 // ----------------------------------------------------------------------------------
-PathNode::PathNode() : g(-1), h(-1), pos(-1, -1), parent(NULL)
+PathNode::PathNode() : g(-1), h(-1), pos(-1, -1), parent(NULL), jump(0) {}
+
+PathNode::PathNode(int g, int h, const iPoint& pos, const PathNode* parent, int jump) : g(g), h(h), pos(pos), parent(parent), jump(jump)
 {}
 
-PathNode::PathNode(int g, int h, const iPoint& pos, const PathNode* parent) : g(g), h(h), pos(pos), parent(parent)
-{}
-
-PathNode::PathNode(const PathNode& node) : g(node.g), h(node.h), pos(node.pos), parent(node.parent)
+PathNode::PathNode(const PathNode& node) : g(node.g), h(node.h), pos(node.pos), parent(node.parent), jump(node.jump)
 {}
 
 // PathNode -------------------------------------------------------------------------
 // Fills a list (PathList) of all valid adjacent pathnodes
 // ----------------------------------------------------------------------------------
-uint PathNode::FindWalkableAdjacents(PathList& listToFill) const
+uint PathNode::FindWalkableAdjacents(PathList& listToFill, bool useGravity, int maxJump) const
 {
 	iPoint cell;
+	iPoint ground;
 	uint before = listToFill.list.Count();
 
-	// north
+	// right
+	if (jump % 2 == 0 || !useGravity)
+	{
+		cell.Create(pos.x + 1, pos.y);
+		if (app->pathfinding->IsWalkable(cell))
+		{
+			ground.Create(cell.x, cell.y + 1);
+			if (!app->pathfinding->IsWalkable(ground) || !useGravity)
+			{
+				listToFill.list.Add(PathNode(-1, -1, cell, this));
+			}
+			else
+			{
+				listToFill.list.Add(PathNode(-1, -1, cell, this, jump + 1));
+			}
+		}
+	}
+
+	// left
+	if (jump % 2 == 0 || !useGravity)
+	{
+		cell.Create(pos.x - 1, pos.y);
+		if (app->pathfinding->IsWalkable(cell))
+		{
+			ground.Create(cell.x, cell.y + 1);
+			if (!app->pathfinding->IsWalkable(ground) || !useGravity)
+			{
+				listToFill.list.Add(PathNode(-1, -1, cell, this));
+			}
+			else
+			{
+				listToFill.list.Add(PathNode(-1, -1, cell, this, jump + 1));
+			}
+		}
+	}
+
+	// down
 	cell.Create(pos.x, pos.y + 1);
 	if (app->pathfinding->IsWalkable(cell))
-		listToFill.list.Add(PathNode(-1, -1, cell, this));
+	{
+		ground.Create(cell.x, cell.y + 1);
+		if (!app->pathfinding->IsWalkable(ground) || !useGravity)
+		{
+			listToFill.list.Add(PathNode(-1, -1, cell, this));
+		}
+		else
+		{
+			listToFill.list.Add(PathNode(-1, -1, cell, this, maxJump * 2));
+		}
+	}
 
-	// south
-	cell.Create(pos.x, pos.y - 1);
-	if (app->pathfinding->IsWalkable(cell))
-		listToFill.list.Add(PathNode(-1, -1, cell, this));
-
-	// east
-	cell.Create(pos.x + 1, pos.y);
-	if (app->pathfinding->IsWalkable(cell))
-		listToFill.list.Add(PathNode(-1, -1, cell, this));
-
-	// west
-	cell.Create(pos.x - 1, pos.y);
-	if (app->pathfinding->IsWalkable(cell))
-		listToFill.list.Add(PathNode(-1, -1, cell, this));
+	// up
+	if (jump < maxJump * 2 || !useGravity)
+	{
+		cell.Create(pos.x, pos.y - 1);
+		if (app->pathfinding->IsWalkable(cell) && useGravity)
+		{
+			listToFill.list.Add(PathNode(-1, -1, cell, this, (jump % 2) ? jump + 1 : jump + 2));
+		}
+		else if (app->pathfinding->IsWalkable(cell) && !useGravity)
+		{
+			listToFill.list.Add(PathNode(-1, -1, cell, this));
+		}
+	}
 
 	return listToFill.list.Count();
 }
@@ -162,10 +225,16 @@ int PathNode::Score() const
 // PathNode -------------------------------------------------------------------------
 // Calculate the F for a specific destination tile
 // ----------------------------------------------------------------------------------
-int PathNode::CalculateF(const iPoint& destination)
+int PathNode::CalculateF(const iPoint& destination, bool useGravity)
 {
-	g = parent->g + 1;
-	h = pos.DistanceTo(destination);
+	if (parent == NULL)
+		g = 0;
+	else
+		g = parent->g + 1;
+	if (!useGravity)
+		h = pos.DistanceTo(destination);
+	else
+		h = pos.DistanceManhattan(destination);
 
 	return g + h;
 }
@@ -173,84 +242,88 @@ int PathNode::CalculateF(const iPoint& destination)
 // ----------------------------------------------------------------------------------
 // Actual A* algorithm: return number of steps in the creation of the path or -1 ----
 // ----------------------------------------------------------------------------------
-int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
+int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination, bool useGravity, int maxJump, int maxLength, int maxNodes)
 {
-	int ret = -1;
-	int iterations = 0;
+	// L12b: TODO 1: if origin or destination are not walkable, return -1
+	if (!IsWalkable(origin) || !IsWalkable(destination))
+		return -1;
 
-	// L12: TODO 1: if origin or destination are not walkable, return -1
-	if (IsWalkable(origin) && IsWalkable(destination))
+	if (origin == destination)
+		return -1;
+
+	lastPath.Clear();
+
+	PathList open;
+	PathList close;
+	PathNode* o = new PathNode(-1, -1, origin, NULL);
+	o->CalculateF(destination, useGravity);
+	open.list.Add(*o);
+
+	int k = 0;
+
+	while (open.list.Count() > 0)
 	{
-		// L12: TODO 2: Create two lists: open, close
-		PathList open;
-		PathList closed;
+		ListItem<PathNode>* lowest = open.GetNodeLowestScore();
 
-		// Add the origin tile to open
-		open.list.Add(PathNode(0, 0, origin, nullptr));
-
-		// Iterate while we have tile in the open list
-		while (open.list.Count() > 0)
+		if (lowest->data.g > maxLength)
 		{
-			// L12: TODO 3: Move the lowest score cell from open list to the closed list
-			ListItem<PathNode>* lowest = open.GetNodeLowestScore();
-			ListItem<PathNode>* node = closed.list.Add(lowest->data);
 			open.list.Del(lowest);
+			continue;
+		}
 
-			// L12: TODO 4: If we just added the destination, we are done!
-			if (node->data.pos == destination)
+		int j = lowest->data.jump;
+
+		close.list.Add(lowest->data);
+		open.list.Del(lowest);
+
+		if (lowest->data.pos == destination)
+		{
+			lastPath.PushBack(close.list[close.list.Count() - 1].pos);
+			PathNode p = *close.list[close.list.Count() - 1].parent;
+			lastPath.PushBack(p.pos);
+			while (p.pos != origin)
 			{
-				lastPath.Clear();
+				p = *p.parent;
+				lastPath.PushBack(p.pos);
+			}
+			lastPath.Flip();
+			break;
+		}
 
-				// Backtrack to create the final path
-				// Use the Pathnode::parent and Flip() the path when you are finish
-				const PathNode* pathNode = &node->data;
+		k++;
+		if (k == maxNodes)
+			break;
 
-				while (pathNode)
-				{
-					lastPath.PushBack(pathNode->pos);
-					pathNode = pathNode->parent;
-				}
-
-				lastPath.Flip();
-				ret = lastPath.Count();
-				LOG("Created path of %d steps in %d iterations", ret, iterations);
-				break;
+		PathList adjacent;
+		close.list[close.list.Count() - 1].FindWalkableAdjacents(adjacent, useGravity, maxJump);		for (int i = 0; i < adjacent.list.Count(); i++)
+		{
+			if (close.list.Find(adjacent.list[i]) != -1)
+			{
+				continue;
 			}
 
-			// L12: TODO 5: Fill a list of all adjancent nodes
-			PathList adjacent;
-			node->data.FindWalkableAdjacents(adjacent);
-
-			// L12: TODO 6: Iterate adjancent nodes:
-			// If it is a better path, Update the parent
-			ListItem<PathNode>* item = adjacent.list.start;
-			for (; item; item = item->next)
+			PathNode n = adjacent.list[i];
+			n.CalculateF(destination, useGravity);
+			int index = open.list.Find(n);
+			if (index != -1)
 			{
-				// ignore nodes in the closed list
-				if (closed.Find(item->data.pos) != NULL)
-					continue;
-
-				// If it is NOT found, calculate its F and add it to the open list
-				ListItem<PathNode>* adjacentInOpen = open.Find(item->data.pos);
-				if (adjacentInOpen == NULL)
+				if (open.list[index].g > n.g)
 				{
-					item->data.CalculateF(destination);
-					open.list.Add(item->data);
-				}
-				else
-				{
-					// If it is already in the open list, check if it is a better path (compare G)
-					if (adjacentInOpen->data.g > item->data.g + 1)
-					{
-						adjacentInOpen->data.parent = item->data.parent;
-						adjacentInOpen->data.CalculateF(destination);
-					}
+					open.list[index].parent = n.parent;
+					open.list[index].g = n.g;
 				}
 			}
-
-			++iterations;
+			else
+			{
+				open.list.Add(n);
+			}
 		}
 	}
 
-	return ret;
+	if (lastPath.Count() == 0)
+	{
+		return -1;
+	}
+
+	return lastPath.Count();
 }
