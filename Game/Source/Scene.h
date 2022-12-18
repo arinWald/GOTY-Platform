@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "Player.h"
+#include "WalkEnemy.h"
 #include "Item.h"
 
 struct SDL_Texture;
@@ -51,8 +52,9 @@ public:
 
 public:
 
-	//L02: DONE 3: Declare a Player attribute 
 	Player* player;
+
+	WalkEnemy* walkEnemy;
 
 	GameplayState gameplayState = LOGO_SCREEN;
 	bool fading = false;
@@ -87,7 +89,6 @@ private:
 	SDL_Texture* mouseTileTex = nullptr;
 	SDL_Texture* originTex = nullptr;
 
-	// L12: Debug pathfing
 	iPoint origin;
 	bool originSelected = false;
 };

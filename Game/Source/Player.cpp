@@ -151,15 +151,7 @@ bool Player::Start() {
 bool Player::Update()
 {
 	
-	// L07 DONE 5: Add physics to the player - updated player position using physics
-
 	currentAnimation->Update();
-
-
-	if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
-	{
-		pbody->body->ApplyLinearImpulse({ 100, 0 }, { 0, 0 }, true);
-	}
 
 	b2Vec2 vel ;
 	if (!app->scene->godMode)
@@ -332,10 +324,7 @@ bool Player::Update()
 
 	}
 
-	printf("Position camera.x %d \n", app->render->camera.x);
-
-
-		
+	/*printf("Position camera.x %d \n", app->render->camera.x);*/		
 	
 	return true;
 }

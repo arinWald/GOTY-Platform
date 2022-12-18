@@ -38,10 +38,12 @@ bool Scene::Awake(pugi::xml_node& config)
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
 		item->parameters = itemNode;
 	}
-	//L02: DONE 3: Instantiate the player using the entity manager
 
 	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 	player->parameters = config.child("player");
+
+	walkEnemy = (WalkEnemy*)app->entityManager->CreateEntity(EntityType::WALKENEMY);
+	walkEnemy->parameters = config.child("walkenemy");
 	
 	pugi::xml_node logo = config.child("logo");
 	logotexturePath = logo.attribute("texturepath").as_string();
@@ -136,7 +138,6 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	// L03: DONE 3: Request App to Load / Save when pressing the keys F5 (save) / F6 (load)
 	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && gameplayState == LOGO_SCREEN)
 	{
 		FadeToNewState(TITLE_SCREEN);
@@ -229,10 +230,9 @@ bool Scene::Update(float dt)
 		fading = false;
 	}
 
-	//app->render->DrawTexture(img, 380, 100); // Placeholder not needed any more
 	app->render->DrawTexture(game_over, 0, 0);
-	// Draw map
 	
+	// Draw map
 	if (app->scene->gameplayState == PLAYING)
 	{
 		app->map->Draw();
@@ -253,16 +253,6 @@ bool Scene::Update(float dt)
 			mouseY - app->render->camera.y);
 	}
 
-	//QUAN CAMERA ES MOU, EL QUADRAT TMB AL DOBLE DE VELOCITAT. MULTIPLICAR O DIVIDIR PER SCALE?
-	//if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
-	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x / app->win->GetScale() - app->map->mapData.tileWidth / 2,
-	//		mouseY - app->render->camera.y / app->win->GetScale() - app->map->mapData.tileHeight / 2);
-	//}
-	//if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
-	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x / app->win->GetScale(),
-	//		mouseY - app->render->camera.y / app->win->GetScale());
-	//}
-
 	//Convert again the tile coordinates to world coordinates to render the texture of the tile
 	iPoint highlightedTileWorld = app->map->MapToWorld(mouseTile.x, mouseTile.y);
 	app->render->DrawTexture(mouseTileTex, highlightedTileWorld.x, highlightedTileWorld.y);
@@ -272,7 +262,6 @@ bool Scene::Update(float dt)
 	{
 		if (originSelected == true && gameplayState == PLAYING)
 		{
-			cout << "Hola" << endl;
 			app->pathfinding->CreatePath(origin, mouseTile);
 			originSelected = false;
 		}
@@ -299,6 +288,41 @@ bool Scene::Update(float dt)
 	return true;
 }
 
+// Called each loop iteration
+bool Scene::PostUpdate()
+{
+	bool ret = true;
+
+	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || (gameplayState == WIN_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		|| (gameplayState == GAME_OVER_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN))
+	{
+		ret = false;
+
+	}
+
+	if (gameplayState == LOGO_SCREEN)
+	{
+		app->render->DrawTexture(logo, 0, 0);
+	}
+
+	if (gameplayState == TITLE_SCREEN)
+	{
+		app->render->DrawTexture(intro, 0, 0);
+
+	}
+
+	if (gameplayState == GAME_OVER_SCREEN)
+	{
+		app->render->DrawTexture(game_over, 0, 0);
+
+	}
+	if (gameplayState == WIN_SCREEN)
+	{
+		app->render->DrawTexture(win_screen, 0, 0);
+
+	}
+	return ret;
+}
 
 
 bool Scene::LoadState(pugi::xml_node& data)
@@ -328,6 +352,7 @@ void Scene::FadeToNewState(GameplayState newState)
 	currentFade = 0.0f;
 	fading = true;
 }
+
 void Scene::ChangeGameplayState(GameplayState newState)
 {
 	if (gameplayState == newState) return;
@@ -370,41 +395,6 @@ void Scene::ChangeGameplayState(GameplayState newState)
 	}
 }
 
-// Called each loop iteration
-bool Scene::PostUpdate()
-{
-	bool ret = true;
-
-	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || (gameplayState == WIN_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-		|| (gameplayState == GAME_OVER_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN))
-	{
-		ret = false;
-
-	}
-
-	if (gameplayState == LOGO_SCREEN)
-	{
-		app->render->DrawTexture(logo, 0, 0);
-	}
-
-	if (gameplayState == TITLE_SCREEN)
-	{
-		app->render->DrawTexture(intro, 0, 0);
-	
-	}
-
-	if (gameplayState == GAME_OVER_SCREEN)
-	{
-		app->render->DrawTexture(game_over, 0, 0);
-
-	}
-	if (gameplayState == WIN_SCREEN)
-	{
-		app->render->DrawTexture(win_screen, 0, 0);
-
-	}
-	return ret;
-}
 
 // Called before quitting
 bool Scene::CleanUp()
