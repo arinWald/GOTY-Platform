@@ -179,7 +179,7 @@ bool Bat::Update( )
 					Enemyposition.x += xDiff;
 				}
 				else
-					position.x += xDir * speed ;
+					Enemyposition.x += xDir * speed ;
 			}
 			else
 			{
