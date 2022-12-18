@@ -48,8 +48,11 @@ public:
 
 
 
-public :
 
+private:
+
+
+	
 	SDL_Texture* BatTexture;
 	const char* texturePath;
 
@@ -68,12 +71,6 @@ public :
 	int speed;
 	bool hasPath = false;
 	fPoint initialPosition;
-
-private:
-
-
-	
-
 
 
 };

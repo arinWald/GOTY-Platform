@@ -52,7 +52,7 @@ bool Bat::Awake()
 }
 bool Bat::CleanUp()
 {
-	delete& path;
+	delete &path;
 	return true;
 }
 
