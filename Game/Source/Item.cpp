@@ -9,6 +9,8 @@
 #include "Point.h"
 #include "Physics.h"
 #include "Animation.h"
+#include "Player.h"
+#include "Scene.h"
 
 Item::Item() : Entity(EntityType::ITEM)
 {
@@ -26,6 +28,8 @@ bool Item::Awake() {
 	fruitAnimation.speed = 0.5f;
 	fruitAnimation.loop = true;
 
+	nothingAnimation.PushBack({ 32, 32, 32, 32 });
+
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
@@ -39,12 +43,15 @@ bool Item::Start() {
 
 	//initilize textures
 	texture = app->tex->Load(texturePath);
+	currentAnimation = &fruitAnimation;
 	
 	// L07 DONE 4: Add a physics to an item - initialize the physics body
 	pbody = app->physics->CreateCircleSensor(position.x + 16, position.y + 16, 16, bodyType::STATIC);
 
 	// L07 DONE 7: Assign collider type
 	pbody->ctype = ColliderType::ITEM;
+	
+	disappear = false;
 
 	return true;
 }
@@ -56,10 +63,17 @@ bool Item::Update()
 	//position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	//position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
-	fruitAnimation.Update();
+	if (disappear)
+	{
+		currentAnimation = &nothingAnimation;
+	}
+
+	currentAnimation->Update();
+
+
 
 	//SDL_Rect rect = { 0,0,32,32 };
-	app->render->DrawTexture(texture, position.x, position.y, &fruitAnimation.GetCurrentFrame());
+	app->render->DrawTexture(texture, position.x, position.y, &currentAnimation->GetCurrentFrame());
 
 
 	return true;
@@ -68,4 +82,13 @@ bool Item::Update()
 bool Item::CleanUp()
 {
 	return true;
+}
+
+void Item::OnCollision(PhysBody* physA, PhysBody* physB)
+{
+	if (physB == app->scene->player->pbody)
+	{
+		disappear = true;
+		pendingToDelete = true;
+	}
 }

@@ -23,6 +23,8 @@ public:
 
 	bool CleanUp();
 
+	void OnCollision(PhysBody* physA, PhysBody* physB);
+
 public:
 
 	bool isPicked = false;
@@ -32,7 +34,11 @@ private:
 	SDL_Texture* texture;
 	const char* texturePath;
 	Animation fruitAnimation;
+	Animation nothingAnimation;
+	Animation* currentAnimation;
 
+	bool disappear;
+	
 	//DONE 4: Add a physics to an item
 	PhysBody* pbody;
 };
