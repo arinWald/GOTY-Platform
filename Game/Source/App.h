@@ -23,7 +23,7 @@ class Map;
 class Physics;
 class PathFinding;
 class GuiManager;
-class MouduleUI;
+class ModuleUI;
 
 class App
 {
