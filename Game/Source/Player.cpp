@@ -103,6 +103,7 @@ bool Player::Awake() {
 	jumpspeed = parameters.attribute("jumpspeed").as_int();
 	defeatFxPath = parameters.attribute("defeatfx").as_string();
 	collectibleFxPath = parameters.attribute("collectiblefx").as_string();
+	cointFxPath = parameters.attribute("coinfxpath").as_string();
 	
 	return true;
 }
@@ -118,7 +119,8 @@ bool Player::Start() {
 	jumpFxId = app->audio->LoadFx(jumpFxPath);
 	defeatFxId = app->audio->LoadFx(defeatFxPath);
 	collectibleFxId = app->audio->LoadFx(collectibleFxPath);
-	//app->audio->PlayMusic(level1SongPath, 0);
+	coinFxId = app->audio->LoadFx(cointFxPath);
+
 	currentAnimation = &rightIdleAnimation;
 
 	timerJump = 0;
@@ -354,7 +356,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	
 	if (physB == app->scene->checkPoint)
 	{
-		app->audio->PlayFx(pickCoinFxId);
+		app->audio->PlayFx(coinFxId);
 		checkPointSave = true;
 	}
 
@@ -389,7 +391,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 		case ColliderType::BAT:
 			//LOG("Collision DEATH");
-			if (!app->scene->godMode)
+			if (!app->scene->godMode && !app->scene->bat->isDead)
 			{
 				app->audio->PlayFx(deathFxId);
 				playerlives--;
@@ -402,7 +404,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::WALKENEMY:
 			//LOG("Collision DEATH");
-			if (!app->scene->godMode)
+			if (!app->scene->godMode && !app->scene->bat->isDead)
 			{
 				app->audio->PlayFx(deathFxId);
 				playerlives--;
