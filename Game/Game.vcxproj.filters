@@ -70,6 +70,9 @@
     <ClCompile Include="Source\GuiManager.cpp">
       <Filter>CPP .H</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ModuleUi.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DynArray.h">
@@ -172,6 +175,9 @@
       <Filter>CPP .H</Filter>
     </ClInclude>
     <ClInclude Include="Source\GuiManager.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleUI.h">
       <Filter>CPP .H</Filter>
     </ClInclude>
   </ItemGroup>

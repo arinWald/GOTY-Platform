@@ -23,6 +23,7 @@ class Map;
 class Physics;
 class PathFinding;
 class GuiManager;
+class MouduleUI;
 
 class App
 {
@@ -96,7 +97,7 @@ public:
 	Physics* physics;
 	PathFinding* pathfinding;
 	GuiManager* guiManager;
-
+	ModuleUI* moduleUI;
 private:
 
 	int argc;

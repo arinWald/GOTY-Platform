@@ -27,11 +27,21 @@ public:
 	bool CleanUp();
 
 	// Additional methods
-	GuiControl* CreateGuiControl(GuiControlType type, int id, const char* text, SDL_Rect bounds, Module* observer, SDL_Rect sliderBounds = { 0,0,0,0 });
+	GuiControl* CreateGuiControl(GuiControlType type, int x, int y, SDL_Rect bounds, int id);
+
+	void DestroyGuiControl(GuiControl* entity);
+
+	void DestroyAllGuiControls();
+
+	void AddGuiControl(GuiControl* entity);
+
+	void UpdateAll(float dt, bool doLogic);
+
+	void DrawAll();
 
 public:
 
-	List<GuiControl*> guiControlsList;
+	List<GuiControl*> controls;
 
 	float accumulatedTime = 0.0f;
 	float updateMsCycle = 0.0f;
@@ -39,6 +49,33 @@ public:
 
 	SDL_Texture* texture;
 
+	bool showDebug = false;
+
+	const char* arrowMenuPath;
+	const char* checkBoxPath;
+	const char* sliderPath;
+
+	SDL_Texture* arrowMenuTex;
+	SDL_Texture* checkBoxTex;
+	SDL_Texture* sliderTex;
+
+	const char* hoverButtonFxPath;
+	const char* pressButtonFxPath;
+	const char* checkboxFxPath;
+
+	uint hoverButtonFx = 0;
+	uint pressButtonFx = 0;
+	uint checkboxFx;
+
+	int lastId = 0;
+
+	int fxVolume = 100;
+	int musicVolume = 100;
+
+	bool fullscreenChecked = false;
+	bool vsyncChecked = false;
 };
+
+
 
 #endif // __GUIMANAGER_H__

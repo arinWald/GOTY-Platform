@@ -49,7 +49,7 @@ public:
 		texture = NULL;
 	}
 
-	virtual bool Update(float dt)
+	virtual bool Update(Input* input, float dt)
 	{
 		return true;
 	}
@@ -65,7 +65,7 @@ public:
 		section = { 0, 0, 0, 0 };
 	}
 
-	void SetObserver(Module* module)
+	void SetObserver(Scene* module)
 	{
 		observer = module;
 	}
@@ -73,6 +73,11 @@ public:
 	void NotifyObserver()
 	{
 		observer->OnGuiMouseClickEvent(this);
+	}
+
+	virtual bool DrawDebug(Render* render)
+	{
+		return true;
 	}
 
 public:
@@ -90,7 +95,7 @@ public:
 
 	//Font font;              // Text font
 
-	Module* observer;        // Observer module (it should probably be an array/list)
+	Scene* observer;        // Observer module (it should probably be an array/list)
 };
 
 #endif // __GUICONTROL_H__

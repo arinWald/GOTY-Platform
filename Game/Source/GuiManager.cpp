@@ -17,67 +17,17 @@ bool GuiManager::Start()
 	return true;
 }
 
-GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int id, const char* text, SDL_Rect bounds, Module* observer, SDL_Rect sliderBounds)
-{
-	// L15: DONE1: Create a GUI control and add it to the list of controls
 
-	GuiControl* guiControl = nullptr;
-
-	//Call the constructor according to the GuiControlType
-	switch (type)
-	{
-	case GuiControlType::BUTTON:
-		guiControl = new GuiButton(id, bounds, text);
-		break;
-		/*
-		case GuiControlType::TOGGLE:
-			break;
-		case GuiControlType::CHECKBOX:
-			break;
-		case GuiControlType::SLIDER:
-			break;
-		case GuiControlType::SLIDERBAR:
-			break;
-		case GuiControlType::COMBOBOX:
-			break;
-		case GuiControlType::DROPDOWNBOX:
-			break;
-		case GuiControlType::INPUTBOX:
-			break;
-		case GuiControlType::VALUEBOX:
-			break;
-		case GuiControlType::SPINNER:
-			break;
-		default:
-			break;
-			*/
-	}
-
-	//Set the observer
-	guiControl->SetObserver(observer);
-
-	// Created GuiControls are add it to the list of controls
-	guiControlsList.Add(guiControl);
-
-	return guiControl;
-}
 
 bool GuiManager::Update(float dt)
 {
 	accumulatedTime += dt;
 	if (accumulatedTime >= updateMsCycle) doLogic = true;
 
-	// We control how often the GUI is updated to optimize the performance
+	UpdateAll(dt, doLogic);
+
 	if (doLogic == true)
 	{
-		ListItem<GuiControl*>* control = guiControlsList.start;
-
-		while (control != nullptr)
-		{
-			control->data->Update(dt);
-			control = control->next;
-		}
-
 		accumulatedTime = 0.0f;
 		doLogic = false;
 	}
@@ -87,7 +37,7 @@ bool GuiManager::Update(float dt)
 
 bool GuiManager::Draw() {
 
-	ListItem<GuiControl*>* control = guiControlsList.start;
+	ListItem<GuiControl*>* control = controls.start;
 
 	while (control != nullptr)
 	{
@@ -101,7 +51,7 @@ bool GuiManager::Draw() {
 
 bool GuiManager::CleanUp()
 {
-	ListItem<GuiControl*>* control = guiControlsList.start;
+	ListItem<GuiControl*>* control = controls.start;
 
 	while (control != nullptr)
 	{
@@ -111,6 +61,79 @@ bool GuiManager::CleanUp()
 	return true;
 
 	return false;
+}
+
+GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int x, int y, SDL_Rect bounds, int id)
+{
+	GuiControl* control = nullptr;
+
+	switch (type)
+	{
+	case GuiControlType::BUTTON:
+		control = new GuiButton(id, bounds, arrowMenuTex);
+		control->SetObserver(app->scene);
+		break;
+	//case GuiControlType::CHECKBOX:
+	//	control = new GuiCheckBox(id, bounds, checkBoxTex);
+	//	control->SetObserver(app->scene);
+	//	break;
+	//case GuiControlType::SLIDER:
+	//	control = new GuiSlider(id, bounds, sliderTex);
+	//	control->SetObserver(app->scene);
+	//	break;
+
+	default: break;
+	}
+	id++;
+
+	// Created entities are added to the list
+	if (control != nullptr) controls.Add(control);
+
+	return control;
+}
+
+void GuiManager::DestroyGuiControl(GuiControl* entity)
+{
+	int i = controls.Find(entity);
+	ListItem<GuiControl*>* c = controls.At(i);
+	controls.Del(c);
+}
+
+void GuiManager::DestroyAllGuiControls()
+{
+	int u = controls.Count();
+
+	for (int i = 0; i < u; i++)
+	{
+		delete controls.At(0)->data;
+		controls.Del(controls.At(0));
+	}
+}
+
+void GuiManager::AddGuiControl(GuiControl* entity)
+{
+	if (entity != nullptr) controls.Add(entity);
+}
+
+void GuiManager::UpdateAll(float dt, bool doLogic)
+{
+	if (doLogic)
+	{
+		for (int i = 0; i < controls.Count(); i++)
+		{
+			controls[i]->Update(app->input, dt);
+		}
+	}
+}
+
+void GuiManager::DrawAll()
+{
+	for (int i = 0; i < controls.Count(); i++)
+	{
+		if (showDebug)
+			controls[i]->DrawDebug(app->render);
+		controls[i]->Draw(app->render);
+	}
 }
 
 
