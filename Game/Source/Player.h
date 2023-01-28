@@ -84,6 +84,9 @@ public:
 
 	int defeatFxId;
 
+	int collectibleFxId;
+	const char* collectibleFxPath;
+
 	int timerDeath;
 	bool isDead;
 
@@ -98,6 +101,8 @@ public:
 
 	int initialPosX;
 	int initialPosY;
+
+	int playerScore;
 
 private:
 

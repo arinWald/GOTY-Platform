@@ -27,7 +27,8 @@
 	  <player x="23" y="289" speed="4" jumpspeed ="-5.5" lives="3" livestexturepath="Assets/Textures/heart-icon.png" texturepath="Assets/Textures/Player/playerSpriteSheet.png"
 			  jumpfxpath="Assets/Audio/Fx/jump.wav"
 			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"
-			  defeatfx="Assets/Audio/Fx/defeat.wav"/>
+			  defeatfx="Assets/Audio/Fx/defeat.wav"
+			  collectiblefx="Assets/Audio/Fx/collectibleFx.wav"/>
 
           <bat x="1624" y="165" speed="4" texturepath="Assets/Textures/bat.png"/>
 	  <walkenemy x="532" y="179" speed="3" texturepath="Assets/Textures/WalkEnemy/mush_spritesheet.png"
@@ -41,6 +42,10 @@
 	<win_screen texturepath="Assets/Textures/Scenas/Win.png"/>
 	<level_1_song audiopath="Assets/Audio/Music/level1Song.ogg"/>
 	<victory_song audiopath="Assets/Audio/Music/victorySong.ogg"/>
+	<item x="240" y="256" texturepath="Assets/Textures/strawberry.png"/>
+	<item x="352" y="208" texturepath="Assets/Textures/strawberry.png"/>
+	<item x="368" y="208" texturepath="Assets/Textures/strawberry.png"/>
+	<item x="698" y="224" texturepath="Assets/Textures/strawberry.png"/>
   </scene>
 
   <map>

@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
+#include "Animation.h"
 
 Item::Item() : Entity(EntityType::ITEM)
 {
@@ -18,9 +19,18 @@ Item::~Item() {}
 
 bool Item::Awake() {
 
+	for (int i = 0; i < 17; ++i)
+	{
+		fruitAnimation.PushBack({ 32 * i, 0, 32, 32 });
+	}
+	fruitAnimation.speed = 0.5f;
+	fruitAnimation.loop = true;
+
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
+
+
 
 	return true;
 }
@@ -31,7 +41,7 @@ bool Item::Start() {
 	texture = app->tex->Load(texturePath);
 	
 	// L07 DONE 4: Add a physics to an item - initialize the physics body
-	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
+	pbody = app->physics->CreateCircleSensor(position.x + 16, position.y + 16, 16, bodyType::STATIC);
 
 	// L07 DONE 7: Assign collider type
 	pbody->ctype = ColliderType::ITEM;
@@ -41,11 +51,16 @@ bool Item::Start() {
 
 bool Item::Update()
 {
-	// L07 DONE 4: Add a physics to an item - update the position of the object from the physics.  
-	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
-	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+	// Removed these thing below
+	//// L07 DONE 4: Add a physics to an item - update the position of the object from the physics.  
+	//position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
+	//position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
-	app->render->DrawTexture(texture, position.x, position.y);
+	fruitAnimation.Update();
+
+	//SDL_Rect rect = { 0,0,32,32 };
+	app->render->DrawTexture(texture, position.x, position.y, &fruitAnimation.GetCurrentFrame());
+
 
 	return true;
 }

@@ -102,6 +102,7 @@ bool Player::Awake() {
 	playerlives = parameters.attribute("lives").as_int();
 	jumpspeed = parameters.attribute("jumpspeed").as_int();
 	defeatFxPath = parameters.attribute("defeatfx").as_string();
+	collectibleFxPath = parameters.attribute("collectiblefx").as_string();
 	
 	return true;
 }
@@ -116,6 +117,7 @@ bool Player::Start() {
 	deathFxId = app->audio->LoadFx(deathFxPath);
 	jumpFxId = app->audio->LoadFx(jumpFxPath);
 	defeatFxId = app->audio->LoadFx(defeatFxPath);
+	collectibleFxId = app->audio->LoadFx(collectibleFxPath);
 	//app->audio->PlayMusic(level1SongPath, 0);
 	currentAnimation = &rightIdleAnimation;
 
@@ -142,6 +144,8 @@ bool Player::Start() {
 	// L07 DONE 7: Assign collider type
 	pbody->ctype = ColliderType::PLAYER;
 	pbody->body->SetLinearVelocity(b2Vec2(0, -GRAVITY_Y));
+
+	playerScore = 0;
 	
 	return true;
 	
@@ -321,6 +325,9 @@ bool Player::Update()
 
 	}
 
+	// Text hack / 5000 to avoid moving it with the camera
+	app->render->DrawText("Score: ", (-app->render->camera.x / 5000) + 300, 5, 100, 50, { 255, 255, 0 });
+
 	return true;
 }
 
@@ -340,7 +347,12 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	{
 		case ColliderType::ITEM:
 			//LOG("Collision ITEM");
-			app->audio->PlayFx(deathFxId);
+			app->audio->PlayFx(collectibleFxId);
+			playerScore += 10;
+
+			// Delete this item
+			//...
+
 			break;
 		case ColliderType::PLATFORM:
 

@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Point.h"
 #include "SDL/include/SDL.h"
+#include "Animation.h"
 
 struct SDL_Texture;
 
@@ -30,6 +31,7 @@ private:
 
 	SDL_Texture* texture;
 	const char* texturePath;
+	Animation fruitAnimation;
 
 	//DONE 4: Add a physics to an item
 	PhysBody* pbody;

@@ -33,19 +33,19 @@ Bat::~Bat() {
 bool Bat::Awake()
 {
 	idleAnimation.GenerateAnimation(SDL_Rect({ 0, 0, 216, 25 }), 1, 12);
-	idleAnimation.speed = 6.0f;
+	idleAnimation.speed = 0.2f;
 
 	flyingLeftAnimation.GenerateAnimation(SDL_Rect({ 0, 25, 322, 26 }), 1, 7);
-	flyingLeftAnimation.speed = 10.0f;
+	flyingLeftAnimation.speed = 0.2f;
 
 	flyingRightAnimation.GenerateAnimation(SDL_Rect({ 0, 51, 322, 26 }), 1, 7);
-	flyingRightAnimation.speed = 10.0f;
+	flyingRightAnimation.speed = 0.2f;
 
 	questionMarkAnimation.GenerateAnimation(SDL_Rect({ 322, 0, 96, 96 }), 3, 3);
-	questionMarkAnimation.speed = 10.0f;
+	questionMarkAnimation.speed = 0.2f;
 
 	deathAnimation.GenerateAnimation(SDL_Rect({ 0, 96, 385, 55 }), 1, 7);
-	deathAnimation.speed = 10.0f;
+	deathAnimation.speed = 0.2f;
 	deathAnimation.loop = false;
 
 	texturePath = parameters.attribute("texturepath").as_string();
@@ -65,28 +65,28 @@ bool Bat::CleanUp()
 bool Bat::Start()
 {
 
-BatTexture = app->tex->Load(texturePath);
+	BatTexture = app->tex->Load(texturePath);
 
-currentAnimation = &idleAnimation;
+	currentAnimation = &idleAnimation;
 
-lastPlayerPosition.x = -1;
-lastPlayerPosition.y = -1;
+	lastPlayerPosition.x = -1;
+	lastPlayerPosition.y = -1;
 
-batbody = app->physics->CreateCircle(Enemyposition.x-10 , Enemyposition.y, 10, bodyType::DYNAMIC);
+	batbody = app->physics->CreateCircle(Enemyposition.x-10 , Enemyposition.y, 10, bodyType::DYNAMIC);
 
- //L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
-batbody->listener = this;
+	 //L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
+	batbody->listener = this;
 
- //L07 DONE 7: Assign collider type
-batbody->ctype = ColliderType::BAT;
+	 //L07 DONE 7: Assign collider type
+	batbody->ctype = ColliderType::BAT;
 
 
-headBody = app->physics->CreateRectangle(METERS_TO_PIXELS(batbody->body->GetTransform().p.x), METERS_TO_PIXELS(batbody->body->GetTransform().p.y) - 12, 15, 2, bodyType::STATIC);
-headBody->ctype = ColliderType::FLYENEMYHEAD;
-headBody->body->SetFixedRotation(true);
-isDead = false;
-state = State::IDLE;
-timerDeath = DEATH_TIME;
+	headBody = app->physics->CreateRectangle(METERS_TO_PIXELS(batbody->body->GetTransform().p.x), METERS_TO_PIXELS(batbody->body->GetTransform().p.y) - 12, 15, 2, bodyType::STATIC);
+	headBody->ctype = ColliderType::FLYENEMYHEAD;
+	headBody->body->SetFixedRotation(true);
+	isDead = false;
+	state = State::IDLE;
+	timerDeath = DEATH_TIME;
 
 	return true;
 }
