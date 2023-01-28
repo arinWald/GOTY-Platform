@@ -64,6 +64,12 @@
     <ClCompile Include="Source\Bat.cpp">
       <Filter>CPP .H</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GuiButton.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GuiManager.cpp">
+      <Filter>CPP .H</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DynArray.h">
@@ -157,6 +163,15 @@
       <Filter>CPP .H</Filter>
     </ClInclude>
     <ClInclude Include="Source\Bat.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GuiButton.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GuiControl.h">
+      <Filter>CPP .H</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GuiManager.h">
       <Filter>CPP .H</Filter>
     </ClInclude>
   </ItemGroup>
