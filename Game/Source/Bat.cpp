@@ -17,7 +17,7 @@
 #include <iostream>
 using namespace std;
 
-#define DEATH_TIME 25;
+#define DEATH_TIME 18;
 
 Bat::Bat() : Entity(EntityType::BAT) {
 
@@ -239,7 +239,6 @@ bool Bat::Update( )
 	case State::DYING:
 		if (timerDeath >= 0) {
 			currentAnimation = &deathAnimation;
-			--timerDeath;
 		}
 		else
 		{
