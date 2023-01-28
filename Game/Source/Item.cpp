@@ -21,19 +21,22 @@ Item::~Item() {}
 
 bool Item::Awake() {
 
-	for (int i = 0; i < 17; ++i)
-	{
-		fruitAnimation.PushBack({ 32 * i, 0, 32, 32 });
-	}
-	fruitAnimation.speed = 0.5f;
-	fruitAnimation.loop = true;
-
-	nothingAnimation.PushBack({ 32, 32, 32, 32 });
-
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
+	id = parameters.attribute("id").as_int();
 
+	if (id == 1)
+	{
+		for (int i = 0; i < 17; ++i)
+		{
+			fruitAnimation.PushBack({ 32 * i, 0, 32, 32 });
+		}
+		fruitAnimation.speed = 0.5f;
+		fruitAnimation.loop = true;
+
+		nothingAnimation.PushBack({ 32, 32, 32, 32 });
+	}
 
 
 	return true;
@@ -50,6 +53,8 @@ bool Item::Start() {
 
 	// L07 DONE 7: Assign collider type
 	pbody->ctype = ColliderType::ITEM;
+
+	pbody->listener = this;
 	
 	disappear = false;
 
@@ -66,14 +71,29 @@ bool Item::Update()
 	if (disappear)
 	{
 		currentAnimation = &nothingAnimation;
+		pbody->body->SetActive(false);
+		pbody->body->SetTransform({ -10, -10 }, 0);
 	}
 
 	currentAnimation->Update();
 
+	if (id == 1)
+	{
+		app->render->DrawTexture(texture, position.x, position.y, &currentAnimation->GetCurrentFrame());
+	}
+	else if(id == 2)
+	{
+		if (disappear)
+		{
+			pbody->body->SetActive(false);
+			pbody->body->SetTransform({ -10, -10 }, 0);
+		}
+		else
+		{
+			app->render->DrawTexture(texture, position.x, position.y, NULL);
+		}
 
-
-	//SDL_Rect rect = { 0,0,32,32 };
-	app->render->DrawTexture(texture, position.x, position.y, &currentAnimation->GetCurrentFrame());
+	}
 
 
 	return true;
@@ -89,6 +109,17 @@ void Item::OnCollision(PhysBody* physA, PhysBody* physB)
 	if (physB == app->scene->player->pbody)
 	{
 		disappear = true;
-		pendingToDelete = true;
+		if (id == 1)
+		{
+			app->scene->player->playerScore += 10;
+		}
+		else if (id == 2)
+		{
+			if (app->scene->player->playerlives < 3)
+			{
+				app->scene->player->playerlives += 1;
+			}			
+			app->scene->player->playerScore += 100;
+		}
 	}
 }

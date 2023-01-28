@@ -37,6 +37,8 @@ private:
 	Animation nothingAnimation;
 	Animation* currentAnimation;
 
+	int id;
+
 	bool disappear;
 	
 	//DONE 4: Add a physics to an item

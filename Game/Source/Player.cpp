@@ -348,7 +348,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		case ColliderType::ITEM:
 			//LOG("Collision ITEM");
 			app->audio->PlayFx(collectibleFxId);
-			playerScore += 10;
 
 			// Delete this item
 			//...
