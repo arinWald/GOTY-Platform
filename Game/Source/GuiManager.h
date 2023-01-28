@@ -17,9 +17,9 @@ public:
 	virtual ~GuiManager();
 
 	// Called before the first frame
-	 bool Start();
+	bool Start();
 
-	 bool Update(float dt);
+	bool Update(float dt);
 
 	bool Draw();
 

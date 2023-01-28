@@ -21,6 +21,8 @@ public:
 
 	bool canClick = true;
 	bool drawBasic = false;
+
+	uint audioFxId;
 };
 
 #endif // __GUIBUTTON_H__

@@ -6,6 +6,7 @@
 #include "WalkEnemy.h"
 #include "Bat.h"
 #include "Item.h"
+#include "GuiButton.h"
 
 struct SDL_Texture;
 
@@ -51,6 +52,8 @@ public:
 	void ChangeGameplayState(GameplayState newState);
 	void FadeToNewState(GameplayState newState);
 
+	bool Scene::OnGuiMouseClickEvent(GuiControl* control);
+
 public:
 
 	Player* player;
@@ -81,6 +84,7 @@ public:
 	Animation* screenDisplayAnim;
 
 	bool godMode;
+
 
 private:
 	SDL_Texture* img;

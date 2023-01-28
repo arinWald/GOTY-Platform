@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "Pathfinding.h"
+#include "GuiManager.h"
 #include <iostream>
 using namespace std;
 
@@ -260,6 +261,8 @@ bool Scene::Update(float dt)
 		app->map->Draw();
 	}
 
+	app->guiManager->Draw();
+
 	//PATHFINDING WALK ENEMY
 	if (walkEnemy->currentMoveState == WalkEnemy::MoveState::CHASING)
 	{
@@ -419,6 +422,13 @@ void Scene::ChangeGameplayState(GameplayState newState)
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
+
+	return true;
+}
+
+bool Scene::OnGuiMouseClickEvent(GuiControl* control)
+{
+	// L15: TODO 5: Implement the OnGuiMouseClickEvent method
 
 	return true;
 }

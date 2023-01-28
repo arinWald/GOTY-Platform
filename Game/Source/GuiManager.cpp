@@ -19,21 +19,51 @@ bool GuiManager::Start()
 
 GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int id, const char* text, SDL_Rect bounds, Module* observer, SDL_Rect sliderBounds)
 {
-	// L15: TODO1: Create a GUI control and add it to the list of controls
+	// L15: DONE1: Create a GUI control and add it to the list of controls
 
 	GuiControl* guiControl = nullptr;
 
 	//Call the constructor according to the GuiControlType
+	switch (type)
+	{
+	case GuiControlType::BUTTON:
+		guiControl = new GuiButton(id, bounds, text);
+		break;
+		/*
+		case GuiControlType::TOGGLE:
+			break;
+		case GuiControlType::CHECKBOX:
+			break;
+		case GuiControlType::SLIDER:
+			break;
+		case GuiControlType::SLIDERBAR:
+			break;
+		case GuiControlType::COMBOBOX:
+			break;
+		case GuiControlType::DROPDOWNBOX:
+			break;
+		case GuiControlType::INPUTBOX:
+			break;
+		case GuiControlType::VALUEBOX:
+			break;
+		case GuiControlType::SPINNER:
+			break;
+		default:
+			break;
+			*/
+	}
 
 	//Set the observer
+	guiControl->SetObserver(observer);
 
 	// Created GuiControls are add it to the list of controls
+	guiControlsList.Add(guiControl);
 
 	return guiControl;
 }
 
 bool GuiManager::Update(float dt)
-{	
+{
 	accumulatedTime += dt;
 	if (accumulatedTime >= updateMsCycle) doLogic = true;
 
@@ -51,7 +81,7 @@ bool GuiManager::Update(float dt)
 		accumulatedTime = 0.0f;
 		doLogic = false;
 	}
-	
+
 	return true;
 }
 

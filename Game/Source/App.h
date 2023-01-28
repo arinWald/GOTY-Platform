@@ -22,6 +22,7 @@ class EntityManager;
 class Map;
 class Physics;
 class PathFinding;
+class GuiManager;
 
 class App
 {
@@ -94,6 +95,7 @@ public:
 	Map* map;
 	Physics* physics;
 	PathFinding* pathfinding;
+	GuiManager* guiManager;
 
 private:
 
