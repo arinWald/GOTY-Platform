@@ -79,6 +79,11 @@ public:
 	int timerJump;
 	int pickCoinFxId;
 
+	const char* cointFxPath;
+	int coinFxId;
+
+	bool checkPointSave;
+
 	int timerPocho;
 	int deathFxId;
 

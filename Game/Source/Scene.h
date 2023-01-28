@@ -95,6 +95,7 @@ public:
 
 	bool godMode;
 
+	PhysBody* checkPoint;
 
 private:
 	SDL_Texture* img;

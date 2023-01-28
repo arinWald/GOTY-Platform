@@ -104,6 +104,9 @@
  <tileset firstgid="293" name="MetaData" tilewidth="16" tileheight="16" tilecount="4" columns="2">
   <image source="MetaData.png" width="32" height="32"/>
  </tileset>
+ <tileset firstgid="297" name="checkpoint" tilewidth="32" tileheight="32" tilecount="4" columns="2">
+  <image source="../Textures/checkpoint.png" width="64" height="64"/>
+ </tileset>
  <layer id="2" name="Background" width="250" height="30">
   <properties>
    <property name="Draw" type="bool" value="true"/>
@@ -26218,7 +26221,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="297"/>
    <tile/>
+   <tile gid="298"/>
    <tile/>
    <tile/>
    <tile/>
@@ -26716,11 +26721,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="299"/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="300"/>
    <tile/>
    <tile/>
    <tile/>

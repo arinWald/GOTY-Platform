@@ -28,14 +28,16 @@
 			  jumpfxpath="Assets/Audio/Fx/jump.wav"
 			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"
 			  defeatfx="Assets/Audio/Fx/defeat.wav"
-			  collectiblefx="Assets/Audio/Fx/collectibleFx.wav"/>
+			  collectiblefx="Assets/Audio/Fx/collectibleFx.wav"
+			  coinfxpath="Assets/Audio/Fx/coinPickup.wav"/>
+				
 
           <bat x="1624" y="165" speed="4" texturepath="Assets/Textures/bat.png"/>
 	  <walkenemy x="532" y="179" speed="3" texturepath="Assets/Textures/WalkEnemy/mush_spritesheet.png"
 
 			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"></walkenemy>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png" 
-		  coinfxpath="Assets/Audio/Fx/coinPickup.ogg"/>
+		  coinfxpath="Assets/Audio/Fx/coinPickup.wav"/>
     <intro texturepath ="Assets/Textures/Scenas/Intro.png"/> 
     <game_over texturepath ="Assets/Textures/Scenas/GameOver.png"/>
 	<logo texturepath ="Assets/Textures/Scenas/Logo.png"/>

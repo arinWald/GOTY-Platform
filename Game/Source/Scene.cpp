@@ -138,6 +138,8 @@ bool Scene::Start()
 		originTex = app->tex->Load("Assets/Maps/x_square.png");
 	}
 
+	checkPoint = app->physics->CreateRectangleSensor(1382, 256, 32, 64, bodyType::STATIC);
+
 	// L15: DONE 2: Declare a GUI Button and create it using the GuiManager
 	uint w, h;
 	app->win->GetWindowSize(w, h);
