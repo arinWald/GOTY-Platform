@@ -196,7 +196,7 @@ void App::FinishUpdate()
 	}
 
 	bool vsyncState = configNode.child("vsync").attribute("value").as_bool();
-
+		
 	// Shows the time measurements in the window title
 	static char title[256];
 	sprintf_s(title, 256, "Av.FPS: %.2f Last sec frames: %i Last dt: %.3f Time since startup: %.3f Frame Count: %I64u Vsync: %s",

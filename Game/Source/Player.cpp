@@ -127,6 +127,8 @@ bool Player::Start() {
 	isDead = false;
 	isWin = false;
 
+	checkPointSave = false;
+
 
 	initialPosX = 40;
 	initialPosY = 270;
@@ -221,7 +223,14 @@ bool Player::Update()
 		{
 			isDead = false;
 			timerDeath = DEATH_TIME;
-			ChangePosition(initialPosX, initialPosY);
+			if (checkPointSave)
+			{
+				ChangePosition(1360, 240);
+			}
+			else
+			{
+				ChangePosition(initialPosX, initialPosY);
+			}
 		}
 	}
 		
@@ -343,6 +352,12 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	// L07 DONE 7: Detect the type of collision
 	
+	if (physB == app->scene->checkPoint)
+	{
+		app->audio->PlayFx(pickCoinFxId);
+		checkPointSave = true;
+	}
+
 	switch (physB->ctype)
 	{
 		case ColliderType::ITEM:

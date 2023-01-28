@@ -79,6 +79,8 @@ public:
 	int timerJump;
 	int pickCoinFxId;
 
+	bool checkPointSave;
+
 	int timerPocho;
 	int deathFxId;
 
