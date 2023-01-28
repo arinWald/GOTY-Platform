@@ -25,6 +25,7 @@ bool Item::Awake() {
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
 	id = parameters.attribute("id").as_int();
+	isActive = parameters.attribute("isActive").as_bool();
 
 	if (id == 1)
 	{
@@ -73,6 +74,7 @@ bool Item::Update()
 		currentAnimation = &nothingAnimation;
 		pbody->body->SetActive(false);
 		pbody->body->SetTransform({ -10, -10 }, 0);
+		isActive = false;
 	}
 
 	currentAnimation->Update();
@@ -87,6 +89,7 @@ bool Item::Update()
 		{
 			pbody->body->SetActive(false);
 			pbody->body->SetTransform({ -10, -10 }, 0);
+			isActive = false;
 		}
 		else
 		{
@@ -122,4 +125,20 @@ void Item::OnCollision(PhysBody* physA, PhysBody* physB)
 			app->scene->player->playerScore += 100;
 		}
 	}
+}
+
+bool Item::LoadState(pugi::xml_node& data)
+{
+	isActive = data.child("item").attribute("isActive").as_bool();
+
+	return true;
+}
+
+bool Item::SaveState(pugi::xml_node& data)
+{
+	pugi::xml_node itemNode = data.append_child("item");
+
+	itemNode.append_attribute("isActive") = isActive;
+
+	return true;
 }

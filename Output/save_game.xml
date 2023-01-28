@@ -7,12 +7,13 @@
 	<:anonymous />
 	<pathfinding />
 	<scene>
-		<player x="23" y="289" />
+		<player x="223" y="240" />
 		<walkEnemy x="516" y="165" moveState="false" />
 		<batEnemy x="0" y="0" state="false" />
 	</scene>
 	<entitymanager />
 	<map />
+	<guiManager />
 	<renderer>
 		<camera x="0" y="0" />
 	</renderer>

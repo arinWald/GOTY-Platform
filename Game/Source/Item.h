@@ -25,6 +25,9 @@ public:
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
+	bool LoadState(pugi::xml_node&);
+	bool SaveState(pugi::xml_node&);
+
 public:
 
 	bool isPicked = false;
@@ -38,6 +41,7 @@ private:
 	Animation* currentAnimation;
 
 	int id;
+	bool isActive;
 
 	bool disappear;
 	

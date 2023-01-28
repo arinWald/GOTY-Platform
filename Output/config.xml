@@ -42,11 +42,11 @@
 	<win_screen texturepath="Assets/Textures/Scenas/Win.png"/>
 	<level_1_song audiopath="Assets/Audio/Music/level1Song.ogg"/>
 	<victory_song audiopath="Assets/Audio/Music/victorySong.ogg"/>
-	<item x="240" y="256" texturepath="Assets/Textures/strawberry.png" id="1"/>
-	<item x="352" y="208" texturepath="Assets/Textures/strawberry.png" id="1"/>
-	<item x="368" y="208" texturepath="Assets/Textures/strawberry.png" id="1"/>
-	<item x="698" y="224" texturepath="Assets/Textures/strawberry.png" id="1"/>
-	<item x="440" y="250" texturepath="Assets/Textures/heart-icon.png" id="2"/>
+	<item x="240" y="256" texturepath="Assets/Textures/strawberry.png" id="1" isActive="true"/>
+	<item x="352" y="208" texturepath="Assets/Textures/strawberry.png" id="1" isActive="true"/>
+	<item x="368" y="208" texturepath="Assets/Textures/strawberry.png" id="1" isActive="true"/>
+	<item x="698" y="224" texturepath="Assets/Textures/strawberry.png" id="1" isActive="true"/>
+	<item x="440" y="250" texturepath="Assets/Textures/heart-icon.png" id="2" isActive="true"/>
   </scene>
 
   <map>

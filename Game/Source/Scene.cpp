@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "Pathfinding.h"
 #include "GuiManager.h"
+#include "Item.h"
 #include <iostream>
 using namespace std;
 
