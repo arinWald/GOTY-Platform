@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<save_state>
+	<input />
+	<window />
+	<textures />
+	<audio />
+	<:anonymous />
+	<pathfinding />
+	<scene>
+		<player x="223" y="240" />
+		<walkEnemy x="516" y="165" moveState="false" />
+		<batEnemy x="0" y="0" state="false" />
+	</scene>
+	<entitymanager />
+	<map />
+	<guiManager />
+	<renderer>
+		<camera x="0" y="0" />
+	</renderer>
+</save_state>
