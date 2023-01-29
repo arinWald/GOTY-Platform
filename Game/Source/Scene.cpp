@@ -12,12 +12,15 @@
 #include "GuiManager.h"
 #include"ModuleUI.h"
 #include "Item.h"
+#include"GuiSlider.h"
 #include <iostream>
 using namespace std;
 
 #include "Defs.h"
 #include "Log.h"
 #include "DynArray.h"
+
+#include "SDL_mixer/include/SDL_mixer.h"
 
 Scene::Scene() : Module()
 {
@@ -328,6 +331,27 @@ bool Scene::PostUpdate()
 	{
 		app->render->DrawTexture(intro, 0, 0);
 
+		SDL_Rect continueRect;
+
+		if (continueButtonDisabled)
+			continueRect = SDL_Rect({ 0,120,100,20 });
+		else
+			continueRect = continueButtonAnim.GetCurrentFrame();
+
+		app->render->DrawTexture(continueButtonTex, buttonsPosX, buttonsPosY, &continueRect, 0, 0, 0, 0, false);
+
+		SDL_Rect newGameRect = newGameButtonAnim.GetCurrentFrame();
+		app->render->DrawTexture(newGameButtonTex, buttonsPosX, buttonsPosY + 24, &newGameRect, 0, 0, 0, 0, false);
+
+		SDL_Rect settingsRect = settingsButtonAnim.GetCurrentFrame();
+		app->render->DrawTexture(settingsButtonTex, buttonsPosX, buttonsPosY + 48, &settingsRect, 0, 0, 0, 0, false);
+
+		SDL_Rect creditsRect = creditsButtonAnim.GetCurrentFrame();
+		app->render->DrawTexture(creditsButtonTex, buttonsPosX, buttonsPosY + 72, &creditsRect, 0, 0, 0, 0, false);
+
+		SDL_Rect exitRect = exitButtonAnim.GetCurrentFrame();
+		app->render->DrawTexture(exitButtonTex, buttonsPosX, buttonsPosY + 96, &exitRect, 0, 0, 0, 0, false);
+
 	}
 
 	if (gameplayState == GAME_OVER_SCREEN)
@@ -413,7 +437,7 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
-		app->moduleUI->uiToRender = 0;
+		/*app->moduleUI->uiToRender = 0;*/
 		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ buttonsPosX, buttonsPosY, 101, 24 }), 1);
 		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ buttonsPosX, buttonsPosY + 24, 101, 24 }), 2);
 		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ buttonsPosX, buttonsPosY + 48, 101, 24 }), 3);
@@ -448,17 +472,185 @@ bool Scene::CleanUp()
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
 	// L15: DONE 5: Implement the OnGuiMouseClickEvent method
-	LOG("Event by %d ", control->id);
+	if (fading)
+		return true;
 
-	switch (control->id)
+	if (gameplayState == TITLE_SCREEN)
 	{
-	case 1:
-		LOG("Button 1 click");
-		break;
-	case 2:
-		LOG("Button 2 click");
-		break;
-	}
+		GuiSlider* g;
+		switch (control->type)
+		{
+		case GuiControlType::BUTTON:
+			switch (control->id)
+			{
+			case 1:
+				app->guiManager->DestroyAllGuiControls();
+				continueButtonPressed = true;
+				break;
 
+			case 2:
+				app->guiManager->DestroyAllGuiControls();
+				FadeToNewState(PLAYING);
+				break;
+
+			case 3:
+				app->guiManager->DestroyAllGuiControls();
+				/*FadeToNewState(TITLE_MENU);*/
+				app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 0, 0, SDL_Rect({ 220, 62, 116, 23 }), 1);
+				app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 0, 0, SDL_Rect({ 220, 105, 116, 23 }), 2);
+				app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 0, 0, SDL_Rect({ 316, 147, 20, 20 }), 1);
+				app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 0, 0, SDL_Rect({ 316, 186, 20, 20 }), 2);
+				break;
+
+			case 4:
+				app->guiManager->DestroyAllGuiControls();
+				/*FadeToNewState(CREDITS_SCREEN);*/
+				break;
+
+			case 5:
+				exit = true;
+				break;
+
+			default:
+				break;
+			}
+			break;
+
+		default:
+			break;
+		}
+	}
+	else if (gameplayState == TITLE_MENU)
+	{
+		GuiSlider* g;
+		int volume;
+		switch (control->type)
+		{
+		case GuiControlType::CHECKBOX:
+			switch (control->id)
+			{
+			case 1:
+				/*app->win->SwitchFullScreen();*/
+				break;
+
+			case 2:
+				LOG("VSYNC switched.");
+				break;
+
+			default:
+				break;
+			}
+			break;
+		case GuiControlType::SLIDER:
+			g = (GuiSlider*)control;
+			switch (control->id)
+			{
+			case 1:
+
+				volume = (g->value / 100) * MIX_MAX_VOLUME;
+				app->guiManager->musicVolume = g->value;
+				Mix_VolumeMusic(volume);
+				break;
+			case 2:
+				volume = (g->value / 100) * MIX_MAX_VOLUME;
+				app->guiManager->fxVolume = g->value;
+				Mix_Volume(-1, volume);
+				break;
+			}
+			break;
+
+		default:
+			break;
+		}
+	}
+	else if (gameplayState == PLAYING)
+	{
+		GuiSlider* g;
+		int volume;
+		switch (control->type)
+		{
+		case GuiControlType::BUTTON:
+			switch (control->id)
+			{
+			case 1:
+				app->guiManager->DestroyAllGuiControls();
+				app->moduleUI->uiToRender = 0;
+				break;
+
+			case 2:
+				app->guiManager->DestroyAllGuiControls();
+				app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 0, 0, SDL_Rect({ 188, 93, 116, 23 }), 1);
+				app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 0, 0, SDL_Rect({ 188, 141, 116, 23 }), 2);
+				app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 0, 0, SDL_Rect({ 275, 166, 20, 20 }), 1);
+				app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 0, 0, SDL_Rect({ 238, 189, 20, 20 }), 2);
+				app->moduleUI->uiToRender = 2;
+				break;
+
+			case 3:
+				app->guiManager->DestroyAllGuiControls();
+				FadeToNewState(TITLE_SCREEN);
+				break;
+
+			case 4:
+				app->guiManager->DestroyAllGuiControls();
+				app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 199, 150, 41, 7 }), 5);
+				app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 240, 150, 35, 7 }), 6);
+				app->moduleUI->uiToRender = 3;
+				break;
+
+			case 5:
+			/*	app->entities->GetPlayer()->saveOnce1 = true;
+				app->entities->GetPlayer()->saveOnce2 = true;
+				app->RequestSave();*/
+				LOG("SAVE REQUESTED");
+				exit = true;
+				break;
+
+			case 6:
+				exit = true;
+				break;
+
+			default:
+				break;
+			}
+			break;
+
+		case GuiControlType::CHECKBOX:
+			switch (control->id)
+			{
+			case 1:
+				/*app->win->SwitchFullScreen();*/
+				break;
+
+			case 2:
+				LOG("VSYNC switched.");
+				break;
+
+			default:
+				break;
+			}
+			break;
+
+		case GuiControlType::SLIDER:
+			g = (GuiSlider*)control;
+			switch (control->id)
+			{
+			case 1:
+				volume = (g->value / 100) * MIX_MAX_VOLUME;
+				app->guiManager->musicVolume = g->value;
+				Mix_VolumeMusic(volume);
+				break;
+			case 2:
+				volume = (g->value / 100) * MIX_MAX_VOLUME;
+				app->guiManager->fxVolume = g->value;
+				Mix_Volume(-1, volume);
+				break;
+			}
+			break;
+
+		default:
+			break;
+		}
+	}
 	return true;
 }
