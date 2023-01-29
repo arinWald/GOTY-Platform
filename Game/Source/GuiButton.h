@@ -6,25 +6,23 @@
 #include "Point.h"
 #include "SString.h"
 
-struct SDL_Texture;
-
 class GuiButton : public GuiControl
 {
 public:
 
-    GuiButton(uint32 id, SDL_Rect bounds, SDL_Texture* tex);
-    virtual ~GuiButton();
+	GuiButton(uint32 id, SDL_Rect bounds, const char* text);
+	virtual ~GuiButton();
 
-    bool Update(Input* input, float dt);
-    bool Draw(Render* render);
-    bool DrawDebug(Render* render);
+	bool Update(float dt);
+	bool Draw(Render* render);
 
-    bool playFxOnce = true;
+	int mouseX, mouseY;
+	unsigned int click;
 
-private:
+	bool canClick = true;
+	bool drawBasic = false;
 
-    // Gui Button specific properties
-    // Maybe some animation properties for state change?
+	uint audioFxId;
 };
 
 #endif // __GUIBUTTON_H__

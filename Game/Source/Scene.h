@@ -83,16 +83,6 @@ public:
 
 	Animation* screenDisplayAnim;
 
-	Animation continueButtonAnim;
-	Animation newGameButtonAnim;
-	Animation settingsButtonAnim;
-	Animation creditsButtonAnim;
-	Animation exitButtonAnim;
-
-
-	bool continueButtonPressed = false;
-	bool continueButtonDisabled = true;
-
 	bool godMode;
 
 	PhysBody* checkPoint;

@@ -97,7 +97,7 @@ public:
 	Physics* physics;
 	PathFinding* pathfinding;
 	GuiManager* guiManager;
-	ModuleUI* moduleUI;
+
 private:
 
 	int argc;
