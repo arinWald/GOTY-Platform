@@ -33,6 +33,8 @@ bool ModuleUI::Awake(pugi::xml_node& config)
 
 	fontPath = uiPathN.attribute("fontPath").as_string();
 
+	fontPath = "Assets/Textures/UI/white.png";
+
 	livesTexturePath = uiPathN.attribute("livesTexturePath").as_string();
 
 	optionsMenuPath = uiPathN.attribute("optionsMenu").as_string();
@@ -68,12 +70,21 @@ bool ModuleUI::Start()
 	livesRect = SDL_Rect({ 0,0,12,10 });
 	extraLivesRect = SDL_Rect({ 12,0,12,10 });
 
+	timer = 5;
+
 	return ret;
 }
 
 // Update: draw background
 bool ModuleUI::Update(float dt)
 {
+	if (app->scene->gameplayState == app->scene->PLAYING) {
+		if (timer > 0) {
+
+			timer = timer - 0.016;
+		}
+	
+	}
 	//switch (uiToRender)
 	//{
 	//case 1:
@@ -124,52 +135,57 @@ bool ModuleUI::Update(float dt)
 
 bool ModuleUI::PostUpdate()
 {
-	app->render->DrawRectangle(box, 33, 31, 48, 255, true, false);
+	if (app->scene->gameplayState == app->scene->PLAYING) {
+		app->render->DrawRectangle(box, 33, 31, 48, 255, true, false);
 
-	int uiposx = 10;
-	BlitText(uiposx, 5, font, "LEVEL", false);
-	IntToString(shortNumberText, currentLevel, 2);
-	BlitText(uiposx + 55, 5, font, shortNumberText, false);
+		int uiposx = 10;
+		BlitText((-app->render->camera.x * 0.5) + uiposx + 90, 5, font, "LEVEL", true);
+		IntToString(shortNumberText, currentLevel, 2);
+		BlitText((-app->render->camera.x * 0.5) + uiposx + 145, 5, font, shortNumberText, true);
 
-	BlitText(uiposx + 90, 5, font, "HEALTH", false);
-	/*IntToString(shortNumberText, app->player->health, 2);
-	BlitText(uiposx + 155, 5, font, shortNumberText, false);
-	*/
-	
+		BlitText((-app->render->camera.x * 0.5) + uiposx, 5, font, "HEALTH", true);
+		/*IntToString(shortNumberText, app->player->health, 2);
+		BlitText(uiposx + 155, 5, font, shortNumberText, false);
+		*/
 
-	//for (int i = 0; i < app->scene->player->playerlives; i++)
-	//{
-	//	if (i < 3)
-	//	{
-	//		app->render->DrawTexture(livesTexture, uiposx + 150 + (i * 15), 3, &livesRect, 0, 0, 0, 0);
-	//	}
-	//	else
-	//	{
-	//		app->render->DrawTexture(livesTexture, uiposx + 150 + (i * 15), 3, &extraLivesRect, 0, 0, 0, 0);
+		BlitText((-app->render->camera.x * 0.5) + uiposx + 200, 5, font, "TIMER", true);
+		IntToString(timerText, timer, 3);
+		BlitText((-app->render->camera.x * 0.5) + uiposx + 250, 5, font, timerText, true);
 
-	//	}
-	//}
+		//for (int i = 0; i < app->scene->player->playerlives; i++)
+		//{
+		//	if (i < 3)
+		//	{
+		//		app->render->DrawTexture(livesTexture, uiposx + 150 + (i * 15), 3, &livesRect, 0, 0, 0, 0);
+		//	}
+		//	else
+		//	{
+		//		app->render->DrawTexture(livesTexture, uiposx + 150 + (i * 15), 3, &extraLivesRect, 0, 0, 0, 0);
 
-	BlitText(uiposx + 320, 5, font, "SCORE", false);
-	IntToDynamicString(scoreText, score);
-	BlitText(uiposx + 375, 5, font, scoreText, false);
+		//	}
+		//}
 
-	switch (uiToRender)
-	{
-	case 1:
-		app->render->DrawTexture(optionsMenuTex, 0, 0, NULL, 0, 0, 0, 0);
-		break;
+		BlitText((-app->render->camera.x * 0.5) + uiposx + 450, 5, font, "SCORE", false);
+		IntToString(scoreText, score, 6);
+		BlitText((-app->render->camera.x * 0.5) + uiposx + 505, 5, font, scoreText, false);
 
-	case 2:
-		app->render->DrawTexture(settingsMenuTex, 0, 0, NULL, 0, 0, 0, 0);
-		break;
+		switch (uiToRender)
+		{
+		case 1:
+			app->render->DrawTexture(optionsMenuTex, 0, 0, NULL, 0, 0, 0, 0);
+			break;
 
-	case 3:
-		app->render->DrawTexture(saveMenuTex, 0, 0, NULL, 0, 0, 0, 0);
-		break;
+		case 2:
+			app->render->DrawTexture(settingsMenuTex, 0, 0, NULL, 0, 0, 0, 0);
+			break;
 
-	default:
-		break;
+		case 3:
+			app->render->DrawTexture(saveMenuTex, 0, 0, NULL, 0, 0, 0, 0);
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	return true;

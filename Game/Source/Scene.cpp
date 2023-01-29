@@ -11,6 +11,7 @@
 #include "Pathfinding.h"
 #include "GuiManager.h"
 #include "Item.h"
+#include"ModuleUI.h"
 #include <iostream>
 using namespace std;
 
@@ -56,6 +57,10 @@ bool Scene::Awake(pugi::xml_node& config)
 		WalkEnemy* enemy = (WalkEnemy*)app->entityManager->CreateEntity(EntityType::WALKENEMY);
 		enemy->parameters = enemyNode;
 	}*/
+
+	//pugi::xml_node titleButtons = config.child("titleButtons");
+
+	//titleButtonsPath = titleButtons.attribute("texturepath").as_string();
 	
 	pugi::xml_node logo = config.child("logo");
 	logotexturePath = logo.attribute("texturepath").as_string();
@@ -83,6 +88,14 @@ bool Scene::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool Scene::Start()
 {
+
+	//newGameButtonAnim.PushBack({ 0,24,101,24 });
+	//newGameButtonAnim.PushBack({ 101,24,101,24 });
+
+	//exitButtonAnim.PushBack({ 0,96,101,24 });
+	//exitButtonAnim.PushBack({ 101,96,101,24 });
+
+ //   newGameButtonAnim.speed=exitButtonAnim.speed = 6.0f;
 
 	// L04: DONE 7: Set the window title with map/tileset info
 	SString title("Peepee's Adventure - Map:%dx%d Tiles:%dx%d Tilesets:%d",
@@ -143,8 +156,8 @@ bool Scene::Start()
 	// L15: DONE 2: Declare a GUI Button and create it using the GuiManager
 	uint w, h;
 	app->win->GetWindowSize(w, h);
-	button1 = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "Button 1", { (int)w / 2 - 50,(int)h / 2 - 30,100,20 }, this);
-	button2 = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "Button 2", { (int)w / 2 - 50,(int)h / 2,100,20 }, this);
+	//button1 = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "Button 1", { (int)w / 2 - 50,(int)h / 2 - 30,100,20 }, this);
+	//button2 = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "Button 2", { (int)w / 2 - 50,(int)h / 2,100,20 }, this);
 
 
 	return true;
@@ -168,7 +181,7 @@ bool Scene::Update(float dt)
 		FadeToNewState(GAME_OVER_SCREEN);
 	}*/
 
-	if (gameplayState == TITLE_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	if (gameplayState == TITLE_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN /*&& continueButtonPressed == true*/)
 	{
 		app->scene->FadeToNewState(PLAYING);
 		LOG("LOAD REQUESTED");
@@ -181,7 +194,7 @@ bool Scene::Update(float dt)
 	//{
 	//	app->scene->FadeToNewState(TITLE_SCREEN);
 	//}
-	if (player->playerlives <= 0) {
+	if (player->playerlives <= 0 /*|| app->ui->timer<=0*/) {
 		app->scene->FadeToNewState(app->scene->GAME_OVER_SCREEN);
 
 	}
@@ -303,6 +316,8 @@ bool Scene::Update(float dt)
 		if (app->physics->debug) app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
 	    }
 	}
+	/*newGameButtonAnim.Update();
+	exitButtonAnim.Update();*/
 
 	return true;
 }
@@ -407,6 +422,8 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		app->map->Load();
 		player->isDead = false;
 		player->isWin = false;
+	/*	app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, 0, SDL_Rect({ buttonsPosX, buttonsPosY, 101, 24 }),this);
+		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, 0, SDL_Rect({ buttonsPosX, buttonsPosY + 24, 101, 24 }),this);*/
 		player->playerlives = 3;
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
