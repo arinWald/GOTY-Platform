@@ -71,7 +71,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int x, int y, SDL_
 	{
 	case GuiControlType::BUTTON:
 		control = new GuiButton(id, bounds, arrowMenuTex);
-		
+		control->SetObserver(app->scene);
 		break;
 	//case GuiControlType::CHECKBOX:
 	//	control = new GuiCheckBox(id, bounds, checkBoxTex);

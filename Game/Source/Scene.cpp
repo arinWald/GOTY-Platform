@@ -10,7 +10,6 @@
 #include "Player.h"
 #include "Pathfinding.h"
 #include "GuiManager.h"
-#include"ModuleUI.h"
 #include "Item.h"
 #include <iostream>
 using namespace std;
@@ -408,17 +407,8 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		player->isDead = false;
 		player->isWin = false;
 		player->playerlives = 3;
-		screenDisplayAnim = &titleScreenAnim;
-		gameplayState = TITLE_SCREEN;
-		app->map->CleanUp();
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
-		app->moduleUI->uiToRender = 0;
-		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ buttonsPosX, buttonsPosY, 101, 24 }), 1);
-		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ buttonsPosX, buttonsPosY + 24, 101, 24 }), 2);
-		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ buttonsPosX, buttonsPosY + 48, 101, 24 }), 3);
-		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ buttonsPosX, buttonsPosY + 72, 101, 24 }), 4);
-		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ buttonsPosX, buttonsPosY + 96, 101, 24 }), 5);
 		break;
 	case GAME_OVER_SCREEN:
 		gameplayState = GAME_OVER_SCREEN;

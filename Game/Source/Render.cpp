@@ -53,11 +53,11 @@ bool Render::Awake(pugi::xml_node& config)
 		camera.y = 0;
 	}
 
-	////initialise the SDL_ttf library
-	//TTF_Init();
+	//initialise the SDL_ttf library
+	TTF_Init();
 
-	////load a font into memory
-	//font = TTF_OpenFont("Assets/Fonts/arial/arial.ttf", 25);
+	//load a font into memory
+	font = TTF_OpenFont("Assets/Fonts/arial/arial.ttf", 25);
 
 	return ret;
 }
@@ -117,11 +117,11 @@ bool Render::PostUpdate()
 bool Render::CleanUp()
 {
 
-	//// Free the font
-	//TTF_CloseFont(font);
+	// Free the font
+	TTF_CloseFont(font);
 
-	////we clean up TTF library
-	//TTF_Quit();
+	//we clean up TTF library
+	TTF_Quit();
 
 	LOG("Destroying SDL render");
 	SDL_DestroyRenderer(renderer);
@@ -192,18 +192,18 @@ bool Render::DrawTexture(SDL_Texture* texture, int x, int y, const SDL_Rect* sec
 
 bool Render::DrawText(const char* text, int posx, int posy, int w, int h, SDL_Color color) {
 
-	///*SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);*/
-	//SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 
-	//int texW = 0;
-	//int texH = 0;
-	//SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
-	//SDL_Rect dstrect = { posx, posy, w, h };
+	int texW = 0;
+	int texH = 0;
+	SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+	SDL_Rect dstrect = { posx, posy, w, h };
 
-	//SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
 
-	//SDL_DestroyTexture(texture);
-	//SDL_FreeSurface(surface);
+	SDL_DestroyTexture(texture);
+	SDL_FreeSurface(surface);
 
 	return true;
 }

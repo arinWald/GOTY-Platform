@@ -88,14 +88,10 @@ public:
 	Animation settingsButtonAnim;
 	Animation creditsButtonAnim;
 	Animation exitButtonAnim;
-	Animation titleScreenAnim;
 
 
 	bool continueButtonPressed = false;
 	bool continueButtonDisabled = true;
-
-	int buttonsPosX = 183;
-	int buttonsPosY = 125;
 
 	bool godMode;
 
