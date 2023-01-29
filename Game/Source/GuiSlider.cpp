@@ -12,11 +12,11 @@ GuiSlider::GuiSlider(uint32 id, SDL_Rect bounds, SDL_Texture* tex) : GuiControl(
     this->texture = tex;
     if (id == 1)
     {
-        value = app->guiManager->musicVolume;
+        value = app->guimanager->musicVolume;
     }
     else if (id == 2)
     {
-        value = app->guiManager->fxVolume;
+        value = app->guimanager->fxVolume;
     }
 
     value = round(value);
@@ -77,13 +77,13 @@ bool GuiSlider::Draw(Render* render)
             break;
 
         case GuiControlState::FOCUSED:
-            if (app->guiManager->lastId != id) playFxOnce = true;
+            if (app->guimanager->lastId != id) playFxOnce = true;
 
             if (playFxOnce)
             {
-                app->audio->PlayFx(app->guiManager->hoverButtonFx, 0);
+                app->audio->PlayFx(app->guimanager->hoverButtonFx, 0);
                 playFxOnce = false;
-                app->guiManager->lastId = id;
+                app->guimanager->lastId = id;
             }
             render->DrawTexture(texture, bounds.x, bounds.y, &SDL_Rect({ 0, 23, 116, 23 }), 0, 0, 0, 0, false);
             render->DrawTexture(texture, sliderPosx, bounds.y, &SDL_Rect({ 116, 0, 16, 23 }), 0, 0, 0, 0, false);
@@ -96,7 +96,7 @@ bool GuiSlider::Draw(Render* render)
 
         case GuiControlState::SELECTED:
             if (id == 2)
-                app->audio->PlayFx(app->guiManager->pressButtonFx, 0);
+                app->audio->PlayFx(app->guimanager->pressButtonFx, 0);
             render->DrawTexture(texture, bounds.x, bounds.y, &SDL_Rect({ 0, 23, 116, 23 }), 0, 0, 0, 0, false);
             render->DrawTexture(texture, sliderPosx, bounds.y, &SDL_Rect({ 116, 23 , 16, 23 }), 0, 0, 0, 0, false);
             NotifyObserver();

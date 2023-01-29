@@ -99,7 +99,6 @@
     <ClCompile Include="Source\EntityManager.cpp" />
     <ClCompile Include="Source\GuiButton.cpp" />
     <ClCompile Include="Source\GuiManager.cpp" />
-    <ClCompile Include="Source\GuiSlider.cpp" />
     <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\App.cpp" />
@@ -125,7 +124,6 @@
     <ClInclude Include="Source\GuiButton.h" />
     <ClInclude Include="Source\GuiControl.h" />
     <ClInclude Include="Source\GuiManager.h" />
-    <ClInclude Include="Source\GuiSlider.h" />
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\ModuleFadeToBlack.h" />

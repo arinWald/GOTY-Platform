@@ -100,17 +100,3 @@ uint Window::GetScale() const
 {
 	return scale;
 }
-
-//void Window::SwitchFullScreen()
-//{
-//	isFullscreen = !isFullscreen;
-//
-//	Uint32 flags = SDL_WINDOW_SHOWN;
-//	if (isFullscreen == true) flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-//
-//	SDL_SetWindowFullscreen(window, flags);
-//	SDL_RenderSetLogicalSize(app->render->renderer, width, height);
-//
-//	screenSurface = SDL_GetWindowSurface(window);
-//
-//}

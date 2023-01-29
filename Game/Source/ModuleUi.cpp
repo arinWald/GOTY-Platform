@@ -44,7 +44,6 @@ bool ModuleUI::Awake(pugi::xml_node& config)
 	score = 0;
 
 	currentLevel = 1;
-	uiToRender = 0;
 
 	return ret;
 }

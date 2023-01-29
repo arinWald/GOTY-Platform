@@ -17,7 +17,6 @@ public:
 	enum GameplayState
 	{
 		TITLE_SCREEN,
-		TITLE_MENU,
 		PLAYING,
 		GAME_OVER_SCREEN,
 		LOGO_SCREEN,
@@ -61,15 +60,6 @@ public:
 	Bat* bat;
 	WalkEnemy* walkEnemy;
 
-	SDL_Texture* screenTexture = nullptr;
-	SDL_Texture* titleMenuTex = nullptr;
-	SDL_Texture* continueButtonTex = nullptr;
-	SDL_Texture* newGameButtonTex = nullptr;
-	SDL_Texture* settingsButtonTex = nullptr;
-	SDL_Texture* creditsButtonTex = nullptr;
-	SDL_Texture* exitButtonTex = nullptr;
-	SDL_Texture* creditsTex = nullptr;
-
 	GameplayState gameplayState = LOGO_SCREEN;
 	bool fading = false;
 
@@ -103,7 +93,6 @@ public:
 
 	bool continueButtonPressed = false;
 	bool continueButtonDisabled = true;
-	bool exit = false;
 
 	int buttonsPosX = 183;
 	int buttonsPosY = 125;
