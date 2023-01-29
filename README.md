@@ -14,6 +14,11 @@ CITM Student's project made in C++, Box2D and SDL libraries.
  - It can double jump!
  - Great music accompained with cool SFX
  - Two types of enemies! Flying with pathfindingand walking 
+ - Checkpoint to save your progress
+ - Fruit and life collectibles
+ - Score counter
+ - Time limit for each game
+ - Lives UI
  
 ## Controls
 
@@ -24,6 +29,7 @@ CITM Student's project made in C++, Box2D and SDL libraries.
  - F3 Start from the beginning of the current level
  - F5 Save the current player and camera position
  - F6 Load the saved player and camera position
+ - F8 View GUI bounds rectangles and state in different colors
  - F9 View colliders / logic / path
  - F10 God Mode(more speed, fly enabled and can't die)
  - F11 FPS Cap (30 / 60 FPS)
