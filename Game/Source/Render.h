@@ -6,7 +6,7 @@
 #include "Point.h"
 
 #include "SDL/include/SDL.h"
-#include "SDL_ttf/include/SDL_ttf.h"
+//#include "SDL_ttf/include/SDL_ttf.h"
 
 class Render : public Module
 {
@@ -55,7 +55,7 @@ public:
 	SDL_Rect viewport;
 	SDL_Color background;
 
-	TTF_Font* font;
+	/*TTF_Font* font;*/
 };
 
 #endif // __RENDER_H__
