@@ -74,51 +74,51 @@ bool ModuleUI::Start()
 // Update: draw background
 bool ModuleUI::Update(float dt)
 {
-	switch (uiToRender)
-	{
-	case 1:
-		if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && app->scene->gameplayState == Scene::GameplayState::PLAYING)
-		{
-			app->guiManager->DestroyAllGuiControls();
-			uiToRender = 0;
-		}
-		break;
+	//switch (uiToRender)
+	//{
+	//case 1:
+	//	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && app->scene->gameplayState == Scene::GameplayState::PLAYING)
+	//	{
+	//		app->guiManager->DestroyAllGuiControls();
+	//		uiToRender = 0;
+	//	}
+	//	break;
 
-	case 2:
-		if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && app->scene->gameplayState == Scene::GameplayState::PLAYING)
-		{
-			app->guiManager->DestroyAllGuiControls();
-			app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 204, 69, 73, 35 }), 1);
-			app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 197, 105, 87, 35 }), 2);
-			app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 177, 141, 127, 35 }), 3);
-			app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 212, 177, 56, 35 }), 4);
-			uiToRender = 1;
-		}
-		break;
+	//case 2:
+	//	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && app->scene->gameplayState == Scene::GameplayState::PLAYING)
+	//	{
+	//		app->guiManager->DestroyAllGuiControls();
+	//		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 204, 69, 73, 35 }), 1);
+	//		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 197, 105, 87, 35 }), 2);
+	//		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 177, 141, 127, 35 }), 3);
+	//		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 212, 177, 56, 35 }), 4);
+	//		uiToRender = 1;
+	//	}
+	//	break;
 
-	case 3:
-		if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && app->scene->gameplayState == Scene::GameplayState::PLAYING)
-		{
-			app->guiManager->DestroyAllGuiControls();
-			app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 204, 69, 73, 35 }), 1);
-			app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 197, 105, 87, 35 }), 2);
-			app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 177, 141, 127, 35 }), 3);
-			app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 212, 177, 56, 35 }), 4);
-			uiToRender = 1;
-		}
-		break;
+	//case 3:
+	//	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && app->scene->gameplayState == Scene::GameplayState::PLAYING)
+	//	{
+	//		app->guiManager->DestroyAllGuiControls();
+	//		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 204, 69, 73, 35 }), 1);
+	//		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 197, 105, 87, 35 }), 2);
+	//		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 177, 141, 127, 35 }), 3);
+	//		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 212, 177, 56, 35 }), 4);
+	//		uiToRender = 1;
+	//	}
+	//	break;
 
-	default:
-		if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && app->scene->gameplayState == Scene::GameplayState::PLAYING)
-		{
-			app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 204, 69, 73, 35 }), 1);
-			app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 197, 105, 87, 35 }), 2);
-			app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 177, 141, 127, 35 }), 3);
-			app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 212, 177, 56, 35 }), 4);
-			uiToRender = 1;
-		}
-		break;
-	}
+	//default:
+	//	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && app->scene->gameplayState == Scene::GameplayState::PLAYING)
+	//	{
+	//		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 204, 69, 73, 35 }), 1);
+	//		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 197, 105, 87, 35 }), 2);
+	//		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 177, 141, 127, 35 }), 3);
+	//		app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 0, 0, SDL_Rect({ 212, 177, 56, 35 }), 4);
+	//		uiToRender = 1;
+	//	}
+	//	break;
+	//}
 	return true;
 }
 
@@ -137,18 +137,18 @@ bool ModuleUI::PostUpdate()
 	*/
 	
 
-	for (int i = 0; i < app->scene->player->playerlives; i++)
-	{
-		if (i < 3)
-		{
-			app->render->DrawTexture(livesTexture, uiposx + 150 + (i * 15), 3, &livesRect, 0, 0, 0, 0, false);
-		}
-		else
-		{
-			app->render->DrawTexture(livesTexture, uiposx + 150 + (i * 15), 3, &extraLivesRect, 0, 0, 0, 0, false);
+	//for (int i = 0; i < app->scene->player->playerlives; i++)
+	//{
+	//	if (i < 3)
+	//	{
+	//		app->render->DrawTexture(livesTexture, uiposx + 150 + (i * 15), 3, &livesRect, 0, 0, 0, 0);
+	//	}
+	//	else
+	//	{
+	//		app->render->DrawTexture(livesTexture, uiposx + 150 + (i * 15), 3, &extraLivesRect, 0, 0, 0, 0);
 
-		}
-	}
+	//	}
+	//}
 
 	BlitText(uiposx + 320, 5, font, "SCORE", false);
 	IntToDynamicString(scoreText, score);
@@ -157,15 +157,15 @@ bool ModuleUI::PostUpdate()
 	switch (uiToRender)
 	{
 	case 1:
-		app->render->DrawTexture(optionsMenuTex, 0, 0, NULL, 0, 0, 0, 0, false);
+		app->render->DrawTexture(optionsMenuTex, 0, 0, NULL, 0, 0, 0, 0);
 		break;
 
 	case 2:
-		app->render->DrawTexture(settingsMenuTex, 0, 0, NULL, 0, 0, 0, 0, false);
+		app->render->DrawTexture(settingsMenuTex, 0, 0, NULL, 0, 0, 0, 0);
 		break;
 
 	case 3:
-		app->render->DrawTexture(saveMenuTex, 0, 0, NULL, 0, 0, 0, 0, false);
+		app->render->DrawTexture(saveMenuTex, 0, 0, NULL, 0, 0, 0, 0);
 		break;
 
 	default:
@@ -283,7 +283,7 @@ void ModuleUI::BlitText(int x, int y, int font_id, const char* text, bool useCam
 		spriteRect.x = spriteRect.w * (charIndex % font->columns);
 		spriteRect.y = spriteRect.h * (charIndex / font->columns);
 
-		app->render->DrawTexture(font->texture, x, y, &spriteRect, 1.0f, 0.0f, INT_MAX, INT_MAX, false);
+		app->render->DrawTexture(font->texture, x, y, &spriteRect, 1.0f, 0.0f, INT_MAX, INT_MAX);
 
 		// Advance the position where we blit the next character
 		x += spriteRect.w;
