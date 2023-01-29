@@ -6,7 +6,7 @@
 #include "Point.h"
 
 #include "SDL/include/SDL.h"
-//#include "SDL_ttf/include/SDL_ttf.h"
+#include "SDL_ttf/include/SDL_ttf.h"
 
 class Render : public Module
 {
