@@ -94,7 +94,7 @@ public:
 	//const char* titleButtonsPath;
 	//const char* creditsPath;
 
-	//Animation* screenDisplayAnim;
+	Animation* screenDisplayAnim;
 	//Animation continueButtonAnim;
 	//Animation newGameButtonAnim;
 	//Animation settingsButtonAnim;
