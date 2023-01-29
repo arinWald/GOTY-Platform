@@ -192,7 +192,7 @@ bool Render::DrawTexture(SDL_Texture* texture, int x, int y, const SDL_Rect* sec
 
 bool Render::DrawText(const char* text, int posx, int posy, int w, int h, SDL_Color color) {
 
-	///*SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);*/
+	//SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);
 	//SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 
 	//int texW = 0;

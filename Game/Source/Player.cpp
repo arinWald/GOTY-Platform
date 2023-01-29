@@ -12,6 +12,7 @@
 #include "Animation.h"
 #include "EntityManager.h"
 #include "Window.h"
+#include"ModuleUI.h"
 
 #include <iostream>
 using namespace std;
@@ -159,6 +160,10 @@ bool Player::Update()
 {
 	
 	currentAnimation->Update();
+
+	if (app->ui->timer <= 0) {
+		app->scene->FadeToNewState(app->scene->GAME_OVER_SCREEN);
+	}
 
 	b2Vec2 vel;
 	if (!app->scene->godMode)
@@ -332,7 +337,7 @@ bool Player::Update()
 	}
 	
 	for (int i = 0; i < (playerlives ); ++i) {
-		app->render->DrawTexture(playerLivesTexture, (-app->render->camera.x*0.5)+ 30*i+5, 5);
+		app->render->DrawTexture(playerLivesTexture, (-app->render->camera.x*0.5)+ 30*i+5, 20);
 
 	}
 
@@ -365,6 +370,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		case ColliderType::ITEM:
 			//LOG("Collision ITEM");
 			app->audio->PlayFx(collectibleFxId);
+			app->ui->score += 100;
 
 			// Delete this item
 			//...
@@ -377,10 +383,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::DEATH:
 			//LOG("Collision DEATH");
-			if (!app->scene->godMode)
+			if (!app->scene->godMode && isDead!=true)
 			{
 				app->audio->PlayFx(deathFxId);
-				playerlives--;
+				playerlives-=1;
 				isDead = true;
 			}
 			if (playerlives <= 0)
@@ -391,7 +397,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 		case ColliderType::BAT:
 			//LOG("Collision DEATH");
-			if (!app->scene->godMode && !app->scene->bat->isDead)
+			if (!app->scene->godMode && !app->scene->bat->isDead && isDead != true)
 			{
 				app->audio->PlayFx(deathFxId);
 				playerlives--;
@@ -404,7 +410,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::WALKENEMY:
 			//LOG("Collision DEATH");
-			if (!app->scene->godMode && !app->scene->bat->isDead)
+			if (!app->scene->godMode && !app->scene->bat->isDead && isDead != true)
 			{
 				app->audio->PlayFx(deathFxId);
 				playerlives--;
@@ -432,11 +438,13 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			ChangePosition(initialPosX, initialPosY);
 		case ColliderType::WALKENEMYHEAD:
 			app->scene->walkEnemy->isDead = true;
+			app->ui->score += 500;
 			autoJump = true;
 			break;
 			//app->audio->PlayFx(walkEnemyDiesFx);
 		case ColliderType::FLYENEMYHEAD:
 			app->scene->bat->isDead = true;
+			app->ui->score += 500;
 			autoJump = true;
 			break;
 

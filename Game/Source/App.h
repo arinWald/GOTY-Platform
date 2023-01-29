@@ -97,7 +97,8 @@ public:
 	Physics* physics;
 	PathFinding* pathfinding;
 	GuiManager* guiManager;
-	ModuleUI* moduleUI;
+	ModuleUI* ui;
+
 private:
 
 	int argc;
@@ -113,6 +114,7 @@ private:
 	uint frames;
 	float dt;
 
+	
     bool saveGameRequested;
 	bool loadGameRequested;
 

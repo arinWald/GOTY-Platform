@@ -10,6 +10,7 @@
 #include "Physics.h"
 #include "Pathfinding.h"
 #include "GuiManager.h"
+#include"ModuleUI.h"
 #include "Optick/include/optick.h"
 #include "Defs.h"
 #include "Log.h"
@@ -34,6 +35,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	entityManager = new EntityManager();
 	map = new Map();
 	guiManager = new GuiManager();
+	ui = new ModuleUI();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -48,6 +50,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(entityManager);
 	AddModule(map);
 	AddModule(guiManager);
+	AddModule(ui);
 
 	// Render last to swap buffer
 	AddModule(render);

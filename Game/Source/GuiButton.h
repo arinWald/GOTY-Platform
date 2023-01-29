@@ -21,10 +21,13 @@ public:
 
     bool playFxOnce = true;
 
-private:
+	int lastState = 0;
 
-    // Gui Button specific properties
-    // Maybe some animation properties for state change?
+	bool canClick = true;
+	bool drawBasic = false;
+	bool playFxOnce = true;
+
+	int audioFxId;
 };
 
 #endif // __GUIBUTTON_H__

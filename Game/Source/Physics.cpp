@@ -457,7 +457,7 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 		{
 			// do we want the normal ?
 
-			float fx = x2 - x1;
+			float fx=x2 - x1;
 			float fy = y2 - y1;
 			float dist = sqrtf((fx * fx) + (fy * fy));
 

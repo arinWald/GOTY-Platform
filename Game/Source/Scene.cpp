@@ -12,6 +12,7 @@
 #include "GuiManager.h"
 #include"ModuleUI.h"
 #include "Item.h"
+#include"ModuleUI.h"
 #include <iostream>
 using namespace std;
 
@@ -57,6 +58,11 @@ bool Scene::Awake(pugi::xml_node& config)
 		WalkEnemy* enemy = (WalkEnemy*)app->entityManager->CreateEntity(EntityType::WALKENEMY);
 		enemy->parameters = enemyNode;
 	}*/
+
+	pugi::xml_node titleButtons = config.child("titleButtons");
+
+	titleButtonsPath = titleButtons.attribute("texturepath").as_string();
+	titleButtonsPath = "Assets/Textures/Ui/title_buttons.png";
 	
 	pugi::xml_node logo = config.child("logo");
 	logotexturePath = logo.attribute("texturepath").as_string();
@@ -84,6 +90,17 @@ bool Scene::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool Scene::Start()
 {
+
+	newGameButtonTex = app->tex->Load(titleButtonsPath);
+	exitButtonTex = app->tex->Load(titleButtonsPath);
+
+	newGameButtonAnim.PushBack({ 0,24,101,24 });
+	newGameButtonAnim.PushBack({ 101,24,101,24 });
+
+	exitButtonAnim.PushBack({ 0,96,101,24 });
+	exitButtonAnim.PushBack({ 101,96,101,24 });
+
+    newGameButtonAnim.speed=exitButtonAnim.speed = 6.0f;
 
 	// L04: DONE 7: Set the window title with map/tileset info
 	SString title("Peepee's Adventure - Map:%dx%d Tiles:%dx%d Tilesets:%d",
@@ -144,7 +161,8 @@ bool Scene::Start()
 	// L15: DONE 2: Declare a GUI Button and create it using the GuiManager
 	uint w, h;
 	app->win->GetWindowSize(w, h);
-
+	button1 = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "Button 1", { buttonsPosX, buttonsPosY + 24, 100, 24 }, this);
+	button2 = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "Button 2", { buttonsPosX, buttonsPosY + 48, 100, 24 }, this);
 
 
 	return true;
@@ -159,6 +177,12 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+
+	if (app->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
+	{
+		app->guiManager->showDebug = !app->guiManager->showDebug;
+		
+	}
 	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && gameplayState == LOGO_SCREEN)
 	{
 		FadeToNewState(TITLE_SCREEN);
@@ -168,7 +192,7 @@ bool Scene::Update(float dt)
 		FadeToNewState(GAME_OVER_SCREEN);
 	}*/
 
-	if (gameplayState == TITLE_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	if (gameplayState == TITLE_SCREEN && (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN ))
 	{
 		app->scene->FadeToNewState(PLAYING);
 		LOG("LOAD REQUESTED");
@@ -181,7 +205,7 @@ bool Scene::Update(float dt)
 	//{
 	//	app->scene->FadeToNewState(TITLE_SCREEN);
 	//}
-	if (player->playerlives <= 0) {
+	if (player->playerlives <= 0 /*|| app->ui->timer<=0*/) {
 		app->scene->FadeToNewState(app->scene->GAME_OVER_SCREEN);
 
 	}
@@ -271,7 +295,7 @@ bool Scene::Update(float dt)
 		app->map->Draw();
 	}
 
-	app->guiManager->Draw();
+	
 
 	//PATHFINDING WALK ENEMY
 	if (walkEnemy->currentMoveState == WalkEnemy::MoveState::CHASING)
@@ -303,6 +327,8 @@ bool Scene::Update(float dt)
 		if (app->physics->debug) app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
 	    }
 	}
+	newGameButtonAnim.Update();
+	exitButtonAnim.Update();
 
 	return true;
 }
@@ -310,7 +336,7 @@ bool Scene::Update(float dt)
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
-	bool ret = true;
+	
 
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || (gameplayState == WIN_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 		|| (gameplayState == GAME_OVER_SCREEN && app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN))
@@ -327,16 +353,28 @@ bool Scene::PostUpdate()
 	if (gameplayState == TITLE_SCREEN)
 	{
 		app->render->DrawTexture(intro, 0, 0);
+		
+		app->guiManager->Draw();
+		
+		SDL_Rect newGameRect = newGameButtonAnim.GetCurrentFrame();
+		app->render->DrawTexture(newGameButtonTex, buttonsPosX, buttonsPosY + 24, &newGameRect, 0, 0, 0, 0);
 
+		SDL_Rect exitRect = exitButtonAnim.GetCurrentFrame();
+		app->render->DrawTexture(exitButtonTex, buttonsPosX, buttonsPosY + 48, &exitRect, 0, 0, 0, 0);
 	}
 
 	if (gameplayState == GAME_OVER_SCREEN)
 	{
+		app->guiManager->Draw();
 		app->render->DrawTexture(game_over, 0, 0);
+
+		SDL_Rect exitRect = exitButtonAnim.GetCurrentFrame();
+		app->render->DrawTexture(exitButtonTex, buttonsPosX, buttonsPosY + 48, &exitRect, 0, 0, 0, 0);
 
 	}
 	if (gameplayState == WIN_SCREEN)
 	{
+		app->guiManager->Draw();
 		app->render->DrawTexture(win_screen, 0, 0);
 
 	}
@@ -407,6 +445,8 @@ void Scene::ChangeGameplayState(GameplayState newState)
 		app->map->Load();
 		player->isDead = false;
 		player->isWin = false;
+		/*button1= (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, 0, SDL_Rect({ buttonsPosX, buttonsPosY, 101, 24 }),this);
+		button2=(GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, 0, SDL_Rect({ buttonsPosX, buttonsPosY + 24, 101, 24 }),this);*/
 		player->playerlives = 3;
 		screenDisplayAnim = &titleScreenAnim;
 		gameplayState = TITLE_SCREEN;
@@ -447,18 +487,97 @@ bool Scene::CleanUp()
 
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
+	 
 	// L15: DONE 5: Implement the OnGuiMouseClickEvent method
 	LOG("Event by %d ", control->id);
+	if (fading)
+		return true;
 
-	switch (control->id)
+	if (gameplayState == TITLE_SCREEN)
 	{
-	case 1:
-		LOG("Button 1 click");
-		break;
-	case 2:
-		LOG("Button 2 click");
-		break;
-	}
+		
+		switch (control->type)
+		{
+		case GuiControlType::BUTTON:
+			switch (control->id)
+			{
+			case 1:
+				app->audio->PlayFx(app->guiManager->pressButtonFx);
+				FadeToNewState(PLAYING);
+				break;
 
-	return true;
+
+			case 2:
+				app->audio->PlayFx(app->guiManager->pressButtonFx);
+				 ret = false;
+				break;
+
+			default:
+				break;
+			}
+			break;
+
+		default:
+			break;
+		}
+	}
+	if (gameplayState == GAME_OVER_SCREEN)
+	{
+
+		switch (control->type)
+		{
+		case GuiControlType::BUTTON:
+			switch (control->id)
+			{
+			case 1:
+				app->audio->PlayFx(app->guiManager->pressButtonFx);
+				FadeToNewState(PLAYING);
+				break;
+
+
+			case 2:
+				app->audio->PlayFx(app->guiManager->pressButtonFx);
+				ret = false;
+				break;
+
+			default:
+				break;
+			}
+			break;
+
+		default:
+			break;
+		}
+		if (gameplayState == WIN_SCREEN)
+		{
+
+			switch (control->type)
+			{
+			case GuiControlType::BUTTON:
+				switch (control->id)
+				{
+				case 1:
+					app->audio->PlayFx(app->guiManager->pressButtonFx);
+					FadeToNewState(PLAYING);
+					break;
+
+
+				case 2:
+					app->audio->PlayFx(app->guiManager->pressButtonFx);
+					ret = false;
+					break;
+
+				default:
+					break;
+				}
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+	return ret;
+    
+	
 }

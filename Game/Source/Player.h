@@ -52,6 +52,7 @@ public:
 	const char* defeatFxPath;
 
 	Animation* currentAnimation;
+
 	Animation rightRunAnimation;
 	Animation rightIdleAnimation;
 	Animation rightJumpAnimation;

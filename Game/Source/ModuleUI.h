@@ -42,6 +42,7 @@ public:
 
 public:
 	int score;
+	float timer;
 	int lifes;
 	int currentLevel;
 
@@ -61,7 +62,8 @@ public:
 
 	bool showDebug = false;
 
-	char scoreText[DYNAMIC_TEXT_LEN + 1] = { "0000000000" };
+	char scoreText[6] = { "00000" };
+	char timerText[4] = { "300" };
 	char shortNumberText[2] = { "0" };
 	char lifeText[2] = { "0" };
 

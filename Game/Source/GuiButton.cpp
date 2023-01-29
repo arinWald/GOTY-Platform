@@ -3,14 +3,20 @@
 #include "Scene.h"
 #include "GuiManager.h"
 #include "Audio.h"
-#include "Player.h"
-#include "Window.h"
+#include"Scene.h"
+#include"GuiManager.h"
+#include "Log.h"
 
 GuiButton::GuiButton(uint32 id, SDL_Rect bounds, SDL_Texture* tex) : GuiControl(GuiControlType::BUTTON, id)
 {
+	this->bounds = bounds;
+	this->text = text;
+
+	canClick = true;
+	drawBasic = false;
     this->id = id;
-    this->bounds = bounds;
-    this->texture = tex;
+
+	
 }
 
 GuiButton::~GuiButton()
@@ -52,22 +58,256 @@ bool GuiButton::Update(Input* input, float dt)
 
 bool GuiButton::Draw(Render* render)
 {
-    int yOffset = 4;
+	//L15: DONE 4: Draw the button according the GuiControl State
+    if (app->guiManager->showDebug == true) {
+        switch (state)
+        {
 
-    // Draw the right button depending on state
+        case GuiControlState::NORMAL:
+            render->DrawRectangle(bounds, 0, 0, 255, 255, true, false);
+            break;
+        case GuiControlState::FOCUSED:
+            render->DrawRectangle(bounds, 0, 0, 20, 255, true, false);
+            break;
+        case GuiControlState::PRESSED:
+            render->DrawRectangle(bounds, 0, 255, 0, 255, true, false);
+            break;
+        }
+    }
     if (app->scene->gameplayState == app->scene->GameplayState::TITLE_SCREEN)
     {
         switch (id)
         {
-            //continue
+         
+  
+            //new game
         case 1:
             switch (state)
             {
             case GuiControlState::NORMAL:
-                app->scene->continueButtonAnim.loop = false;
+                app->scene->newGameButtonAnim.loop = false;
+                lastState = 1;
                 break;
+
             case GuiControlState::FOCUSED:
                 if (app->guiManager->lastId != id) playFxOnce = true;
+
+               
+                if(lastState!=2){
+                    app->audio->PlayFx(app->guiManager->hoverButtonFx,0);
+                    playFxOnce = false;
+                    
+                    app->guiManager->lastId = id;
+                    lastState = 2;
+                 
+                 }
+                
+                app->scene->newGameButtonAnim.loop = true;
+                break;
+
+            case GuiControlState::SELECTED:
+                app->audio->PlayFx(app->guiManager->pressButtonFx);
+              
+                NotifyObserver();
+                break;
+
+            default:
+                break;
+            }
+            break;
+            //settings
+       
+        case 2:
+            switch (state)
+            {
+            case GuiControlState::NORMAL:
+                app->scene->exitButtonAnim.loop = false;
+                lastState = 3;
+                break;
+
+            case GuiControlState::FOCUSED:
+                if (app->guiManager->lastId != id) playFxOnce = true;
+
+                if (lastState != 4) {
+
+                    app->audio->PlayFx(app->guiManager->hoverButtonFx, 0);
+                    playFxOnce = false;
+                    app->guiManager->lastId = id;
+                    lastState = 4;
+                }
+                app->scene->exitButtonAnim.loop = true;
+                break;
+
+            case GuiControlState::SELECTED:
+                app->audio->PlayFx(app->guiManager->pressButtonFx);
+                NotifyObserver();
+                break;
+
+            default:
+                break;
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
+    if (app->scene->gameplayState == app->scene->GameplayState::GAME_OVER_SCREEN)
+    {
+        switch (id)
+        {
+
+
+            //new game
+        case 1:
+            switch (state)
+            {
+            case GuiControlState::NORMAL:
+                app->scene->newGameButtonAnim.loop = false;
+                lastState = 1;
+                break;
+
+            case GuiControlState::FOCUSED:
+                if (app->guiManager->lastId != id) playFxOnce = true;
+
+
+                if (lastState != 2) {
+                    app->audio->PlayFx(app->guiManager->hoverButtonFx, 0);
+                    playFxOnce = false;
+
+                    app->guiManager->lastId = id;
+                    lastState = 2;
+
+                }
+
+                app->scene->newGameButtonAnim.loop = true;
+                break;
+
+            case GuiControlState::SELECTED:
+                app->audio->PlayFx(app->guiManager->pressButtonFx);
+
+                NotifyObserver();
+                break;
+
+            default:
+                break;
+            }
+            break;
+            //settings
+
+        case 2:
+            switch (state)
+            {
+            case GuiControlState::NORMAL:
+                app->scene->exitButtonAnim.loop = false;
+                lastState = 3;
+                break;
+
+            case GuiControlState::FOCUSED:
+                if (app->guiManager->lastId != id) playFxOnce = true;
+
+                if (lastState != 4) {
+
+                    app->audio->PlayFx(app->guiManager->hoverButtonFx, 0);
+                    playFxOnce = false;
+                    app->guiManager->lastId = id;
+                    lastState = 4;
+                }
+                app->scene->exitButtonAnim.loop = true;
+                break;
+
+            case GuiControlState::SELECTED:
+                app->audio->PlayFx(app->guiManager->pressButtonFx);
+                NotifyObserver();
+                break;
+
+            default:
+                break;
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
+    if (app->scene->gameplayState == app->scene->GameplayState::WIN_SCREEN)
+    {
+        switch (id)
+        {
+
+
+            //new game
+        case 1:
+            switch (state)
+            {
+            case GuiControlState::NORMAL:
+                app->scene->newGameButtonAnim.loop = false;
+                lastState = 1;
+                break;
+
+            case GuiControlState::FOCUSED:
+                if (app->guiManager->lastId != id) playFxOnce = true;
+
+
+                if (lastState != 2) {
+                    app->audio->PlayFx(app->guiManager->hoverButtonFx, 0);
+                    playFxOnce = false;
+
+                    app->guiManager->lastId = id;
+                    lastState = 2;
+
+                }
+
+                app->scene->newGameButtonAnim.loop = true;
+                break;
+
+            case GuiControlState::SELECTED:
+                app->audio->PlayFx(app->guiManager->pressButtonFx);
+
+                NotifyObserver();
+                break;
+
+            default:
+                break;
+            }
+            break;
+            //settings
+
+        case 2:
+            switch (state)
+            {
+            case GuiControlState::NORMAL:
+                app->scene->exitButtonAnim.loop = false;
+                lastState = 3;
+                break;
+
+            case GuiControlState::FOCUSED:
+                if (app->guiManager->lastId != id) playFxOnce = true;
+
+                if (lastState != 4) {
+
+                    app->audio->PlayFx(app->guiManager->hoverButtonFx, 0);
+                    playFxOnce = false;
+                    app->guiManager->lastId = id;
+                    lastState = 4;
+                }
+                app->scene->exitButtonAnim.loop = true;
+                break;
+
+            case GuiControlState::SELECTED:
+                app->audio->PlayFx(app->guiManager->pressButtonFx);
+                NotifyObserver();
+                break;
+
+            default:
+                break;
+            }
+            break;
+
+           default:
+            break;
+        }
+    }
 
                 if (playFxOnce)
                 {

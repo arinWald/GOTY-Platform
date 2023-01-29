@@ -14,6 +14,15 @@ GuiManager::~GuiManager() {}
 
 bool GuiManager::Start()
 {
+
+
+	pressButtonFxPath = "Assets/Audio/Fx/pressed_button.wav";
+	hoverButtonFxPath = "Assets/Audio/Fx/hover_button.wav";
+
+	hoverButtonFx = app->audio->LoadFx(hoverButtonFxPath);
+	pressButtonFx = app->audio->LoadFx(pressButtonFxPath);
+	
+
 	return true;
 }
 
@@ -31,6 +40,7 @@ bool GuiManager::Update(float dt)
 		accumulatedTime = 0.0f;
 		doLogic = false;
 	}
+	
 
 	return true;
 }
@@ -41,8 +51,10 @@ bool GuiManager::Draw() {
 
 	while (control != nullptr)
 	{
-		control->data->Draw(app->render);
-		control = control->next;
+		
+			control->data->Draw(app->render);
+			control = control->next;
+		
 	}
 
 	return true;

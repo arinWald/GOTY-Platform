@@ -34,8 +34,10 @@
 
           <bat x="1624" y="165" speed="4" texturepath="Assets/Textures/bat.png"/>
 	  <walkenemy x="532" y="179" speed="3" texturepath="Assets/Textures/WalkEnemy/mush_spritesheet.png"
+  
 
 			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"></walkenemy>
+    <titleButtons   texturepath="Assets/Textures/Ui/title_buttons.png"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png" 
 		  coinfxpath="Assets/Audio/Fx/coinPickup.wav"/>
     <intro texturepath ="Assets/Textures/Scenas/Intro.png"/> 
@@ -50,7 +52,9 @@
 	<item x="698" y="224" texturepath="Assets/Textures/strawberry.png" id="1" isActive="true"/>
 	<item x="440" y="250" texturepath="Assets/Textures/heart-icon.png" id="2" isActive="true"/>
   </scene>
-
+  <ui>
+    <ui fontPath="Assets/Textures/UI/white.png" livesTexturePath = "Assets/Textures/UI/lives.png" optionsMenu="Assets/Textures/Ui/options_menu.png" settingsMenu="Assets/Textures/Ui/settings_menu.png" saveMenu="Assets/Textures/Ui/save_menu.png" menuArrow="Assets/Textures/Ui/settings_arrow.png"/>
+  </ui>
   <map>
     <mapfolder path="Assets/Maps/"/>
     <mapfile path="Assets/Maps/level1.tmx"/>

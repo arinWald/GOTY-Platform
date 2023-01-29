@@ -61,6 +61,13 @@ public:
 	WalkEnemy* walkEnemy;
 
 	GameplayState gameplayState = LOGO_SCREEN;
+
+	SDL_Texture* newGameButtonTex = nullptr;
+	SDL_Texture* settingsButtonTex = nullptr;
+	SDL_Texture* creditsButtonTex = nullptr;
+	SDL_Texture* exitButtonTex = nullptr;
+	SDL_Texture* creditsTex = nullptr;
+
 	bool fading = false;
 
 	SDL_Texture* logo;
@@ -81,7 +88,18 @@ public:
 
 	const char* victorySongPath;
 
+	const char* musicPath;
+	const char* screenTexturePath;
+	const char* titleMenuPath;
+	const char* titleButtonsPath;
+	const char* creditsPath;
+
 	Animation* screenDisplayAnim;
+	Animation continueButtonAnim;
+	Animation newGameButtonAnim;
+	Animation settingsButtonAnim;
+	Animation creditsButtonAnim;
+	Animation exitButtonAnim;
 
 	Animation continueButtonAnim;
 	Animation newGameButtonAnim;
@@ -98,6 +116,13 @@ public:
 	int buttonsPosY = 125;
 
 	bool godMode;
+	bool continueButtonPressed = false;
+	bool continueButtonDisabled = true;
+	bool exit = false;
+	bool ret = true;
+
+	int buttonsPosX = 280;
+	int buttonsPosY = 355;
 
 	PhysBody* checkPoint;
 
