@@ -4,6 +4,7 @@
 #include "Map.h"
 #include "Defs.h"
 #include "Log.h"
+#include "Optick/include/optick.h"
 
 PathFinding::PathFinding() : Module(), map(NULL), lastPath(DEFAULT_PATH_LENGTH), width(0), height(0)
 {
@@ -29,6 +30,7 @@ bool PathFinding::CleanUp()
 
 void PathFinding::DrawPath(const DynArray<iPoint>* path, int r, int g, int b)
 {
+	OPTICK_EVENT();
 	int c = path->Count() - 1;
 	for (int i = 0; i < c; i++)
 	{
@@ -142,6 +144,7 @@ PathNode::PathNode(const PathNode& node) : g(node.g), h(node.h), pos(node.pos), 
 // ----------------------------------------------------------------------------------
 uint PathNode::FindWalkableAdjacents(PathList& listToFill, bool useGravity, int maxJump) const
 {
+	OPTICK_EVENT();
 	iPoint cell;
 	iPoint ground;
 	uint before = listToFill.list.Count();
