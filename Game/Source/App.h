@@ -114,6 +114,7 @@ private:
 	uint frames;
 	float dt;
 
+	
     bool saveGameRequested;
 	bool loadGameRequested;
 

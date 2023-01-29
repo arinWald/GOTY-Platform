@@ -62,11 +62,11 @@ public:
 
 	GameplayState gameplayState = LOGO_SCREEN;
 
-	//SDL_Texture* newGameButtonTex = nullptr;
-	//SDL_Texture* settingsButtonTex = nullptr;
-	//SDL_Texture* creditsButtonTex = nullptr;
-	//SDL_Texture* exitButtonTex = nullptr;
-	//SDL_Texture* creditsTex = nullptr;
+	SDL_Texture* newGameButtonTex = nullptr;
+	SDL_Texture* settingsButtonTex = nullptr;
+	SDL_Texture* creditsButtonTex = nullptr;
+	SDL_Texture* exitButtonTex = nullptr;
+	SDL_Texture* creditsTex = nullptr;
 
 	bool fading = false;
 
@@ -88,26 +88,27 @@ public:
 
 	const char* victorySongPath;
 
-	//const char* musicPath;
-	//const char* screenTexturePath;
-	//const char* titleMenuPath;
-	//const char* titleButtonsPath;
-	//const char* creditsPath;
+	const char* musicPath;
+	const char* screenTexturePath;
+	const char* titleMenuPath;
+	const char* titleButtonsPath;
+	const char* creditsPath;
 
 	Animation* screenDisplayAnim;
-	//Animation continueButtonAnim;
-	//Animation newGameButtonAnim;
-	//Animation settingsButtonAnim;
-	//Animation creditsButtonAnim;
-	//Animation exitButtonAnim;
+	Animation continueButtonAnim;
+	Animation newGameButtonAnim;
+	Animation settingsButtonAnim;
+	Animation creditsButtonAnim;
+	Animation exitButtonAnim;
 
 	bool godMode;
-	//bool continueButtonPressed = false;
-	//bool continueButtonDisabled = true;
-	//bool exit = false;
+	bool continueButtonPressed = false;
+	bool continueButtonDisabled = true;
+	bool exit = false;
+	bool ret = true;
 
-	int buttonsPosX = 183;
-	int buttonsPosY = 125;
+	int buttonsPosX = 280;
+	int buttonsPosY = 355;
 
 	PhysBody* checkPoint;
 

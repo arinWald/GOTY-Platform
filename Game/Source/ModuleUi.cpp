@@ -70,7 +70,7 @@ bool ModuleUI::Start()
 	livesRect = SDL_Rect({ 0,0,12,10 });
 	extraLivesRect = SDL_Rect({ 12,0,12,10 });
 
-	timer = 5;
+	timer = 61;
 
 	return ret;
 }
@@ -148,9 +148,9 @@ bool ModuleUI::PostUpdate()
 		BlitText(uiposx + 155, 5, font, shortNumberText, false);
 		*/
 
-		BlitText((-app->render->camera.x * 0.5) + uiposx + 200, 5, font, "TIMER", true);
+		BlitText((-app->render->camera.x * 0.5) + uiposx + 280, 5, font, "TIMER", true);
 		IntToString(timerText, timer, 3);
-		BlitText((-app->render->camera.x * 0.5) + uiposx + 250, 5, font, timerText, true);
+		BlitText((-app->render->camera.x * 0.5) + uiposx + 330, 5, font, timerText, true);
 
 		//for (int i = 0; i < app->scene->player->playerlives; i++)
 		//{
@@ -165,9 +165,9 @@ bool ModuleUI::PostUpdate()
 		//	}
 		//}
 
-		BlitText((-app->render->camera.x * 0.5) + uiposx + 450, 5, font, "SCORE", false);
+		BlitText((-app->render->camera.x * 0.5) + uiposx + 500, 5, font, "SCORE", false);
 		IntToString(scoreText, score, 6);
-		BlitText((-app->render->camera.x * 0.5) + uiposx + 505, 5, font, scoreText, false);
+		BlitText((-app->render->camera.x * 0.5) + uiposx + 555, 5, font, scoreText, false);
 
 		switch (uiToRender)
 		{

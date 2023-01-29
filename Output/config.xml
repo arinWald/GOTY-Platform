@@ -34,9 +34,10 @@
 
           <bat x="1624" y="165" speed="4" texturepath="Assets/Textures/bat.png"/>
 	  <walkenemy x="532" y="179" speed="3" texturepath="Assets/Textures/WalkEnemy/mush_spritesheet.png"
-    <titleButtons   texturepath="Assets/Textures/Ui/title_buttons.png"/>
+  
 
 			  deathfxpath="Assets/Audio/Fx/hitHurt.wav"></walkenemy>
+    <titleButtons   texturepath="Assets/Textures/Ui/title_buttons.png"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png" 
 		  coinfxpath="Assets/Audio/Fx/coinPickup.wav"/>
     <intro texturepath ="Assets/Textures/Scenas/Intro.png"/> 

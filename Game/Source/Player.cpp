@@ -383,10 +383,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::DEATH:
 			//LOG("Collision DEATH");
-			if (!app->scene->godMode)
+			if (!app->scene->godMode && isDead!=true)
 			{
 				app->audio->PlayFx(deathFxId);
-				playerlives--;
+				playerlives-=1;
 				isDead = true;
 			}
 			if (playerlives <= 0)
@@ -397,7 +397,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 		case ColliderType::BAT:
 			//LOG("Collision DEATH");
-			if (!app->scene->godMode && !app->scene->bat->isDead)
+			if (!app->scene->godMode && !app->scene->bat->isDead && isDead != true)
 			{
 				app->audio->PlayFx(deathFxId);
 				playerlives--;
@@ -410,7 +410,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::WALKENEMY:
 			//LOG("Collision DEATH");
-			if (!app->scene->godMode && !app->scene->bat->isDead)
+			if (!app->scene->godMode && !app->scene->bat->isDead && isDead != true)
 			{
 				app->audio->PlayFx(deathFxId);
 				playerlives--;

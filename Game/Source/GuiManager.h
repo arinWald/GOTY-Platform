@@ -36,6 +36,14 @@ public:
 	float accumulatedTime = 0.0f;
 	float updateMsCycle = 0.0f;
 	bool doLogic = false;
+	bool showDebug = false;
+	int lastId = 0;
+
+	const char* hoverButtonFxPath;
+	const char* pressButtonFxPath;
+
+	int hoverButtonFx = 0;
+	int pressButtonFx = 0;
 
 	SDL_Texture* texture;
 

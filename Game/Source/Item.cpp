@@ -118,7 +118,7 @@ void Item::OnCollision(PhysBody* physA, PhysBody* physB)
 		}
 		else if (id == 2)
 		{
-			if (app->scene->player->playerlives < 3)
+			if (app->scene->player->playerlives < 4)
 			{
 				app->scene->player->playerlives += 1;
 			}			

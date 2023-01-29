@@ -19,10 +19,13 @@ public:
 	int mouseX, mouseY;
 	unsigned int click;
 
+	int lastState = 0;
+
 	bool canClick = true;
 	bool drawBasic = false;
+	bool playFxOnce = true;
 
-	uint audioFxId;
+	int audioFxId;
 };
 
 #endif // __GUIBUTTON_H__
